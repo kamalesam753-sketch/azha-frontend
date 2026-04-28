@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AZHA Gate Console</title>
+  <link rel="stylesheet" href="../STYLES/main.css">
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --blue1: #082d4b;
+      --blue2: #0f4c81;
+      --blue3: #1977b5;
+      --blue4: #2f88c5;
+      --text: #0f172a;
+      --muted: #64748b;
+      --line: #e7eef6;
+      --line-2: #edf2f7;
+      --soft: #edf4fb;
+      --soft-2: #f8fbff;
+      --white: #ffffff;
+      --shadow: 0 22px 55px rgba(15, 76, 129, .14);
+      --shadow-soft: 0 10px 24px rgba(15, 76, 129, .08);
+      --success-bg: #eaf8ee;
+      --success-text: #166534;
+      --warning-bg: #fff8e6;
+      --warning-text: #92400e;
+      --danger-bg: #fdecec;
+      --danger-text: #b91c1c;
+      --info-bg: #edf4fb;
+      --info-text: #0f4c81;
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Inter', Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(25, 119, 181, .12), transparent 26%),
+        radial-gradient(circle at bottom left, rgba(8, 45, 75, .10), transparent 28%),
+        linear-gradient(180deg, #eef5fb 0%, #f8fbff 100%);
+      color: var(--text);
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .wrap {
+      max-width: 1540px;
+      margin: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .azha-brand-header {
+      width: 100%;
+      margin: 0 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 22px;
+      background: rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-bottom: 1px solid rgba(212, 175, 55, .45);
+      border-radius: 22px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, .18);
+    }
+
+    .azha-brand-header img {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .azha-brand-title {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      color: #fff;
+      text-align: right;
+    }
+
+    .azha-brand-title strong {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+
+    .azha-brand-title span {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .72);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .hero-card,
+    .panel,
+    .kpi,
+    .mini,
+    .search-row,
+    .latest-box {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after,
+    .panel::after,
+    .kpi::after,
+    .mini::after,
+    .search-row::after,
+    .latest-box::after {
+      content: "AZHA";
+      position: absolute;
+      right: 14px;
+      bottom: 8px;
+      font-size: 58px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: .08em;
+      color: #0b3558;
+      opacity: .03;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-card>*,
+    .panel>*,
+    .kpi>*,
+    .mini>*,
+    .search-row>*,
+    .latest-box>* {
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-head {
+      position: relative;
+    }
+
+    .panel-head::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      left: 18px;
+      width: 86px;
+      height: 26px;
+      background-image: url('../ASSETS/madaar-logo.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: left center;
+      opacity: .7;
+      pointer-events: none;
+    }
+
+    .topbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      animation: fadeInUp .3s ease both;
+    }
+
+    .brand-stack {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-size: 14px;
+      font-weight: 900;
+      color: #0f4c81;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+    }
+
+    .brand-logos {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo-chip {
+      min-height: 34px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid #dbe6f0;
+      box-shadow: var(--shadow-soft);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-chip img {
+      display: block;
+      max-height: 18px;
+      max-width: 100px;
+      object-fit: contain;
+    }
+
+    .logo-fallback {
+      font-size: 11px;
+      font-weight: 900;
+      color: #0f4c81;
+      letter-spacing: .6px;
+      white-space: nowrap;
+    }
+
+    .topbar-right {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .pill {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      color: #475569;
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 8px 18px rgba(15, 76, 129, .04);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .api-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .api-dot.online {
+      background: #16a34a;
+      animation: pulseGlow 2s ease infinite;
+    }
+
+    .api-dot.offline {
+      background: #dc2626;
+    }
+
+    .api-dot.checking {
+      background: #d97706;
+    }
+
+    .notice {
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.8;
+      display: none;
+    }
+
+    .notice.show {
+      display: block;
+    }
+
+    .notice.info {
+      background: #edf4fb;
+      color: #0f4c81;
+      border: 1px solid #d7e7f5;
+    }
+
+    .notice.err {
+      background: #fdecec;
+      color: #b91c1c;
+      border: 1px solid #f5c2c7;
+    }
+
+    .notice.ok {
+      background: #eaf8ee;
+      color: #166534;
+      border: 1px solid #cdebd5;
+    }
+
+    .hero-card {
+      background: #fff;
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      margin-bottom: 18px;
+      animation: fadeInUp .4s ease both;
+    }
+
+    .hero-header {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at top right, rgba(255, 255, 255, .16), transparent 26%),
+        linear-gradient(135deg, var(--blue1), var(--blue2) 60%, var(--blue3));
+      color: #fff;
+      padding: 30px 28px 22px;
+    }
+
+    .hero-header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, .06) 40%, transparent 70%);
+      transform: translateX(-100%);
+      animation: shimmer 8s linear infinite;
+      pointer-events: none;
+    }
+
+    .hero-header::after {
+      content: "AZHA";
+      position: absolute;
+      inset: auto 0 8px 0;
+      text-align: center;
+      font-size: 72px;
+      font-weight: 800;
+      color: rgba(255, 255, 255, .06);
+      pointer-events: none;
+      letter-spacing: 1px;
+    }
+
+    .badge-top {
+      display: inline-block;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 999px;
+      font-size: 13px;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 2;
+      backdrop-filter: blur(4px);
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: .5px;
+    }
+
+    .hero-header h1 {
+      margin: 0;
+      font-size: 31px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .sub {
+      margin-top: 10px;
+      font-size: 15px;
+      line-height: 1.85;
+      opacity: .97;
+      position: relative;
+      z-index: 2;
+      max-width: 920px;
+    }
+
+    .hero-metrics {
+      margin-top: 20px;
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .hero-metric {
+      background: rgba(255, 255, 255, .10);
+      border: 1px solid rgba(255, 255, 255, .16);
+      border-radius: 18px;
+      padding: 14px;
+      backdrop-filter: blur(4px);
+    }
+
+    .hero-metric .k {
+      font-size: 11px;
+      opacity: .82;
+      margin-bottom: 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .45px;
+    }
+
+    .hero-metric .v {
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 18px 20px 20px;
+      background: #fff;
+      border-top: 1px solid #eef2f7;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 16px;
+      padding: 13px 18px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 150px;
+      transition: .15s ease;
+      font-family: inherit;
+      gap: 8px;
+      letter-spacing: .01em;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0b3558, #0f4c81);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(15, 76, 129, .16);
+    }
+
+    .btn-light {
+      background: #edf4fb;
+      color: #0f4c81;
+    }
+
+    .btn-soft {
+      background: #f8fafc;
+      color: #334155;
+      border: 1px solid #e2e8f0;
+    }
+
+    .btn-danger {
+      background: #b91c1c;
+      color: #fff;
+    }
+
+    .btn-green {
+      background: #16a34a;
+      color: #fff;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 500px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: #fff;
+      border-radius: 28px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      animation: fadeInUp .45s ease both;
+    }
+
+    .panel-head {
+      padding: 20px 20px 14px;
+      border-bottom: 1px solid #eef2f7;
+    }
+
+    .panel-title {
+      margin: 0 0 6px;
+      font-size: 22px;
+      color: #0f4c81;
+      font-weight: 800;
+    }
+
+    .panel-sub {
+      margin: 0;
+      color: #6b7280;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .panel-body {
+      padding: 18px 20px 22px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .label {
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+      color: #475569;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: .35px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .input {
+      flex: 1;
+      min-width: 180px;
+      border: 1px solid #d8e2ec;
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 14px 14px;
+      font-size: 15px;
+      outline: none;
+      transition: .15s ease;
+      font-family: inherit;
+      color: #111827;
+    }
+
+    .input:focus {
+      border-color: #86b9dd;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(25, 118, 182, .08);
+    }
+
+    .hint {
+      margin-top: 8px;
+      color: #64748b;
+      font-size: 12px;
+      line-height: 1.8;
+      font-weight: 600;
+    }
+
+    .status-box {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+      display: block;
+      line-height: 1.8;
+      border: 1px solid transparent;
+    }
+
+    .status-box.ok {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border-color: #cdebd5;
+    }
+
+    .status-box.err {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border-color: #f5c2c7;
+    }
+
+    .status-box.info {
+      background: var(--info-bg);
+      color: var(--info-text);
+      border-color: #d8e8f6;
+    }
+
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e5edf5, transparent);
+      margin: 18px 0;
+    }
+
+    .decision-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .decision-btn {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: .15s ease;
+      font-family: inherit;
+    }
+
+    .decision-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .d-approved {
+      background: #eaf8ee;
+      color: #166534;
+    }
+
+    .d-rejected {
+      background: #fdecec;
+      color: #b91c1c;
+    }
+
+    .d-review {
+      background: #fff8e6;
+      color: #92400e;
+    }
+
+    .d-payment {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .d-note {
+      background: #edf4fb;
+      color: #0f4c81;
+    }
+
+    .latest-box {
+      border-radius: 22px;
+      padding: 18px;
+      border: 1px solid #eef2f7;
+      background: #f8fafc;
+      transition: all .18s ease;
+    }
+
+    .latest-box.valid {
+      background: #eaf8ee;
+      color: #166534;
+      border-color: #cdebd5;
+    }
+
+    .latest-box.warning {
+      background: #fff8e6;
+      color: #92400e;
+      border-color: #f2dfab;
+    }
+
+    .latest-box.invalid,
+    .latest-box.not_found {
+      background: #fdecec;
+      color: #b91c1c;
+      border-color: #f5c2c7;
+    }
+
+    .latest-main {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      line-height: 1.35;
+    }
+
+    .latest-note {
+      line-height: 1.85;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .latest-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .mini {
+      background: #fff;
+      border: 1px solid #eef2f7;
+      border-radius: 16px;
+      padding: 14px;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+
+    .mini:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(15, 76, 129, .05);
+    }
+
+    .mini .k {
+      font-size: 11px;
+      color: #6b7280;
+      font-weight: 800;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: .35px;
+    }
+
+    .mini .v {
+      font-size: 15px;
+      font-weight: 800;
+      word-break: break-word;
+      color: #111827;
+      line-height: 1.5;
+    }
+
+    .preview-frame {
+      width: 100%;
+      min-height: 1020px;
+      border: none;
+      background: #fff;
+      display: block;
+    }
+
+    .empty-preview {
+      padding: 100px 28px;
+      text-align: center;
+      color: #64748b;
+      font-size: 16px;
+      line-height: 1.9;
+      font-weight: 700;
+    }
+
+    .preview-shell {
+      padding: 18px;
+    }
+
+    .preview-top {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .preview-title {
+      font-size: 15px;
+      font-weight: 900;
+      color: #0f4c81;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    .preview-sub {
+      font-size: 13px;
+      font-weight: 700;
+      color: #64748b;
+    }
+
+    #reader {
+      width: 100%;
+      display: none;
+      margin-top: 14px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid #e7eef6;
+      background: #fff;
+      min-height: 280px;
+      box-shadow: 0 6px 18px rgba(15, 76, 129, .06);
+    }
+
+    .search-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .search-row {
+      background: #f8fafc;
+      border: 1px solid #eef2f7;
+      border-radius: 18px;
+      padding: 14px;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+
+    .search-row:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(15, 76, 129, .05);
+    }
+
+    .search-top {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+
+    .search-id {
+      font-weight: 900;
+      font-size: 16px;
+      color: #0f4c81;
+    }
+
+    .search-meta {
+      font-size: 13px;
+      color: #475569;
+      font-weight: 700;
+      line-height: 1.8;
+    }
+
+    .search-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .tiny-btn {
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .tiny-primary {
+      background: #0f4c81;
+      color: #fff;
+    }
+
+    .tiny-light {
+      background: #edf4fb;
+      color: #0f4c81;
+    }
+
+    .top-kpis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .kpi {
+      background: #f8fafc;
+      border: 1px solid #edf2f7;
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .kpi .k {
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 800;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: .35px;
+    }
+
+    .kpi .v {
+      font-size: 18px;
+      font-weight: 900;
+      color: #111827;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulseGlow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(22, 163, 74, .4);
+      }
+
+      50% {
+        box-shadow: 0 0 0 6px rgba(22, 163, 74, 0);
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        transform: translateX(-100%);
+      }
+
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    @media (max-width: 1250px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .preview-frame {
+        min-height: 780px;
+      }
+
+      .hero-metrics {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .hero-header h1 {
+        font-size: 26px;
+      }
+
+      .latest-grid,
+      .decision-grid,
+      .top-kpis {
+        grid-template-columns: 1fr;
+      }
+
+      .input-row {
+        flex-direction: column;
+      }
+
+      .hero-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar-right {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="azha-brand-header">
+      <img src="../ASSETS/azha-logo.png" alt="Azha Logo">
+      <div class="azha-brand-title">
+        <strong>AZHA Enterprise Security System</strong>
+        <span>Community Security Operating System</span>
+      </div>
+    </header>
+    <div class="topbar">
+      <div class="brand-stack">
+        <div class="brand">AZHA Community • Gate Console</div>
+        <div class="brand-logos">
+          <div class="logo-chip">
+            <img src="../ASSETS/azha-logo.png" alt="AZHA Logo"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+            <span class="logo-fallback" style="display:none;">AZHA</span>
+          </div>
+          <div class="logo-chip">
+            <img src="../ASSETS/madaar-logo.png" alt="MADAAR Logo"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+            <span class="logo-fallback" style="display:none;">MADAAR</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="pill" id="sessionInfo">Checking active session...</div>
+        <div class="pill" id="roleInfo">Role: --</div>
+        <div class="pill" id="gateInfo">Gate: --</div>
+        <div class="pill" id="apiInfo">
+          <span id="apiText">API: --</span>
+          <span class="api-dot checking" id="apiDot"></span>
+        </div>
+        <div class="pill" id="clockBox">--</div>
+      </div>
+    </div>
+
+    <div id="noticeBox" class="notice info"></div>
+
+    <div class="hero-card">
+      <div class="hero-header">
+        <div class="badge-top">Gate Command Workspace</div>
+        <h1>Security Verification Console</h1>
+        <div class="sub">
+          Operational gate workspace for manual permit opening, protected search, secure QR token verification,
+          decision registration, and controlled preview access within the internal security operating system.
+        </div>
+
+        <div class="hero-metrics">
+          <div class="hero-metric">
+            <div class="k">Verification Flow</div>
+            <div class="v">Manual open • Secure QR scan • Search-driven access</div>
+          </div>
+          <div class="hero-metric">
+            <div class="k">Decision Layer</div>
+            <div class="v">Approve • Reject • Review • Payment Issue • Security Note</div>
+          </div>
+          <div class="hero-metric">
+            <div class="k">Token System</div>
+            <div class="v">QR URLs are normalized into secure verification tokens</div>
+          </div>
+          <div class="hero-metric">
+            <div class="k">Migration Ready</div>
+            <div class="v">UI talks to service layer, not directly to the backend URL</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <button class="btn btn-primary" onclick="openPermit()">Open Permit</button>
+        <button class="btn btn-soft" onclick="startScanner()">Scan Secure QR</button>
+        <button class="btn btn-light" id="dashboardBtn" onclick="goDashboard()">Open Dashboard</button>
+        <button class="btn btn-light" onclick="refreshLatestScan()">Refresh Latest</button>
+        <button class="btn btn-danger" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <div class="panel">
+        <div class="panel-head">
+          <h2 class="panel-title">Gate Tools</h2>
+          <p class="panel-sub">Manual opening, protected search, QR verification, and security action registration.</p>
+        </div>
+
+        <div class="panel-body">
+          <div class="top-kpis">
+            <div class="kpi">
+              <div class="k">Console Mode</div>
+              <div class="v">Gate Operations</div>
+            </div>
+            <div class="kpi">
+              <div class="k">Scanner Mode</div>
+              <div class="v">Secure Token Scan</div>
+            </div>
+            <div class="kpi">
+              <div class="k">Preview Mode</div>
+              <div class="v">Token Preview</div>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+
+          <div class="field">
+            <label class="label" for="permitIdInput">Permit ID</label>
+            <div class="input-row">
+              <input id="permitIdInput" class="input" type="text" placeholder="Enter permit ID">
+              <button class="btn btn-primary" onclick="openPermit()">Open Permit</button>
+            </div>
+            <div class="hint">Manual opening resolves the permit into its secure token before preview.</div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="searchInput">Permit Search</label>
+            <div class="input-row">
+              <input id="searchInput" class="input" type="text"
+                placeholder="Permit ID / Unit / Tenant / Phone / Vehicle">
+              <button class="btn btn-light" onclick="searchNow()">Search</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="decisionNotes">Action Notes</label>
+            <input id="decisionNotes" class="input" type="text" placeholder="Enter internal action note">
+          </div>
+
+          <div id="statusBox" class="status-box info">Console ready for operation.</div>
+
+          <div class="field" style="margin-top:18px;">
+            <label class="label">Security Action</label>
+            <div class="decision-grid">
+              <button class="decision-btn d-approved" onclick="submitDecision('approved')">Approve</button>
+              <button class="decision-btn d-rejected" onclick="submitDecision('rejected')">Reject</button>
+              <button class="decision-btn d-review" onclick="submitDecision('review_required')">Review</button>
+              <button class="decision-btn d-payment" onclick="submitDecision('payment_issue')">Payment Issue</button>
+              <button class="decision-btn d-note" onclick="submitDecision('security_note')">Security Note</button>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+
+          <div class="field">
+            <label class="label">Scanner Status</label>
+            <div id="scannerBox" class="latest-box">
+              <div class="latest-main">Scanner Ready</div>
+              <div class="latest-note">Start the camera to read a secure permit token or tokenized permit URL.</div>
+            </div>
+          </div>
+
+          <div id="reader"></div>
+
+          <div class="section-divider"></div>
+
+          <div class="field">
+            <label class="label">Search Results</label>
+            <div id="searchResults" class="search-list">
+              <div class="latest-box">
+                <div class="latest-main">No Results</div>
+                <div class="latest-note">Run a protected search to display permit matches here.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+
+          <div class="field">
+            <label class="label">Latest Verification</label>
+            <div id="latestScanBox" class="latest-box">
+              <div class="latest-main">Loading...</div>
+              <div class="latest-note">Loading the most recent verification record.</div>
+            </div>
+          </div>
+
+          <div id="latestScanGrid" class="latest-grid"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2 class="panel-title">Protected Preview Area</h2>
+          <p class="panel-sub">Permit preview appears here after manual open, search-driven open, or secure QR
+            verification.</p>
+        </div>
+
+        <div id="previewHolder" class="preview-shell">
+          <div class="empty-preview">
+            No permit has been opened yet.<br>
+            Use manual open, search, or secure QR scan.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../JS/core/config.js"></script>
+  <script src="../JS/core/auth.js"></script>
+  <script src="../JS/api/client.js"></script>
+
+  <script>
+    let html5QrCode = null;
+    let scanRunning = false;
+    let currentPermitId = "";
+    let currentSecureToken = "";
+    let isSearching = false;
+    let isSubmittingDecision = false;
+    let isVerifyingToken = false;
+    let isOpeningPermit = false;
+
+    const AzhaGateServices = {
+      get: function (payload) {
+        if (!window.AzhaApi || typeof AzhaApi.get !== "function") {
+          return Promise.reject(new Error("API layer is not available"));
+        }
+        return AzhaApi.get(payload || {});
+      },
+
+      post: function (payload) {
+        if (!window.AzhaApi || typeof AzhaApi.post !== "function") {
+          return Promise.reject(new Error("API layer is not available"));
+        }
+        return AzhaApi.post(payload || {});
+      },
+
+      ping: function () {
+        return this.get({ action: "ping" });
+      },
+
+      verifySession: function (sessionToken) {
+        return this.get({
+          action: "verifySession",
+          sessionToken: sessionToken
+        });
+      },
+
+      logout: function (sessionToken) {
+        return this.get({
+          action: "logout",
+          sessionToken: sessionToken
+        });
+      },
+
+      latestScan: function (sessionToken) {
+        return this.get({
+          action: "latestScan",
+          sessionToken: sessionToken
+        });
+      },
+
+      searchPermits: function (sessionToken, query) {
+        return this.get({
+          action: "searchPermits",
+          sessionToken: sessionToken,
+          query: query
+        });
+      },
+
+      scanToken: function (sessionToken, secureToken) {
+        return this.get({
+          action: "scanToken",
+          sessionToken: sessionToken,
+          token: secureToken
+        });
+      },
+
+      getTokenByPermit: function (sessionToken, permitId) {
+        return this.get({
+          action: "getTokenByPermit",
+          sessionToken: sessionToken,
+          id: permitId
+        });
+      },
+
+      submitDecision: function (payload) {
+        return this.post(payload || {});
+      }
+    };
+
+    function coreReady() {
+      return !!(window.AZHA_CONFIG && window.AzhaAuth && window.AzhaApi);
+    }
+
+    function getRoute(routeName, fallback) {
+      const routes = (window.AZHA_CONFIG && AZHA_CONFIG.ROUTES) || {};
+      return routes[routeName] || fallback;
+    }
+
+    function getSessionToken() {
+      return window.AzhaAuth && typeof AzhaAuth.getToken === "function" ? AzhaAuth.getToken() : "";
+    }
+
+    function saveSession(data) {
+      if (window.AzhaAuth && typeof AzhaAuth.saveSession === "function") {
+        AzhaAuth.saveSession(data || {});
+      }
+    }
+
+    function clearSession() {
+      if (window.AzhaAuth && typeof AzhaAuth.clearSession === "function") {
+        AzhaAuth.clearSession();
+      }
+    }
+
+    function redirectToLogin() {
+      location.href = getRoute("login", "security-login.html");
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function safeJsonString(value) {
+      return JSON.stringify(String(value || ""));
+    }
+
+    function normalizeArabic(value) {
+      return String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, " ")
+        .replace(/[أإآ]/g, "ا")
+        .replace(/ة/g, "ه")
+        .replace(/ى/g, "ي");
+    }
+
+    function translateStatusArabicToEnglish(value) {
+      const v = normalizeArabic(value);
+      if (v.includes("اخر يوم ساري")) return "Last Valid Day";
+      if (v.includes("ساري")) return "Active";
+      if (v.includes("لم يبدا")) return "Not Started";
+      if (v.includes("يبدا غدا")) return "Starts Tomorrow";
+      if (v.includes("انتهى") || v.includes("انتهي") || v.includes("منتهي")) return "Expired";
+      return value || "-";
+    }
+
+    function translatePaymentArabicToEnglish(value) {
+      const v = normalizeArabic(value);
+      if (v.includes("تم الدفع") || v.includes("تم السداد") || v.includes("مدفوع") || v.includes("مسدد")) return "Paid";
+      if (v.includes("لم يتم الدفع") || v.includes("غير مدفوع") || v.includes("غير مسدد")) return "Unpaid";
+      return value || "-";
+    }
+
+    function translateValidityTextToEnglish(value) {
+      const v = normalizeArabic(value);
+      if (v.includes("صالح للدخول")) return "Valid for Entry";
+      if (v.includes("التصريح منتهي")) return "Permit Expired";
+      if (v.includes("لم يبدا بعد")) return "Not Started Yet";
+      if (v.includes("مراجعه السداد")) return "Payment Review";
+      if (v.includes("تصريح غير موجود")) return "Permit Not Found";
+      if (v.includes("رمز غير صالح")) return "Invalid Token";
+      return value || "-";
+    }
+
+    function showNotice(type, message) {
+      const box = document.getElementById("noticeBox");
+      box.className = "notice show " + (type || "info");
+      box.textContent = message || "";
+    }
+
+    function setStatus(type, message) {
+      const box = document.getElementById("statusBox");
+      box.className = "status-box " + (type || "info");
+      box.textContent = message || "";
+    }
+
+    function updateClock() {
+      document.getElementById("clockBox").textContent = "Time: " + new Date().toLocaleString();
+    }
+
+    function setApiState(state) {
+      const textEl = document.getElementById("apiText");
+      const dotEl = document.getElementById("apiDot");
+
+      if (state === "online") {
+        textEl.textContent = "API: Online";
+        dotEl.className = "api-dot online";
+      } else if (state === "offline") {
+        textEl.textContent = "API: Offline";
+        dotEl.className = "api-dot offline";
+      } else {
+        textEl.textContent = "API: Checking";
+        dotEl.className = "api-dot checking";
+      }
+    }
+
+    function isSessionFailure(res) {
+      const msg = String((res && res.message) || "").toLowerCase();
+      return (
+        msg.includes("session") ||
+        msg.includes("expired") ||
+        msg.includes("الجلسة") ||
+        msg.includes("انتهت صلاحية") ||
+        msg.includes("غير موجودة") ||
+        msg.includes("غير نشطة")
+      );
+    }
+
+    function handlePossibleSessionFailure(res) {
+      if (isSessionFailure(res)) {
+        clearSession();
+        setStatus("err", "Session expired. Redirecting to login.");
+        setTimeout(redirectToLogin, 700);
+        return true;
+      }
+      return false;
+    }
+
+    function extractSecureTokenFromQr(decodedText) {
+      const raw = String(decodedText || "").trim();
+
+      if (!raw) return "";
+
+      try {
+        const parsed = new URL(raw, window.location.origin);
+        const tokenFromQuery = parsed.searchParams.get("token") || parsed.searchParams.get("secureToken");
+
+        if (tokenFromQuery) {
+          return tokenFromQuery.trim();
+        }
+      } catch (error) {
+        // Not a URL. Treat as raw token below.
+      }
+
+      return raw;
+    }
+
+    function normalizeTokenPayload(data) {
+      data = data || {};
+      return {
+        permitId: data.permitId || data.id || data.permitID || "",
+        secureToken: data.secureToken || data.token || data.clientToken || "",
+        clientUrl: data.clientUrl || data.clientURL || ""
+      };
+    }
+
+    function setCurrentPermit(permitId, secureToken) {
+      currentPermitId = permitId || "";
+      currentSecureToken = secureToken || currentSecureToken || "";
+    }
+
+    function buildPreviewUrlFromToken(secureToken) {
+      const previewRoute = getRoute("permitPreview", "index.html");
+      return previewRoute + "?token=" + encodeURIComponent(secureToken || "") + "&mode=preview";
+    }
+
+    function renderPreviewShell(permitId, secureToken) {
+      return `
+        <div class="preview-top">
+          <div>
+            <div class="preview-title">Protected Permit Preview</div>
+            <div class="preview-sub">Permit ID: ${escapeHtml(permitId || "-")}</div>
+          </div>
+          <button class="btn btn-soft" onclick="openPermitInNewTab(${safeJsonString(secureToken || "")})">Open in New Tab</button>
+        </div>
+        <iframe class="preview-frame" src="${escapeHtml(buildPreviewUrlFromToken(secureToken))}" title="Permit Preview"></iframe>
+      `;
+    }
+
+    function showPreview(permitId, secureToken) {
+      if (!secureToken) {
+        setStatus("err", "Secure token is missing. Preview cannot be opened.");
+        return;
+      }
+
+      document.getElementById("previewHolder").innerHTML = renderPreviewShell(permitId, secureToken);
+    }
+
+    function openPermitInNewTab(secureToken) {
+      if (!secureToken) return;
+      window.open(buildPreviewUrlFromToken(secureToken), "_blank");
+    }
+
+    async function resolvePermitToken(permitId) {
+      const sessionToken = getSessionToken();
+
+      if (!permitId) {
+        throw new Error("Missing permit ID.");
+      }
+
+      const result = await AzhaGateServices.getTokenByPermit(sessionToken, permitId);
+
+      if (handlePossibleSessionFailure(result)) {
+        throw new Error("Session expired.");
+      }
+
+      if (!(result && result.success && result.data)) {
+        throw new Error((result && result.message) || "Secure token could not be resolved.");
+      }
+
+      const normalized = normalizeTokenPayload(result.data);
+
+      if (!normalized.secureToken) {
+        throw new Error("Secure token is missing for this permit.");
+      }
+
+      return normalized;
+    }
+
+    async function openPermit() {
+      if (isOpeningPermit) return;
+
+      const permitId = document.getElementById("permitIdInput").value.trim();
+
+      if (!permitId) {
+        setStatus("err", "Enter a permit ID first.");
+        return;
+      }
+
+      isOpeningPermit = true;
+      setStatus("info", "Resolving secure token...");
+      showNotice("info", "Resolving permit token.");
+
+      try {
+        const tokenData = await resolvePermitToken(permitId);
+
+        setCurrentPermit(tokenData.permitId || permitId, tokenData.secureToken);
+        setStatus("ok", "Permit token resolved successfully.");
+        showPreview(tokenData.permitId || permitId, tokenData.secureToken);
+        showNotice("ok", "Protected token preview opened.");
+      } catch (error) {
+        setStatus("err", error.message || "Permit could not be opened.");
+        showNotice("err", error.message || "Permit could not be opened.");
+      } finally {
+        isOpeningPermit = false;
+      }
+    }
+
+    function startScanner() {
+      const reader = document.getElementById("reader");
+      const scannerBox = document.getElementById("scannerBox");
+
+      if (scanRunning) return;
+
+      if (typeof Html5Qrcode === "undefined") {
+        scannerBox.className = "latest-box invalid";
+        scannerBox.innerHTML = `
+          <div class="latest-main">Scanner Library Unavailable</div>
+          <div class="latest-note">Camera scanner module could not be loaded on this device.</div>
+        `;
+        setStatus("err", "Scanner module is not available.");
+        showNotice("err", "Scanner module could not be loaded.");
+        return;
+      }
+
+      reader.style.display = "block";
+      scannerBox.className = "latest-box warning";
+      scannerBox.innerHTML = `
+        <div class="latest-main">Starting Camera</div>
+        <div class="latest-note">Point the camera toward the secure QR token to begin verification.</div>
+      `;
+
+      html5QrCode = new Html5Qrcode("reader");
+      scanRunning = true;
+
+      html5QrCode.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: 260 },
+        onScanSuccess,
+        function () { }
+      ).then(() => {
+        setStatus("info", "Camera opened successfully.");
+        showNotice("info", "Scanner is ready.");
+      }).catch(err => {
+        scanRunning = false;
+        reader.style.display = "none";
+        scannerBox.className = "latest-box invalid";
+        scannerBox.innerHTML = `
+          <div class="latest-main">Camera Unavailable</div>
+          <div class="latest-note">${escapeHtml(String(err || ""))}</div>
+        `;
+        setStatus("err", "Camera could not be opened.");
+        showNotice("err", "Camera access failed on this device.");
+      });
+    }
+
+    function stopScanner() {
+      if (!html5QrCode || !scanRunning) return;
+
+      html5QrCode.stop()
+        .then(() => {
+          scanRunning = false;
+          document.getElementById("reader").style.display = "none";
+          return html5QrCode.clear();
+        })
+        .catch(() => {
+          scanRunning = false;
+          document.getElementById("reader").style.display = "none";
+        });
+    }
+
+    async function onScanSuccess(decodedText) {
+      if (isVerifyingToken) return;
+      isVerifyingToken = true;
+
+      stopScanner();
+      setStatus("info", "Secure QR captured. Verifying token...");
+      showNotice("info", "Verifying secure token.");
+
+      const secureToken = extractSecureTokenFromQr(decodedText);
+      const sessionToken = getSessionToken();
+
+      if (!secureToken) {
+        setStatus("err", "Invalid QR payload.");
+        showNotice("err", "No secure token found in QR.");
+        isVerifyingToken = false;
+        return;
+      }
+
+      try {
+        const result = await AzhaGateServices.scanToken(sessionToken, secureToken);
+
+        if (handlePossibleSessionFailure(result)) return;
+
+        if (!(result && result.success && result.data)) {
+          document.getElementById("scannerBox").className = "latest-box invalid";
+          document.getElementById("scannerBox").innerHTML = `
+            <div class="latest-main">Verification Failed</div>
+            <div class="latest-note">${escapeHtml(result && result.message ? result.message : "Token verification failed.")}</div>
+          `;
+          setStatus("err", result && result.message ? result.message : "Token is not valid.");
+          showNotice("err", result && result.message ? result.message : "Token verification failed.");
+          refreshLatestScan();
+          return;
+        }
+
+        const d = result.data;
+        const permitId = d.permitId || "";
+        setCurrentPermit(permitId, secureToken);
+        document.getElementById("permitIdInput").value = permitId;
+
+        document.getElementById("scannerBox").className = "latest-box " + escapeHtml(d.validityClass || "valid");
+        document.getElementById("scannerBox").innerHTML = `
+          <div class="latest-main">${escapeHtml(translateValidityTextToEnglish(d.validityText || "Verification Successful"))}</div>
+          <div class="latest-note">
+            Permit ID: ${escapeHtml(permitId || "-")}<br>
+            ${escapeHtml(d.tenant || "-")} • ${escapeHtml(d.unit || "-")}<br>
+            ${escapeHtml(translateStatusArabicToEnglish(d.statusArabic || "-"))} • ${escapeHtml(translatePaymentArabicToEnglish(d.paymentArabic || "-"))}
+          </div>
+        `;
+
+        setStatus("ok", "Permit verified successfully.");
+        showNotice("ok", "Secure token verified.");
+        showPreview(permitId, secureToken);
+        refreshLatestScan();
+      } catch (error) {
+        document.getElementById("scannerBox").className = "latest-box invalid";
+        document.getElementById("scannerBox").innerHTML = `
+          <div class="latest-main">Verification Error</div>
+          <div class="latest-note">A system error occurred during secure token verification.</div>
+        `;
+        setStatus("err", "A system error occurred during verification.");
+        showNotice("err", "A system error occurred during secure token verification.");
+      } finally {
+        isVerifyingToken = false;
+      }
+    }
+
+    async function submitDecision(decision) {
+      if (isSubmittingDecision) return;
+
+      const token = getSessionToken();
+      const notes = document.getElementById("decisionNotes").value.trim();
+
+      if (!currentPermitId) {
+        setStatus("err", "Open or verify a permit before submitting an action.");
+        showNotice("err", "You must open or verify a permit first.");
+        return;
+      }
+
+      try {
+        isSubmittingDecision = true;
+
+        const res = await AzhaGateServices.submitDecision({
+          action: "submitSecurityDecision",
+          sessionToken: token,
+          id: currentPermitId,
+          token: currentSecureToken,
+          decision,
+          notes
+        });
+
+        if (handlePossibleSessionFailure(res)) return;
+
+        if (res && res.success) {
+          setStatus("ok", "Security action recorded.");
+          showNotice("ok", "Security action saved successfully.");
+          document.getElementById("decisionNotes").value = "";
+        } else {
+          setStatus("err", (res && res.message) || "Action could not be saved.");
+          showNotice("err", (res && res.message) || "Action could not be saved.");
+        }
+      } catch (error) {
+        setStatus("err", "A system error occurred while saving the action.");
+        showNotice("err", "A system error occurred while saving the action.");
+      } finally {
+        isSubmittingDecision = false;
+      }
+    }
+
+    function renderSearchResults(data) {
+      const box = document.getElementById("searchResults");
+
+      if (!data || !data.length) {
+        box.innerHTML = `
+          <div class="latest-box">
+            <div class="latest-main">No Results</div>
+            <div class="latest-note">No matching permits were found for the current search.</div>
+          </div>
+        `;
+        return;
+      }
+
+      box.innerHTML = data.map(item => {
+        const permitId = item.permitId || "";
+        const secureToken = item.secureToken || item.token || "";
+        return `
+          <div class="search-row">
+            <div class="search-top">
+              <div class="search-id">Permit: ${escapeHtml(permitId || "-")}</div>
+              <div class="tiny-btn tiny-light">${escapeHtml(translateValidityTextToEnglish(item.validityText || "-"))}</div>
+            </div>
+            <div class="search-meta">
+              Unit: ${escapeHtml(item.unit || "-")}<br>
+              Tenant: ${escapeHtml(item.tenant || "-")}<br>
+              Phone: ${escapeHtml(item.phone || "-")}<br>
+              Vehicle: ${escapeHtml(item.carPlate || "-")}<br>
+              ${escapeHtml(translateStatusArabicToEnglish(item.statusArabic || "-"))} • ${escapeHtml(translatePaymentArabicToEnglish(item.paymentArabic || "-"))}
+            </div>
+            <div class="search-actions">
+              <button class="tiny-btn tiny-primary" onclick="openResultPermit(${safeJsonString(permitId)}, ${safeJsonString(secureToken)})">Open</button>
+              <button class="tiny-btn tiny-light" onclick="previewResultPermit(${safeJsonString(permitId)}, ${safeJsonString(secureToken)})">Preview</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function searchNow() {
+      if (isSearching) return;
+
+      const q = document.getElementById("searchInput").value.trim();
+
+      if (!q) {
+        renderSearchResults([]);
+        return;
+      }
+
+      isSearching = true;
+      setStatus("info", "Searching permits...");
+
+      AzhaGateServices.searchPermits(getSessionToken(), q)
+        .then(res => {
+          if (handlePossibleSessionFailure(res)) return;
+
+          if (res && res.success) {
+            renderSearchResults(res.data || []);
+            showNotice("ok", "Search completed successfully.");
+          } else {
+            renderSearchResults([]);
+            showNotice("err", res && res.message ? res.message : "Search failed.");
+          }
+        })
+        .catch(() => {
+          renderSearchResults([]);
+          showNotice("err", "A system error occurred while searching.");
+        })
+        .finally(() => {
+          isSearching = false;
+        });
+    }
+
+    async function openResultPermit(permitId, secureToken) {
+      document.getElementById("permitIdInput").value = permitId || "";
+
+      if (secureToken) {
+        setCurrentPermit(permitId, secureToken);
+        showPreview(permitId, secureToken);
+        setStatus("ok", "Protected token preview opened.");
+        showNotice("ok", "Protected preview opened.");
+        return;
+      }
+
+      await openPermit();
+    }
+
+    async function previewResultPermit(permitId, secureToken) {
+      document.getElementById("permitIdInput").value = permitId || "";
+
+      if (secureToken) {
+        setCurrentPermit(permitId, secureToken);
+        showPreview(permitId, secureToken);
+        setStatus("ok", "Preview opened successfully.");
+        showNotice("ok", "Protected preview opened.");
+        return;
+      }
+
+      await openPermit();
+    }
+
+    function renderLatestScan(data) {
+      const box = document.getElementById("latestScanBox");
+      const grid = document.getElementById("latestScanGrid");
+
+      if (!data || !data.found) {
+        box.className = "latest-box";
+        box.innerHTML = `
+          <div class="latest-main">No Verification Records Yet</div>
+          <div class="latest-note">The latest verification will appear here once a scan or manual check is registered.</div>
+        `;
+        grid.innerHTML = "";
+        return;
+      }
+
+      box.className = "latest-box " + escapeHtml(data.validityClass || "");
+      box.innerHTML = `
+        <div class="latest-main">${escapeHtml(translateValidityTextToEnglish(data.validityText || "-"))}</div>
+        <div class="latest-note">
+          ${escapeHtml(data.tenant || "-")}<br>
+          ${escapeHtml(data.unit || "-")}<br>
+          ${escapeHtml(translateStatusArabicToEnglish(data.statusArabic || "-"))} • ${escapeHtml(translatePaymentArabicToEnglish(data.paymentArabic || "-"))}
+        </div>
+      `;
+
+      grid.innerHTML = `
+        <div class="mini"><div class="k">Permit ID</div><div class="v">${escapeHtml(data.permitId || "-")}</div></div>
+        <div class="mini"><div class="k">Verification Time</div><div class="v">${escapeHtml(data.timestamp || "-")}</div></div>
+        <div class="mini"><div class="k">Unit</div><div class="v">${escapeHtml(data.unit || "-")}</div></div>
+        <div class="mini"><div class="k">Tenant</div><div class="v">${escapeHtml(data.tenant || "-")}</div></div>
+      `;
+    }
+
+    function refreshLatestScan() {
+      if (!coreReady()) return;
+
+      AzhaGateServices.latestScan(getSessionToken())
+        .then(result => {
+          if (handlePossibleSessionFailure(result)) return;
+
+          if (result && result.success) {
+            renderLatestScan(result.data);
+          } else {
+            setStatus("err", "Latest verification could not be loaded.");
+          }
+        })
+        .catch(() => {
+          setStatus("err", "A system error occurred while loading the latest verification.");
+        });
+    }
+
+    function checkApi() {
+      if (!coreReady()) {
+        setApiState("offline");
+        return;
+      }
+
+      setApiState("checking");
+
+      AzhaGateServices.ping()
+        .then(result => {
+          setApiState(result && result.success ? "online" : "offline");
+        })
+        .catch(() => {
+          setApiState("offline");
+        });
+    }
+
+    function logout() {
+      const token = getSessionToken();
+      stopScanner();
+      clearSession();
+
+      if (token) {
+        AzhaGateServices.logout(token).finally(redirectToLogin);
+        return;
+      }
+
+      redirectToLogin();
+    }
+
+    function goDashboard() {
+      location.href = getRoute("dashboard", "dashboard.html");
+    }
+
+    function requireSecurityAccess() {
+      if (!coreReady()) {
+        setStatus("err", "Core modules failed to load.");
+        setApiState("offline");
+        return;
+      }
+
+      const token = getSessionToken();
+
+      if (!token) {
+        redirectToLogin();
+        return;
+      }
+
+      AzhaGateServices.verifySession(token)
+        .then(result => {
+          if (!(result && result.success && result.data)) {
+            clearSession();
+            redirectToLogin();
+            return;
+          }
+
+          saveSession(result.data);
+
+          document.getElementById("sessionInfo").textContent = result.data.fullName || result.data.username || "Active Session";
+          document.getElementById("roleInfo").textContent = "Role: " + (result.data.role || "-");
+          document.getElementById("gateInfo").textContent = "Gate: " + ((result.data.gateName || "-") + " • " + (result.data.gateLocation || "-"));
+
+          const permissions = result.data.permissions || {};
+          const dashboardBtn = document.getElementById("dashboardBtn");
+
+          if (!permissions.canAccessGate) {
+            location.href = permissions.defaultRoute === "dashboard"
+              ? getRoute("dashboard", "dashboard.html")
+              : getRoute("login", "security-login.html");
+            return;
+          }
+
+          if (dashboardBtn) {
+            dashboardBtn.style.display = permissions.canOpenDashboardFromGate ? "inline-flex" : "none";
+          }
+        })
+        .catch(() => {
+          clearSession();
+          redirectToLogin();
+        });
+    }
+
+    function initGateConsole() {
+      requireSecurityAccess();
+      updateClock();
+      checkApi();
+      refreshLatestScan();
+
+      document.getElementById("permitIdInput").addEventListener("keydown", e => {
+        if (e.key === "Enter") openPermit();
+      });
+
+      document.getElementById("searchInput").addEventListener("keydown", e => {
+        if (e.key === "Enter") searchNow();
+      });
+
+      window.addEventListener("beforeunload", () => stopScanner());
+
+      setInterval(updateClock, 1000);
+      setInterval(refreshLatestScan, 5000);
+      setInterval(checkApi, 30000);
+    }
+
+    initGateConsole();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AZHA Security Access</title>
+  <link rel="stylesheet" href="../STYLES/main.css">
+
+  <style>
+    :root {
+      --blue1: #071f35;
+      --blue2: #0b3558;
+      --blue3: #1977b5;
+      --text: #0f172a;
+      --muted: #64748b;
+      --line: #e7eef6;
+      --soft: #edf4fb;
+      --white: #ffffff;
+      --shadow: 0 24px 60px rgba(15, 76, 129, .16);
+      --shadow-soft: 0 12px 28px rgba(15, 76, 129, .08);
+      --ok-bg: #eaf8ee;
+      --ok-text: #166534;
+      --err-bg: #fdecec;
+      --err-text: #b91c1c;
+      --info-bg: #edf4fb;
+      --info-text: #0f4c81;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background-image: url('../ASSETS/bg-light.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 10, 18, 0.65);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 1140px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .azha-brand-header {
+      width: 100%;
+      margin: 0 auto 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 22px;
+      background: rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.45);
+      border-radius: 22px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+    }
+
+    .azha-brand-header img {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .azha-brand-title {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      color: #fff;
+      text-align: right;
+    }
+
+    .azha-brand-title strong {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+
+    .azha-brand-title span {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .72);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      background: var(--white);
+      border-radius: 34px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .card::after,
+    .form-card::after {
+      content: "AZHA";
+      position: absolute;
+      inset: auto 18px 8px auto;
+      font-size: 96px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: .08em;
+      color: #0b3558;
+      opacity: .03;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .card > *,
+    .form-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .madaar-card-logo {
+      position: absolute;
+      top: 16px;
+      left: 18px;
+      height: 22px;
+      width: auto;
+      object-fit: contain;
+      opacity: .7;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .hero {
+      position: relative;
+      padding: 42px 36px;
+      background:
+        radial-gradient(circle at top right, rgba(255, 255, 255, .14), transparent 28%),
+        linear-gradient(135deg, var(--blue1), var(--blue2) 60%, var(--blue3));
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, .06) 40%, transparent 70%);
+      transform: translateX(-100%);
+      animation: shine 7s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shine {
+      0% {
+        transform: translateX(-100%);
+      }
+
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    .hero::after {
+      content: "AZHA";
+      position: absolute;
+      inset: auto 0 14px 0;
+      text-align: center;
+      font-size: 88px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: rgba(255, 255, 255, .06);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, .18);
+      background: rgba(255, 255, 255, .10);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 2;
+      backdrop-filter: blur(4px);
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.2;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero p {
+      margin: 14px 0 0;
+      line-height: 1.9;
+      font-size: 15px;
+      opacity: .97;
+      position: relative;
+      z-index: 2;
+      max-width: 520px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 26px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-mini {
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .08);
+      border-radius: 20px;
+      padding: 14px 14px 12px;
+      backdrop-filter: blur(4px);
+    }
+
+    .hero-mini .k {
+      font-size: 12px;
+      opacity: .82;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .hero-mini .v {
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.7;
+    }
+
+    .panel {
+      padding: 34px 28px;
+      background:
+        radial-gradient(circle at top left, rgba(25, 119, 181, .06), transparent 20%),
+        #fff;
+    }
+
+    .brandline {
+      text-align: center;
+      color: #0f4c81;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 18px;
+      letter-spacing: .6px;
+    }
+
+    .form-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 22px 18px 18px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .title {
+      font-size: 26px;
+      font-weight: 800;
+      text-align: center;
+      margin: 0 0 6px;
+      color: #0f172a;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.8;
+      margin-bottom: 18px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 8px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid #d8e2ec;
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 15px 48px 15px 14px;
+      font-size: 15px;
+      outline: none;
+      transition: .18s ease;
+    }
+
+    input:focus {
+      border-color: #86b9dd;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(25, 118, 182, .08);
+    }
+
+    .toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .hint {
+      margin-top: 8px;
+      color: #64748b;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: .15s ease;
+      margin-top: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: .7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0b3558, #0f4c81);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(15, 76, 129, .18);
+    }
+
+    .status {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+      display: none;
+      line-height: 1.8;
+    }
+
+    .status.show {
+      display: block;
+    }
+
+    .status.ok {
+      background: var(--ok-bg);
+      color: var(--ok-text);
+      border: 1px solid #cdebd5;
+    }
+
+    .status.err {
+      background: var(--err-bg);
+      color: var(--err-text);
+      border: 1px solid #f5c2c7;
+    }
+
+    .status.info {
+      background: var(--info-bg);
+      color: var(--info-text);
+      border: 1px solid #d7e7f5;
+    }
+
+    .session-box {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 18px;
+      background: #f8fafc;
+      border: 1px solid #e9eff6;
+      display: none;
+    }
+
+    .session-box.show {
+      display: block;
+    }
+
+    .session-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #0f4c81;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .session-meta {
+      text-align: center;
+      color: #475569;
+      font-size: 13px;
+      line-height: 1.9;
+      font-weight: 700;
+    }
+
+    .session-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .mini-btn {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      background: #edf4fb;
+      color: #0f4c81;
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.9;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        align-items: flex-start;
+      }
+
+      .azha-brand-header {
+        padding: 12px 14px;
+        margin-bottom: 16px;
+      }
+
+      .azha-brand-header img {
+        height: 34px;
+      }
+
+      .azha-brand-title strong {
+        font-size: 12px;
+      }
+
+      .azha-brand-title span {
+        font-size: 9px;
+      }
+
+      .card {
+        grid-template-columns: 1fr;
+      }
+
+      .card::after,
+      .form-card::after {
+        font-size: 62px;
+      }
+
+      .hero {
+        padding: 28px 22px;
+      }
+
+      .hero h1 {
+        font-size: 28px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        padding: 22px 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <header class="azha-brand-header">
+      <img src="../ASSETS/azha-logo.png" alt="Azha Logo">
+      <div class="azha-brand-title">
+        <strong>AZHA Enterprise Security System</strong>
+        <span>Community Security Operating System</span>
+      </div>
+    </header>
+
+    <div class="card">
+      <img class="madaar-card-logo" src="../ASSETS/madaar-logo.png" alt="Madaar Logo">
+
+      <section class="hero">
+        <div class="hero-badge">AZHA COMMUNITY • SECURITY ACCESS</div>
+        <h1>Security Team Access Gateway</h1>
+        <p>Official access point for internal security operations, gate verification, monitoring, and role-based
+          control.</p>
+
+        <div class="hero-grid">
+          <div class="hero-mini">
+            <div class="k">Access</div>
+            <div class="v">Role-based security permissions</div>
+          </div>
+          <div class="hero-mini">
+            <div class="k">Operations</div>
+            <div class="v">Dashboard • Gate Console</div>
+          </div>
+          <div class="hero-mini">
+            <div class="k">Roles</div>
+            <div class="v">Admin / Supervisor / Viewer / Guard / Scanner</div>
+          </div>
+          <div class="hero-mini">
+            <div class="k">Sessions</div>
+            <div class="v">Managed session verification</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="brandline">AZHA INTERNAL SECURITY SYSTEM</div>
+
+        <div class="form-card">
+          <img class="madaar-card-logo" src="../ASSETS/madaar-logo.png" alt="Madaar Logo">
+          <div class="title">Secure Login</div>
+          <div class="subtitle">Enter your credentials to access the operational modules assigned to your role.</div>
+
+          <div class="field">
+            <label class="label" for="username">Username</label>
+            <div class="input-wrap">
+              <input id="username" type="text" placeholder="Username" autocomplete="username" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="password">Password</label>
+            <div class="input-wrap">
+              <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
+              <button class="toggle" type="button" id="togglePassword">👁️</button>
+            </div>
+            <div class="hint">Credentials are verified through the secure backend.</div>
+          </div>
+
+          <button class="btn btn-primary" id="loginBtn">Access System</button>
+
+          <div id="statusBox" class="status"></div>
+
+          <div id="sessionBox" class="session-box">
+            <div class="session-title">Valid session detected</div>
+            <div id="sessionMeta" class="session-meta"></div>
+            <div class="session-actions">
+              <button class="mini-btn" id="continueBtn">Continue</button>
+            </div>
+          </div>
+
+          <div class="footer-note">
+            Final routing is controlled by account permissions and active security role.
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="../JS/core/config.js"></script>
+  <script src="../JS/core/auth.js"></script>
+  <script src="../JS/api/client.js"></script>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const usernameInput = document.getElementById("username");
+      const passwordInput = document.getElementById("password");
+      const loginBtn = document.getElementById("loginBtn");
+      const statusBox = document.getElementById("statusBox");
+      const sessionBox = document.getElementById("sessionBox");
+      const sessionMeta = document.getElementById("sessionMeta");
+      const continueBtn = document.getElementById("continueBtn");
+      const togglePasswordBtn = document.getElementById("togglePassword");
+
+      let isLoggingIn = false;
+      let sessionVerificationInProgress = false;
+
+      function isReady() {
+        return !!(window.AZHA_CONFIG && window.AzhaAuth && window.AzhaApi);
+      }
+
+      function setStatus(type, message) {
+        statusBox.className = "status show " + (type || "info");
+        statusBox.textContent = message || "";
+      }
+
+      function clearStatus() {
+        statusBox.className = "status";
+        statusBox.textContent = "";
+      }
+
+      function setBusy(value) {
+        isLoggingIn = !!value;
+        loginBtn.disabled = isLoggingIn;
+        loginBtn.textContent = isLoggingIn ? "Signing in..." : "Access System";
+      }
+
+      function hideExistingSession() {
+        sessionBox.classList.remove("show");
+        sessionMeta.textContent = "";
+      }
+
+      function escapeHtml(value) {
+        return String(value || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function getDeviceInfo() {
+        return [
+          "platform:" + (navigator.platform || ""),
+          "language:" + (navigator.language || ""),
+          "timezone:" + (Intl.DateTimeFormat().resolvedOptions().timeZone || ""),
+          "userAgent:" + (navigator.userAgent || "")
+        ].join(" | ").substring(0, 700);
+      }
+
+      function normalizeLoginPayload(data, existingToken) {
+        data = data || {};
+        return {
+          token: data.token || data.sessionToken || existingToken || "",
+          role: data.role || "",
+          username: data.username || "",
+          fullName: data.fullName || data.name || "",
+          gateName: data.gateName || "",
+          gateLocation: data.gateLocation || ""
+        };
+      }
+
+      function showExistingSession(data) {
+        sessionMeta.innerHTML = `
+          ${escapeHtml(data.fullName || data.username || "-")}<br>
+          ${escapeHtml(data.role || "-")}<br>
+          ${escapeHtml(data.gateName || "-")} • ${escapeHtml(data.gateLocation || "-")}
+        `;
+        sessionBox.classList.add("show");
+      }
+
+      function continueSession() {
+        if (window.AzhaAuth && AzhaAuth.redirectByRole) {
+          AzhaAuth.redirectByRole();
+        }
+      }
+
+      function handleSessionRejected() {
+        if (window.AzhaAuth && AzhaAuth.clearSession) {
+          AzhaAuth.clearSession();
+        }
+        hideExistingSession();
+      }
+
+      async function verifyExistingSession() {
+        if (sessionVerificationInProgress) return;
+
+        hideExistingSession();
+
+        if (!isReady()) {
+          setStatus("err", "System modules are not available.");
+          return;
+        }
+
+        const token = AzhaAuth.getToken ? AzhaAuth.getToken() : "";
+
+        if (!token) return;
+
+        sessionVerificationInProgress = true;
+
+        try {
+          const res = await AzhaApi.get({
+            action: "verifySession",
+            sessionToken: token
+          });
+
+          if (!res || !res.success || !res.data) {
+            handleSessionRejected();
+            return;
+          }
+
+          const sessionPayload = normalizeLoginPayload(res.data, token);
+          AzhaAuth.saveSession(sessionPayload);
+
+          showExistingSession(sessionPayload);
+          setStatus("ok", "Valid session detected.");
+        } catch (error) {
+          console.error("Session verification error:", error);
+          handleSessionRejected();
+        } finally {
+          sessionVerificationInProgress = false;
+        }
+      }
+
+      function validateLoginInput(username, password) {
+        if (!username || !password) {
+          return "Please enter username and password.";
+        }
+
+        if (username.length < 2) {
+          return "Username is too short.";
+        }
+
+        if (password.length < 3) {
+          return "Password is too short.";
+        }
+
+        return "";
+      }
+
+      async function login() {
+        if (isLoggingIn) return;
+
+        clearStatus();
+        hideExistingSession();
+
+        if (!isReady()) {
+          setStatus("err", "System modules are not available.");
+          return;
+        }
+
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+        const validationError = validateLoginInput(username, password);
+
+        if (validationError) {
+          setStatus("err", validationError);
+          return;
+        }
+
+        setBusy(true);
+        setStatus("info", "Verifying credentials...");
+
+        try {
+          const res = await AzhaApi.post({
+            action: "login",
+            username: username,
+            password: password,
+            deviceInfo: getDeviceInfo()
+          });
+
+          if (!res || !res.success || !res.data) {
+            setStatus("err", (res && res.message) || "Login failed.");
+            return;
+          }
+
+          const sessionPayload = normalizeLoginPayload(res.data);
+          AzhaAuth.saveSession(sessionPayload);
+
+          setStatus("ok", "Login successful.");
+
+          setTimeout(function () {
+            AzhaAuth.redirectByRole();
+          }, 350);
+        } catch (error) {
+          console.error("Login error:", error);
+          setStatus("err", "A system connection error occurred.");
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      function initEvents() {
+        togglePasswordBtn.addEventListener("click", function () {
+          passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+          togglePasswordBtn.textContent = passwordInput.type === "password" ? "👁️" : "🙈";
+        });
+
+        loginBtn.addEventListener("click", login);
+
+        passwordInput.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") login();
+        });
+
+        usernameInput.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") passwordInput.focus();
+        });
+
+        continueBtn.addEventListener("click", continueSession);
+      }
+
+      function init() {
+        initEvents();
+
+        if (!isReady()) {
+          setStatus("err", "Core modules failed to load.");
+          return;
+        }
+
+        verifyExistingSession();
+      }
+
+      init();
+    })();
+  </script>
+</body>
+
+</html>
