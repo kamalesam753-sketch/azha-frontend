@@ -1,0 +1,28 @@
+{
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/PAGES/security-login.html"
+    },
+    {
+      "src": "/login",
+      "dest": "/PAGES/security-login.html"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/PAGES/dashboard.html"
+    },
+    {
+      "src": "/gate",
+      "dest": "/PAGES/gate.html"
+    },
+    {
+      "src": "/client",
+      "dest": "/PAGES/client.html"
+    },
+    {
+      "src": "/permit",
+      "dest": "/PAGES/index.html"
+    }
+  ]
+}
