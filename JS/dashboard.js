@@ -9,7 +9,7 @@
   "use strict";
 
   const API_BASE =
-    (window.AZHA_CONFIG && (AZHA_CONFIG.API_BASE || (AZHA_CONFIG.API && AZHA_CONFIG.API.BASE_URL))) ||
+    (window.AZHA_CONFIG && (AZHA_CONFIG.API_BASE || (window.AZHA_CONFIG.API && window.AZHA_CONFIG.API.BASE_URL))) ||
     "https://azha-backend-production.up.railway.app/api";
 
   const svc = {
@@ -93,11 +93,8 @@
     else alert(msg);
   }
 
-  function getClientBasePath() {
-    if (window.location.pathname.includes("/PAGES/")) {
-      return window.location.origin + "/PAGES/";
-    }
-    return window.location.origin + "/";
+  function cleanClientLink(token) {
+    return window.location.origin + "/client?token=" + encodeURIComponent(token);
   }
 
   async function copyText(text) {
@@ -128,13 +125,16 @@
   window.loadAdminPermits = async function (showMsg) {
     try {
       const res = await AdminPermitService.getAll();
+
       if (!(res && res.success)) {
         toast("err", (res && res.message) || "Failed to load permits.");
         return;
       }
+
       adminPermits = res.data || [];
       renderAdminPermits(adminPermits);
       renderAdminPermitSummary(adminPermits);
+
       if (showMsg) toast("ok", "Admin permits refreshed.");
     } catch (e) {
       toast("err", "System error loading permits.");
@@ -213,6 +213,7 @@
   };
 
   let searchTimer = null;
+
   setTimeout(function () {
     const el = document.getElementById("adminPermitSearch");
     if (el) {
@@ -225,6 +226,7 @@
 
   window.openAdminPermitModal = function () {
     editingPermitId = null;
+
     const modal = document.getElementById("adminPermitModal");
     const title = document.getElementById("adminPermitModalTitle");
     const form = document.getElementById("adminPermitForm");
@@ -247,6 +249,7 @@
 
   window.editAdminPermit = function (permitId) {
     const p = adminPermits.find((x) => (x.permitId || x._id) === permitId);
+
     if (!p) {
       toast("err", "Permit not found.");
       return;
@@ -338,20 +341,20 @@
         return;
       }
 
-      const clientLink = getClientBasePath() + "/client?token=" + encodeURIComponent(token);
+      const clientLink = cleanClientLink(token);
       window.lastGeneratedClientLink = clientLink;
 
       const copied = await copyText(clientLink);
+
+      if (typeof showNotice === "function") {
+        showNotice("ok", "Client Card Link: " + clientLink, false);
+      }
 
       if (copied) {
         toast("ok", "Client card link generated and copied.");
       } else {
         prompt("Copy client card link:", clientLink);
         toast("ok", "Client card link generated.");
-      }
-
-      if (typeof showNotice === "function") {
-        showNotice("ok", "Client Card Link: " + clientLink, false);
       }
     } catch (e) {
       toast("err", "System error generating client card link.");

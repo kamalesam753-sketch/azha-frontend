@@ -1925,6 +1925,107 @@
         width: 100%
       }
     }
+  
+
+    /* ================================
+       FINAL BRANDING + WORKSPACE FIX
+       Clean navy identity, no random tiny logo boxes
+    ================================= */
+    .azha-brand-header{
+      min-height: 78px;
+      border-bottom-color: rgba(25,119,181,.38) !important;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .azha-brand-header > img{
+      display:none !important;
+    }
+
+    .azha-brand-header::after{
+      content:"AZHA";
+      position:absolute;
+      right:26px;
+      top:50%;
+      transform:translateY(-50%);
+      font-size:34px;
+      font-weight:900;
+      letter-spacing:.08em;
+      color:rgba(255,255,255,.90);
+      text-shadow:0 10px 28px rgba(0,0,0,.20);
+      pointer-events:none;
+    }
+
+    .azha-brand-header::before{
+      content:"";
+      position:absolute;
+      right:-42px;
+      top:-62px;
+      width:210px;
+      height:210px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(25,119,181,.34), rgba(255,255,255,.06) 42%, transparent 70%);
+      pointer-events:none;
+    }
+
+    .azha-brand-title{align-items:flex-start;text-align:left;padding-right:145px;}
+    .azha-brand-title strong{font-size:18px;letter-spacing:.03em;}
+    .azha-brand-title span{color:rgba(255,255,255,.78);}
+
+    .brand-logos{display:none !important;}
+
+    .section-head::before{display:none !important;}
+
+    .logo-chip img,
+    .section-head img,
+    .section .madaar-card-logo{
+      display:none !important;
+    }
+
+    .brand{
+      min-height:172px;
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,.16), transparent 30%),
+        linear-gradient(135deg, #082d4b, #0f4c81 58%, #1977b5) !important;
+    }
+
+    .brand::before{
+      content:"AZHA";
+      position:absolute;
+      left:20px;
+      bottom:16px;
+      font-size:42px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:.10em;
+      color:rgba(255,255,255,.13);
+      pointer-events:none;
+    }
+
+    .brand::after{
+      opacity:.10 !important;
+      font-size:58px !important;
+      right:18px !important;
+      bottom:12px !important;
+    }
+
+    .main{width:100%;max-width:none;}
+    .section{width:100%;max-width:none;}
+    body.page-mode .dashboard-page-visible{width:100% !important;max-width:none !important;}
+    body.page-mode .section-body{width:100%;}
+
+    body.page-mode .grid-2.dashboard-page-visible,
+    body.page-mode .grid-2{width:100%;max-width:none;}
+
+    .admin-row-actions{gap:8px;}
+    .admin-action-btn.reset{background:#e0e7ff;color:#3730a3;border:1px solid #c7d2fe;}
+
+    @media(max-width:700px){
+      .azha-brand-header::after{font-size:24px;right:18px;}
+      .azha-brand-title{padding-right:105px;}
+      .azha-brand-title strong{font-size:14px;}
+    }
+
   </style>
 </head>
 
@@ -2563,6 +2664,168 @@
               <div class="admin-modal-actions">
                 <button type="submit" class="btn btn-primary" id="adminSaveBtn">Save Permit</button>
                 <button type="button" class="btn btn-soft" onclick="closeAdminPermitModal()">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+
+      <section class="section admin-panel-rtl manager-access" id="adminUsersSection">
+        <div class="section-head">
+          <div class="section-head-main">
+            <h2 class="section-title">Security Users</h2>
+            <p class="section-sub">Enterprise user administration workspace for creating, editing, and managing security personnel accounts and role assignments.</p>
+          </div>
+          <div class="section-head-actions">
+            <button class="btn btn-primary btn-small" onclick="openAdminUserModal()">➕ Add User</button>
+            <button class="btn btn-light btn-small" onclick="loadAdminUsers(true)">Refresh Users</button>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="table-wrap admin-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Full Name</th>
+                  <th>Role</th>
+                  <th>Gate</th>
+                  <th>Location</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminUsersTableBody">
+                <tr><td colspan="7" class="empty">Loading users...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <div class="admin-modal-backdrop" id="adminUserModal" onclick="handleAdminUserModalBackdrop(event)">
+        <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="adminUserModalTitle">
+          <div class="admin-modal-head">
+            <h3 class="admin-modal-title" id="adminUserModalTitle">Add Security User</h3>
+            <p class="admin-modal-sub">Create or update a secured dashboard/gate account with role and gate assignment.</p>
+          </div>
+          <div class="admin-modal-body">
+            <form id="adminUserForm" onsubmit="saveAdminUser(event)">
+              <div class="admin-form-grid">
+                <div class="field">
+                  <div class="field-label">Username</div>
+                  <input id="adminUserUsername" class="input" type="text" required placeholder="Username" />
+                </div>
+                <div class="field">
+                  <div class="field-label">Full Name</div>
+                  <input id="adminUserFullName" class="input" type="text" placeholder="Full name" />
+                </div>
+                <div class="field" id="adminUserPasswordField">
+                  <div class="field-label">Password</div>
+                  <input id="adminUserPassword" class="input" type="password" placeholder="Password" />
+                </div>
+                <div class="field">
+                  <div class="field-label">Role</div>
+                  <select id="adminUserRole" class="select">
+                    <option value="admin">admin</option>
+                    <option value="supervisor">supervisor</option>
+                    <option value="viewer">viewer</option>
+                    <option value="guard">guard</option>
+                    <option value="scanner">scanner</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <div class="field-label">Gate Name</div>
+                  <input id="adminUserGateName" class="input" type="text" placeholder="Main Gate" />
+                </div>
+                <div class="field">
+                  <div class="field-label">Gate Location</div>
+                  <input id="adminUserGateLocation" class="input" type="text" placeholder="HQ / Beach / Main" />
+                </div>
+                <div class="field">
+                  <div class="field-label">Status</div>
+                  <select id="adminUserStatus" class="select">
+                    <option value="active">active</option>
+                    <option value="inactive">inactive</option>
+                    <option value="disabled">disabled</option>
+                  </select>
+                </div>
+              </div>
+              <div class="admin-modal-actions">
+                <button type="submit" class="btn btn-primary">Save User</button>
+                <button type="button" class="btn btn-soft" onclick="closeAdminUserModal()">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <section class="section admin-panel-rtl manager-access" id="adminGatesSection">
+        <div class="section-head">
+          <div class="section-head-main">
+            <h2 class="section-title">Gates Registry</h2>
+            <p class="section-sub">Central registry for all physical and virtual gate access points within the enterprise security perimeter.</p>
+          </div>
+          <div class="section-head-actions">
+            <button class="btn btn-primary btn-small" onclick="openAdminGateModal()">➕ Add Gate</button>
+            <button class="btn btn-light btn-small" onclick="loadAdminGates(true)">Refresh Gates</button>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="table-wrap admin-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Location</th>
+                  <th>Description</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminGatesTableBody">
+                <tr><td colspan="5" class="empty">Loading gates...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <div class="admin-modal-backdrop" id="adminGateModal" onclick="handleAdminGateModalBackdrop(event)">
+        <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="adminGateModalTitle">
+          <div class="admin-modal-head">
+            <h3 class="admin-modal-title" id="adminGateModalTitle">Add Gate</h3>
+            <p class="admin-modal-sub">Create or update a gate registry record used by security users and scan logs.</p>
+          </div>
+          <div class="admin-modal-body">
+            <form id="adminGateForm" onsubmit="saveAdminGate(event)">
+              <div class="admin-form-grid">
+                <div class="field">
+                  <div class="field-label">Gate Name</div>
+                  <input id="adminGateName" class="input" type="text" required placeholder="Main Gate" />
+                </div>
+                <div class="field">
+                  <div class="field-label">Location</div>
+                  <input id="adminGateLocation" class="input" type="text" placeholder="Main / Beach / HQ" />
+                </div>
+                <div class="field">
+                  <div class="field-label">Description</div>
+                  <input id="adminGateDescription" class="input" type="text" placeholder="Entrance Gate" />
+                </div>
+                <div class="field">
+                  <div class="field-label">Status</div>
+                  <select id="adminGateStatus" class="select">
+                    <option value="active">active</option>
+                    <option value="inactive">inactive</option>
+                    <option value="disabled">disabled</option>
+                  </select>
+                </div>
+              </div>
+              <div class="admin-modal-actions">
+                <button type="submit" class="btn btn-primary">Save Gate</button>
+                <button type="button" class="btn btn-soft" onclick="closeAdminGateModal()">Cancel</button>
               </div>
             </form>
           </div>
@@ -4149,7 +4412,7 @@
           const basePath = window.location.pathname.indexOf("/PAGES/") !== -1 ? window.location.origin + "/PAGES/" : window.location.origin + "/";
           const clientLink = returnedUrl && returnedUrl.indexOf("http") === 0
             ? returnedUrl
-            : (basePath + "/client?token=" + encodeURIComponent(token));
+            : (window.location.origin + "/client?token=" + encodeURIComponent(token));
 
           window.lastGeneratedClientLink = clientLink;
           const copied = await copyClientText(clientLink);
