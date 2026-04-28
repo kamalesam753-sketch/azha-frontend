@@ -14,12 +14,12 @@
     API_BASE: API_BASE_URL,
 
     ROUTES: {
-      login: "security-login.html",
-      dashboard: "dashboard.html",
-      gate: "gate.html",
-      permitPreview: "index.html",
-      client: "client.html",
-      clientCard: "client.html"
+      login: "/login",
+      dashboard: "/dashboard",
+      gate: "/gate",
+      permitPreview: "/permit",
+      client: "/client",
+      clientCard: "/client"
     },
 
     STORAGE: {

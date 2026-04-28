@@ -1250,7 +1250,7 @@
     }
 
     function redirectToLogin() {
-      location.href = getRoute("login", "security-login.html");
+      location.href = getRoute("login", "/login");
     }
 
     function escapeHtml(value) {
@@ -1392,7 +1392,7 @@
     }
 
     function buildPreviewUrlFromToken(secureToken) {
-      const previewRoute = getRoute("permitPreview", "index.html");
+      const previewRoute = getRoute("permitPreview", "/permit");
       return previewRoute + "?token=" + encodeURIComponent(secureToken || "") + "&mode=preview";
     }
 
@@ -1831,7 +1831,7 @@
     }
 
     function goDashboard() {
-      location.href = getRoute("dashboard", "dashboard.html");
+      location.href = getRoute("dashboard", "/dashboard");
     }
 
     function requireSecurityAccess() {
@@ -1867,8 +1867,8 @@
 
           if (!permissions.canAccessGate) {
             location.href = permissions.defaultRoute === "dashboard"
-              ? getRoute("dashboard", "dashboard.html")
-              : getRoute("login", "security-login.html");
+              ? getRoute("dashboard", "/dashboard")
+              : getRoute("login", "/login");
             return;
           }
 

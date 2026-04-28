@@ -94,7 +94,7 @@
 
     redirectToLogin: function () {
       this.clearSession();
-      window.location.replace(this.getRoute("login", "security-login.html"));
+      window.location.replace(this.getRoute("login", "/login"));
     },
 
     redirectByRole: function () {
@@ -105,12 +105,12 @@
       const dashboardRoles = roles.DASHBOARD || ["admin", "supervisor", "viewer"];
 
       if (gateRoles.includes(role)) {
-        window.location.replace(this.getRoute("gate", "gate.html"));
+        window.location.replace(this.getRoute("gate", "/gate"));
         return;
       }
 
       if (dashboardRoles.includes(role)) {
-        window.location.replace(this.getRoute("dashboard", "dashboard.html"));
+        window.location.replace(this.getRoute("dashboard", "/dashboard"));
         return;
       }
 

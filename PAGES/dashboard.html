@@ -2883,7 +2883,7 @@
 
     function goGate() {
       if (currentPermissions.canOpenGateFromDashboard) {
-        location.href = ((window.AZHA_CONFIG && AZHA_CONFIG.ROUTES && AZHA_CONFIG.ROUTES.gate) || "gate.html");
+        location.href = ((window.AZHA_CONFIG && AZHA_CONFIG.ROUTES && AZHA_CONFIG.ROUTES.gate) || "/gate");
       }
     }
 
@@ -2959,7 +2959,7 @@
       const token = AzhaAuth.getToken();
       AzhaAuth.clearSession();
 
-      const loginRoute = (window.AZHA_CONFIG && AZHA_CONFIG.ROUTES && AZHA_CONFIG.ROUTES.login) || "security-login.html";
+      const loginRoute = (window.AZHA_CONFIG && AZHA_CONFIG.ROUTES && AZHA_CONFIG.ROUTES.login) || "/login";
 
       if (token) {
         AzhaDashboardServices.logout(token).finally(() => {
@@ -2972,7 +2972,7 @@
     }
 
     function openPermitPreview(permitId) {
-      location.href = (((window.AZHA_CONFIG && AZHA_CONFIG.ROUTES && AZHA_CONFIG.ROUTES.permitPreview) || "index.html") + "?id=" + encodeURIComponent(permitId) + "&mode=preview");
+      location.href = (((window.AZHA_CONFIG && AZHA_CONFIG.ROUTES && AZHA_CONFIG.ROUTES.permitPreview) || "/permit") + "?id=" + encodeURIComponent(permitId) + "&mode=preview");
     }
 
     function updateClock() {
@@ -3025,7 +3025,7 @@
         applyDashboardPermissions(res.data.permissions || {});
 
         if (!currentPermissions.canAccessDashboard) {
-          location.href = currentPermissions.defaultRoute === "gate" ? (((window.AZHA_CONFIG && AZHA_CONFIG.ROUTES && AZHA_CONFIG.ROUTES.gate) || "gate.html")) : (((window.AZHA_CONFIG && AZHA_CONFIG.ROUTES && AZHA_CONFIG.ROUTES.login) || "security-login.html"));
+          location.href = currentPermissions.defaultRoute === "gate" ? (((window.AZHA_CONFIG && AZHA_CONFIG.ROUTES && AZHA_CONFIG.ROUTES.gate) || "/gate")) : (((window.AZHA_CONFIG && AZHA_CONFIG.ROUTES && AZHA_CONFIG.ROUTES.login) || "/login"));
           return false;
         }
 
@@ -4149,7 +4149,7 @@
           const basePath = window.location.pathname.indexOf("/PAGES/") !== -1 ? window.location.origin + "/PAGES/" : window.location.origin + "/";
           const clientLink = returnedUrl && returnedUrl.indexOf("http") === 0
             ? returnedUrl
-            : (basePath + "client.html?token=" + encodeURIComponent(token));
+            : (basePath + "/client?token=" + encodeURIComponent(token));
 
           window.lastGeneratedClientLink = clientLink;
           const copied = await copyClientText(clientLink);

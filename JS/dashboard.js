@@ -338,7 +338,7 @@
         return;
       }
 
-      const clientLink = getClientBasePath() + "client.html?token=" + encodeURIComponent(token);
+      const clientLink = getClientBasePath() + "/client?token=" + encodeURIComponent(token);
       window.lastGeneratedClientLink = clientLink;
 
       const copied = await copyText(clientLink);
