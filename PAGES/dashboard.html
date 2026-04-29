@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" dir="ltr">
 
 <head>
@@ -2289,10 +2289,10 @@
               <div class="field-label">Status</div>
               <select id="scanStatus" class="select">
                 <option value="">All Statuses</option>
-                <option value="ساري">Active</option>
-                <option value="انتهى">Expired</option>
-                <option value="لم يبدأ">Not Started</option>
-                <option value="آخر يوم ساري">Last Valid Day</option>
+                <option value="Ø³Ø§Ø±ÙŠ">Active</option>
+                <option value="Ø§Ù†ØªÙ‡Ù‰">Expired</option>
+                <option value="Ù„Ù… ÙŠØ¨Ø¯Ø£">Not Started</option>
+                <option value="Ø¢Ø®Ø± ÙŠÙˆÙ… Ø³Ø§Ø±ÙŠ">Last Valid Day</option>
               </select>
             </div>
             <div class="field">
@@ -2562,7 +2562,7 @@
             <p class="section-sub">Enterprise permit administration workspace for creating, editing, deleting, and supervising permit records through the secured backend API.</p>
           </div>
           <div class="section-head-actions">
-            <button class="btn btn-primary btn-small" onclick="openAdminPermitModal()">➕ Add Permit</button>
+            <button class="btn btn-primary btn-small" onclick="openAdminPermitModal()">âž• Add Permit</button>
             <button class="btn btn-light btn-small" onclick="loadAdminPermits(true)">Refresh Permits</button>
           </div>
         </div>
@@ -2576,10 +2576,10 @@
 
           <div class="admin-toolbar">
             <div class="admin-search-wrap">
-              <input id="adminPermitSearch" class="input" type="text" placeholder="بحث بالوحدة / اسم المستأجر / الهاتف / رقم السيارة / الحالة" />
+              <input id="adminPermitSearch" class="input" type="text" placeholder="Ø¨Ø­Ø« Ø¨Ø§Ù„ÙˆØ­Ø¯Ø© / Ø§Ø³Ù… Ø§Ù„Ù…Ø³ØªØ£Ø¬Ø± / Ø§Ù„Ù‡Ø§ØªÙ / Ø±Ù‚Ù… Ø§Ù„Ø³ÙŠØ§Ø±Ø© / Ø§Ù„Ø­Ø§Ù„Ø©" />
               <button class="btn btn-soft" onclick="resetAdminPermitSearch()">Reset</button>
             </div>
-            <button class="btn btn-primary" onclick="openAdminPermitModal()">➕ Add Permit</button>
+            <button class="btn btn-primary" onclick="openAdminPermitModal()">âž• Add Permit</button>
           </div>
 
           <div class="table-wrap admin-table">
@@ -2610,7 +2610,7 @@
       <div class="admin-modal-backdrop" id="adminPermitModal" onclick="handleAdminModalBackdrop(event)">
         <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="adminPermitModalTitle">
           <div class="admin-modal-head">
-            <h3 class="admin-modal-title" id="adminPermitModalTitle">إضافة تصريح</h3>
+            <h3 class="admin-modal-title" id="adminPermitModalTitle">Ø¥Ø¶Ø§ÙØ© ØªØµØ±ÙŠØ­</h3>
             <p class="admin-modal-sub">Manage permit record data without leaving the enterprise dashboard workspace.</p>
           </div>
           <div class="admin-modal-body">
@@ -2646,18 +2646,18 @@
                   <select id="adminPaymentStatus" class="select">
                     <option value="paid">Paid</option>
                     <option value="unpaid">Unpaid</option>
-                    <option value="تم الدفع">تم الدفع</option>
-                    <option value="لم يتم الدفع">لم يتم الدفع</option>
+                    <option value="ØªÙ… Ø§Ù„Ø¯ÙØ¹">ØªÙ… Ø§Ù„Ø¯ÙØ¹</option>
+                    <option value="Ù„Ù… ÙŠØªÙ… Ø§Ù„Ø¯ÙØ¹">Ù„Ù… ÙŠØªÙ… Ø§Ù„Ø¯ÙØ¹</option>
                   </select>
                 </div>
                 <div class="field">
                   <div class="field-label">Operational Status</div>
                   <select id="adminOperationalStatus" class="select">
-                    <option value="ساري">ساري</option>
-                    <option value="لم يبدأ">لم يبدأ</option>
-                    <option value="آخر يوم ساري">آخر يوم ساري</option>
-                    <option value="انتهى">انتهى</option>
-                    <option value="غير محدد">غير محدد</option>
+                    <option value="Ø³Ø§Ø±ÙŠ">Ø³Ø§Ø±ÙŠ</option>
+                    <option value="Ù„Ù… ÙŠØ¨Ø¯Ø£">Ù„Ù… ÙŠØ¨Ø¯Ø£</option>
+                    <option value="Ø¢Ø®Ø± ÙŠÙˆÙ… Ø³Ø§Ø±ÙŠ">Ø¢Ø®Ø± ÙŠÙˆÙ… Ø³Ø§Ø±ÙŠ</option>
+                    <option value="Ø§Ù†ØªÙ‡Ù‰">Ø§Ù†ØªÙ‡Ù‰</option>
+                    <option value="ØºÙŠØ± Ù…Ø­Ø¯Ø¯">ØºÙŠØ± Ù…Ø­Ø¯Ø¯</option>
                   </select>
                 </div>
               </div>
@@ -2679,7 +2679,7 @@
             <p class="section-sub">Enterprise user administration workspace for creating, editing, and managing security personnel accounts and role assignments.</p>
           </div>
           <div class="section-head-actions">
-            <button class="btn btn-primary btn-small" onclick="openAdminUserModal()">➕ Add User</button>
+            <button class="btn btn-primary btn-small" onclick="openAdminUserModal()">âž• Add User</button>
             <button class="btn btn-light btn-small" onclick="loadAdminUsers(true)">Refresh Users</button>
           </div>
         </div>
@@ -2769,7 +2769,7 @@
             <p class="section-sub">Central registry for all physical and virtual gate access points within the enterprise security perimeter.</p>
           </div>
           <div class="section-head-actions">
-            <button class="btn btn-primary btn-small" onclick="openAdminGateModal()">➕ Add Gate</button>
+            <button class="btn btn-primary btn-small" onclick="openAdminGateModal()">âž• Add Gate</button>
             <button class="btn btn-light btn-small" onclick="loadAdminGates(true)">Refresh Gates</button>
           </div>
         </div>
@@ -3125,7 +3125,7 @@
       const container = document.getElementById("toastContainer");
       const toast = document.createElement("div");
       toast.className = "toast " + (type || "info");
-      const icons = { ok: "✅", err: "❌", info: "ℹ️", warn: "⚠️" };
+      const icons = { ok: "âœ…", err: "âŒ", info: "â„¹ï¸", warn: "âš ï¸" };
       toast.innerHTML = '<span class="toast-icon">' + (icons[type] || icons.info) + '</span><span class="toast-text">' + escapeHtml(message || "") + '</span>';
       container.appendChild(toast);
       setTimeout(() => {
@@ -3252,11 +3252,11 @@
       const msg = String((res && res.message) || "").toLowerCase();
       return (
         msg.includes("session") ||
-        msg.includes("الجلسة") ||
+        msg.includes("Ø§Ù„Ø¬Ù„Ø³Ø©") ||
         msg.includes("expired") ||
-        msg.includes("انتهت صلاحية") ||
-        msg.includes("غير موجودة") ||
-        msg.includes("غير نشطة")
+        msg.includes("Ø§Ù†ØªÙ‡Øª ØµÙ„Ø§Ø­ÙŠØ©") ||
+        msg.includes("ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯Ø©") ||
+        msg.includes("ØºÙŠØ± Ù†Ø´Ø·Ø©")
       );
     }
 
@@ -3294,9 +3294,9 @@
 
         document.getElementById("sessionName").textContent = res.data.fullName || res.data.username || "-";
         document.getElementById("sessionRole").textContent = "Role: " + (res.data.role || "-");
-        document.getElementById("sessionGate").textContent = (res.data.gateName || "-") + " • " + (res.data.gateLocation || "-");
+        document.getElementById("sessionGate").textContent = (res.data.gateName || "-") + " â€¢ " + (res.data.gateLocation || "-");
         document.getElementById("topRole").textContent = "Role: " + (res.data.role || "-");
-        document.getElementById("topGate").textContent = "Gate: " + (res.data.gateName || "-") + " • " + (res.data.gateLocation || "-");
+        document.getElementById("topGate").textContent = "Gate: " + (res.data.gateName || "-") + " â€¢ " + (res.data.gateLocation || "-");
         return true;
       } catch (error) {
         AzhaAuth.redirectToLogin();
@@ -3337,36 +3337,36 @@
         .trim()
         .toLowerCase()
         .replace(/\s+/g, " ")
-        .replace(/[أإآ]/g, "ا")
-        .replace(/ة/g, "ه")
-        .replace(/ى/g, "ي");
+        .replace(/[Ø£Ø¥Ø¢]/g, "Ø§")
+        .replace(/Ø©/g, "Ù‡")
+        .replace(/Ù‰/g, "ÙŠ");
     }
 
     function translateStatusArabicToEnglish(value) {
       const v = normalizeArabic(value);
-      if (v.includes("اخر يوم ساري")) return "Last Valid Day";
-      if (v.includes("ساري")) return "Active";
-      if (v.includes("لم يبدا")) return "Not Started";
-      if (v.includes("يبدا غدا")) return "Starts Tomorrow";
-      if (v.includes("انتهى") || v.includes("انتهي") || v.includes("منتهي")) return "Expired";
+      if (v.includes("Ø§Ø®Ø± ÙŠÙˆÙ… Ø³Ø§Ø±ÙŠ")) return "Last Valid Day";
+      if (v.includes("Ø³Ø§Ø±ÙŠ")) return "Active";
+      if (v.includes("Ù„Ù… ÙŠØ¨Ø¯Ø§")) return "Not Started";
+      if (v.includes("ÙŠØ¨Ø¯Ø§ ØºØ¯Ø§")) return "Starts Tomorrow";
+      if (v.includes("Ø§Ù†ØªÙ‡Ù‰") || v.includes("Ø§Ù†ØªÙ‡ÙŠ") || v.includes("Ù…Ù†ØªÙ‡ÙŠ")) return "Expired";
       return value || "-";
     }
 
     function translatePaymentArabicToEnglish(value) {
       const v = normalizeArabic(value);
-      if (v.includes("تم الدفع") || v.includes("تم السداد") || v.includes("مدفوع") || v.includes("مسدد")) return "Paid";
-      if (v.includes("لم يتم الدفع") || v.includes("غير مدفوع") || v.includes("غير مسدد")) return "Unpaid";
+      if (v.includes("ØªÙ… Ø§Ù„Ø¯ÙØ¹") || v.includes("ØªÙ… Ø§Ù„Ø³Ø¯Ø§Ø¯") || v.includes("Ù…Ø¯ÙÙˆØ¹") || v.includes("Ù…Ø³Ø¯Ø¯")) return "Paid";
+      if (v.includes("Ù„Ù… ÙŠØªÙ… Ø§Ù„Ø¯ÙØ¹") || v.includes("ØºÙŠØ± Ù…Ø¯ÙÙˆØ¹") || v.includes("ØºÙŠØ± Ù…Ø³Ø¯Ø¯")) return "Unpaid";
       return value || "-";
     }
 
     function translateValidityTextToEnglish(value) {
       const v = normalizeArabic(value);
-      if (v.includes("صالح للدخول")) return "Valid for Entry";
-      if (v.includes("التصريح منتهي")) return "Permit Expired";
-      if (v.includes("لم يبدا بعد")) return "Not Started Yet";
-      if (v.includes("مراجعه السداد")) return "Payment Review";
-      if (v.includes("تصريح غير موجود")) return "Permit Not Found";
-      if (v.includes("رمز غير صالح")) return "Invalid Token";
+      if (v.includes("ØµØ§Ù„Ø­ Ù„Ù„Ø¯Ø®ÙˆÙ„")) return "Valid for Entry";
+      if (v.includes("Ø§Ù„ØªØµØ±ÙŠØ­ Ù…Ù†ØªÙ‡ÙŠ")) return "Permit Expired";
+      if (v.includes("Ù„Ù… ÙŠØ¨Ø¯Ø§ Ø¨Ø¹Ø¯")) return "Not Started Yet";
+      if (v.includes("Ù…Ø±Ø§Ø¬Ø¹Ù‡ Ø§Ù„Ø³Ø¯Ø§Ø¯")) return "Payment Review";
+      if (v.includes("ØªØµØ±ÙŠØ­ ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯")) return "Permit Not Found";
+      if (v.includes("Ø±Ù…Ø² ØºÙŠØ± ØµØ§Ù„Ø­")) return "Invalid Token";
       return value || "-";
     }
 
@@ -3428,7 +3428,7 @@
         return;
       }
 
-      const gateText = [data.gateName, data.gateLocation].filter(Boolean).join(" • ") || "-";
+      const gateText = [data.gateName, data.gateLocation].filter(Boolean).join(" â€¢ ") || "-";
 
       box.innerHTML = `
         <div class="latest-card ${escapeHtml(data.validityClass || "")}">
@@ -3438,8 +3438,8 @@
             Tenant: ${escapeHtml(data.tenant || "-")}<br>
             Unit: ${escapeHtml(data.unit || "-")}<br>
             Gate: ${escapeHtml(gateText)}<br>
-            User: ${escapeHtml(data.securityUsername || "-")} • ${escapeHtml(data.role || "-")}<br>
-            ${escapeHtml(translateStatusArabicToEnglish(data.statusArabic || "-"))} • ${escapeHtml(translatePaymentArabicToEnglish(data.paymentArabic || "-"))}<br>
+            User: ${escapeHtml(data.securityUsername || "-")} â€¢ ${escapeHtml(data.role || "-")}<br>
+            ${escapeHtml(translateStatusArabicToEnglish(data.statusArabic || "-"))} â€¢ ${escapeHtml(translatePaymentArabicToEnglish(data.paymentArabic || "-"))}<br>
             ${escapeHtml(data.timestamp || "-")}
           </div>
           <div class="metric-pair">
@@ -3531,7 +3531,7 @@
           <td>${escapeHtml(row[4] || "-")}</td>
           <td>${escapeHtml(row[11] || "-")}</td>
           <td>${escapeHtml(row[12] || "-")}</td>
-          <td>${escapeHtml((row[13] || "-") + " • " + (row[14] || "-"))}</td>
+          <td>${escapeHtml((row[13] || "-") + " â€¢ " + (row[14] || "-"))}</td>
         </tr>
       `).join("");
     }
@@ -3554,7 +3554,7 @@
           <button class="decision-btn reject" onclick='applyDecision("rejected", ${jsonPermitId})'>Reject</button>
           <button class="decision-btn review" onclick='applyDecision("review_required", ${jsonPermitId})'>Review</button>
           <button class="decision-btn payment" onclick='applyDecision("payment_issue", ${jsonPermitId})'>Payment</button>
-        ` : '<span style="color:var(--muted);font-size:11px">—</span>';
+        ` : '<span style="color:var(--muted);font-size:11px">â€”</span>';
 
         return `
         <tr>
@@ -3563,7 +3563,7 @@
           <td>${escapeHtml(formatDecision(row[2] || "-"))}</td>
           <td>${escapeHtml(row[3] || "-")}</td>
           <td>${escapeHtml(row[5] || row[4] || "-")}</td>
-          <td>${escapeHtml((row[7] || "-") + " • " + (row[8] || "-"))}</td>
+          <td>${escapeHtml((row[7] || "-") + " â€¢ " + (row[8] || "-"))}</td>
           <td style="white-space:nowrap">${applyBtns}</td>
         </tr>
       `;
@@ -3630,7 +3630,7 @@
         <tr>
           <td>${escapeHtml(item.fullName || item.username || "-")}</td>
           <td>${escapeHtml(item.role || "-")}</td>
-          <td>${escapeHtml((item.gateName || "-") + " • " + (item.gateLocation || "-"))}</td>
+          <td>${escapeHtml((item.gateName || "-") + " â€¢ " + (item.gateLocation || "-"))}</td>
           <td>${escapeHtml(item.createdAt || "-")}</td>
           <td>${escapeHtml(item.expiresAt || "-")}</td>
           <td>${escapeHtml(item.lastActivity || "-")}</td>
@@ -3761,20 +3761,20 @@
 
       mainFeed.innerHTML = mainRows.length ? mainRows.slice(0, 6).map((row) => `
         <div class="list-item">
-          <div class="list-item-title">${escapeHtml(translateValidityTextToEnglish(row.validityText || "-"))} — ${escapeHtml(row.permitId || "-")}</div>
+          <div class="list-item-title">${escapeHtml(translateValidityTextToEnglish(row.validityText || "-"))} â€” ${escapeHtml(row.permitId || "-")}</div>
           <div class="list-item-sub">
-            ${escapeHtml(row.tenant || "-")} • ${escapeHtml(row.unit || "-")}<br>
-            ${escapeHtml(row.securityUsername || "-")} • ${escapeHtml(row.timestamp || "-")}
+            ${escapeHtml(row.tenant || "-")} â€¢ ${escapeHtml(row.unit || "-")}<br>
+            ${escapeHtml(row.securityUsername || "-")} â€¢ ${escapeHtml(row.timestamp || "-")}
           </div>
         </div>
       `).join("") : `<div class="empty">No main gate rows for the current filter.</div>`;
 
       beachFeed.innerHTML = beachRows.length ? beachRows.slice(0, 6).map((row) => `
         <div class="list-item">
-          <div class="list-item-title">${escapeHtml(translateValidityTextToEnglish(row.validityText || "-"))} — ${escapeHtml(row.permitId || "-")}</div>
+          <div class="list-item-title">${escapeHtml(translateValidityTextToEnglish(row.validityText || "-"))} â€” ${escapeHtml(row.permitId || "-")}</div>
           <div class="list-item-sub">
-            ${escapeHtml(row.tenant || "-")} • ${escapeHtml(row.unit || "-")}<br>
-            ${escapeHtml(row.securityUsername || "-")} • ${escapeHtml(row.timestamp || "-")}
+            ${escapeHtml(row.tenant || "-")} â€¢ ${escapeHtml(row.unit || "-")}<br>
+            ${escapeHtml(row.securityUsername || "-")} â€¢ ${escapeHtml(row.timestamp || "-")}
           </div>
         </div>
       `).join("") : `<div class="empty">No beach gate rows for the current filter.</div>`;
@@ -3788,8 +3788,8 @@
         <tr>
           <td>${escapeHtml(row.timestamp || "-")}</td>
           <td>${escapeHtml(row.permitId || "-")}</td>
-          <td>${escapeHtml((row.gateName || "-") + " • " + (row.gateLocation || "-"))}</td>
-          <td>${escapeHtml((row.securityUsername || "-") + " • " + (row.role || "-"))}</td>
+          <td>${escapeHtml((row.gateName || "-") + " â€¢ " + (row.gateLocation || "-"))}</td>
+          <td>${escapeHtml((row.securityUsername || "-") + " â€¢ " + (row.role || "-"))}</td>
           <td>${escapeHtml(row.mode || "-")}</td>
           <td>${escapeHtml(row.tenant || "-")}</td>
           <td>${escapeHtml(row.unit || "-")}</td>
@@ -3842,8 +3842,8 @@
         <tr>
           <td>${escapeHtml(row.timestamp || "-")}</td>
           <td>${escapeHtml(row.permitId || "-")}</td>
-          <td>${escapeHtml((row.gateName || "-") + " • " + (row.gateLocation || "-"))}</td>
-          <td>${escapeHtml((row.securityUsername || "-") + " • " + (row.role || "-"))}</td>
+          <td>${escapeHtml((row.gateName || "-") + " â€¢ " + (row.gateLocation || "-"))}</td>
+          <td>${escapeHtml((row.securityUsername || "-") + " â€¢ " + (row.role || "-"))}</td>
           <td>${escapeHtml(row.tenant || "-")}</td>
           <td>${escapeHtml(row.unit || "-")}</td>
           <td><span class="status-tag ${statusTagClass(row.validityClass || "")}">${escapeHtml(translateValidityTextToEnglish(row.validityText || "-"))}</span></td>
@@ -4374,63 +4374,6 @@
         document.body.removeChild(tmp);
         return ok;
       }
-
-      window.generateClientPermitLink = async function (permitId) {
-        if (!permitId) {
-          if (typeof showToast === "function") showToast("err", "Missing permit ID.");
-          else alert("Missing permit ID.");
-          return;
-        }
-
-        try {
-          if (typeof showLoading === "function") showLoading("Generating client card link...");
-
-          let res;
-          if (window.AdminPermitService && typeof AdminPermitService.generateClientToken === "function") {
-            res = await AdminPermitService.generateClientToken(permitId);
-          } else {
-            const api = getApiBaseForDashboard();
-            const sessionToken = getStoredSessionToken();
-            const response = await fetch(api, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              cache: "no-store",
-              body: JSON.stringify({ action: "generateClientToken", id: permitId, sessionToken: sessionToken })
-            });
-            res = await response.json();
-          }
-
-          if (!(res && res.success && res.data)) {
-            const msg = (res && res.message) || "Failed to generate client card link.";
-            if (typeof showToast === "function") showToast("err", msg);
-            else alert(msg);
-            return;
-          }
-
-          const token = res.data.token || res.data.secureToken || "";
-          const returnedUrl = res.data.clientUrl || "";
-          const basePath = window.location.pathname.indexOf("/PAGES/") !== -1 ? window.location.origin + "/PAGES/" : window.location.origin + "/";
-          const clientLink = returnedUrl && returnedUrl.indexOf("http") === 0
-            ? returnedUrl
-            : (window.location.origin + "/client?token=" + encodeURIComponent(token));
-
-          window.lastGeneratedClientLink = clientLink;
-          const copied = await copyClientText(clientLink);
-
-          if (typeof showNotice === "function") {
-            showNotice("ok", "Client Card Link: " + clientLink, false);
-          }
-          if (typeof showToast === "function") {
-            showToast("ok", copied ? "Client card link generated and copied." : "Client card link generated.");
-          }
-          if (!copied) prompt("Copy client card link:", clientLink);
-        } catch (error) {
-          if (typeof showToast === "function") showToast("err", "System error generating client card link.");
-          else alert("System error generating client card link.");
-        } finally {
-          if (typeof hideLoading === "function") hideLoading();
-        }
-      };
 
       document.addEventListener("DOMContentLoaded", function () {
         fixAssetImages();

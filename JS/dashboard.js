@@ -1,7 +1,7 @@
-// ==============================
+﻿// ==============================
 // AZHA ENTERPRISE DASHBOARD JS
 // FINAL - NO DOWNGRADE VERSION
-// Action-Based API — Direct Production Transport
+// Action-Based API â€” Direct Production Transport
 // Client Card Generator Enabled
 // ==============================
 
@@ -83,8 +83,8 @@
       .replace(/'/g, "&#039;");
   }
 
-  function safeJson(v) {
-    return JSON.stringify(String(v || ""));
+  function safeArg(v) {
+    return encodeURIComponent(String(v || ""));
   }
 
   function toast(type, msg) {
@@ -146,7 +146,7 @@
     if (!el) return;
 
     const total = data.length;
-    const paid = data.filter((p) => /paid|مدفوع|تم الدفع|تم السداد|مسدد/i.test(p.paymentArabic || "")).length;
+    const paid = data.filter((p) => /paid|Ù…Ø¯ÙÙˆØ¹|ØªÙ… Ø§Ù„Ø¯ÙØ¹|ØªÙ… Ø§Ù„Ø³Ø¯Ø§Ø¯|Ù…Ø³Ø¯Ø¯/i.test(p.paymentArabic || "")).length;
     const unpaid = total - paid;
     const active = data.filter((p) => p.validityClass === "valid").length;
 
@@ -232,7 +232,7 @@
     const form = document.getElementById("adminPermitForm");
 
     if (form) form.reset();
-    if (title) title.textContent = "إضافة تصريح";
+    if (title) title.textContent = "Ø¥Ø¶Ø§ÙØ© ØªØµØ±ÙŠØ­";
     if (document.getElementById("adminPermitId")) document.getElementById("adminPermitId").value = "";
     if (modal) modal.classList.add("show");
   };
@@ -258,7 +258,7 @@
     editingPermitId = permitId;
 
     const title = document.getElementById("adminPermitModalTitle");
-    if (title) title.textContent = "تعديل تصريح";
+    if (title) title.textContent = "ØªØ¹Ø¯ÙŠÙ„ ØªØµØ±ÙŠØ­";
 
     if (document.getElementById("adminPermitId")) document.getElementById("adminPermitId").value = permitId;
     if (document.getElementById("adminUnit")) document.getElementById("adminUnit").value = p.unit || "";
@@ -267,8 +267,8 @@
     if (document.getElementById("adminEndDate")) document.getElementById("adminEndDate").value = p.endDate || "";
     if (document.getElementById("adminPhone")) document.getElementById("adminPhone").value = p.phone || "";
     if (document.getElementById("adminCarPlate")) document.getElementById("adminCarPlate").value = p.carPlate || "";
-    if (document.getElementById("adminPaymentStatus")) document.getElementById("adminPaymentStatus").value = p.paymentArabic || "تم الدفع";
-    if (document.getElementById("adminOperationalStatus")) document.getElementById("adminOperationalStatus").value = p.statusArabic || "ساري";
+    if (document.getElementById("adminPaymentStatus")) document.getElementById("adminPaymentStatus").value = p.paymentArabic || "ØªÙ… Ø§Ù„Ø¯ÙØ¹";
+    if (document.getElementById("adminOperationalStatus")) document.getElementById("adminOperationalStatus").value = p.statusArabic || "Ø³Ø§Ø±ÙŠ";
 
     const modal = document.getElementById("adminPermitModal");
     if (modal) modal.classList.add("show");
