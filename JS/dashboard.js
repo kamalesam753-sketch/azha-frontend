@@ -1,7 +1,8 @@
 ﻿// ==============================
 // AZHA ENTERPRISE DASHBOARD JS
-// FINAL - NO DOWNGRADE VERSION
-// Action-Based API â€” Direct Production Transport
+// FINAL ENTERPRISE VERSION - NO DOWNGRADE
+// Action-Based API - Direct Production Transport
+// Safe DOM Events - No Broken Inline onclick
 // Client Card Generator Enabled
 // ==============================
 
@@ -73,9 +74,10 @@
   let editingPermitId = null;
   let editingUserId = null;
   let editingGateId = null;
+  let searchTimer = null;
 
   function escHtml(v) {
-    return String(v || "")
+    return String(v == null ? "" : v)
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
@@ -83,14 +85,34 @@
       .replace(/'/g, "&#039;");
   }
 
-  function safeArg(v) {
-    return encodeURIComponent(String(v || ""));
+  function attr(v) {
+    return escHtml(encodeURIComponent(String(v || "")));
+  }
+
+  function decodeId(v) {
+    try {
+      return decodeURIComponent(String(v || ""));
+    } catch (e) {
+      return String(v || "");
+    }
   }
 
   function toast(type, msg) {
     if (typeof showToast === "function") showToast(type, msg);
     else if (typeof showNotice === "function") showNotice(type, msg);
     else alert(msg);
+  }
+
+  function getPaymentText(value) {
+    const v = String(value || "").trim();
+    if (!v) return "-";
+    if (/paid|تم الدفع|تم السداد|مدفوع|مسدد/i.test(v)) return "Paid";
+    if (/unpaid|لم يتم الدفع|غير مدفوع|غير مسدد/i.test(v)) return "Unpaid";
+    return v;
+  }
+
+  function isPaid(value) {
+    return /paid|تم الدفع|تم السداد|مدفوع|مسدد/i.test(String(value || ""));
   }
 
   function cleanClientLink(token) {
@@ -122,6 +144,53 @@
     return copied;
   }
 
+  function findPermitById(id) {
+    return adminPermits.find((x) => String(x.permitId || x._id || "") === String(id || ""));
+  }
+
+  function findUserById(id) {
+    return adminUsers.find((x) => String(x._id || x.username || "") === String(id || ""));
+  }
+
+  function findGateById(id) {
+    return adminGates.find((x) => String(x._id || "") === String(id || ""));
+  }
+
+  function buildActionButton(action, id, label, cls) {
+    return '<button type="button" class="admin-action-btn ' + escHtml(cls || "") +
+      '" data-admin-action="' + escHtml(action) +
+      '" data-admin-id="' + attr(id) + '">' + escHtml(label) + '</button>';
+  }
+
+  function bindEnterpriseActionDelegation() {
+    if (window.__AZHA_ADMIN_ACTIONS_BOUND__) return;
+    window.__AZHA_ADMIN_ACTIONS_BOUND__ = true;
+
+    document.addEventListener("click", function (event) {
+      const btn = event.target && event.target.closest ? event.target.closest("[data-admin-action]") : null;
+      if (!btn) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const action = btn.getAttribute("data-admin-action") || "";
+      const id = decodeId(btn.getAttribute("data-admin-id") || "");
+
+      if (!action) return;
+
+      if (action === "edit-permit") return window.editAdminPermit(id);
+      if (action === "client-card") return window.generateClientPermitLink(id);
+      if (action === "delete-permit") return window.deleteAdminPermit(id);
+
+      if (action === "edit-user") return window.editAdminUser(id);
+      if (action === "reset-user-password") return window.resetAdminUserPassword(id);
+      if (action === "delete-user") return window.deleteAdminUser(id);
+
+      if (action === "edit-gate") return window.editAdminGate(id);
+      if (action === "delete-gate") return window.deleteAdminGate(id);
+    }, true);
+  }
+
   window.loadAdminPermits = async function (showMsg) {
     try {
       const res = await AdminPermitService.getAll();
@@ -131,13 +200,15 @@
         return;
       }
 
-      adminPermits = res.data || [];
+      adminPermits = Array.isArray(res.data) ? res.data : [];
       window.adminPermits = adminPermits;
+
       renderAdminPermits(adminPermits);
       renderAdminPermitSummary(adminPermits);
 
       if (showMsg) toast("ok", "Admin permits refreshed.");
     } catch (e) {
+      console.error(e);
       toast("err", "System error loading permits.");
     }
   };
@@ -147,9 +218,9 @@
     if (!el) return;
 
     const total = data.length;
-    const paid = data.filter((p) => /paid|Ù…Ø¯ÙÙˆØ¹|ØªÙ… Ø§Ù„Ø¯ÙØ¹|ØªÙ… Ø§Ù„Ø³Ø¯Ø§Ø¯|Ù…Ø³Ø¯Ø¯/i.test(p.paymentArabic || "")).length;
+    const paid = data.filter((p) => isPaid(p.paymentArabic || p.paymentStatus)).length;
     const unpaid = total - paid;
-    const active = data.filter((p) => p.validityClass === "valid").length;
+    const active = data.filter((p) => p.validityClass === "valid" || /ساري|active/i.test(p.statusArabic || p.status || "")).length;
 
     el.innerHTML =
       '<div class="mini-card"><div class="mini-k">Total Permits</div><div class="mini-v">' + escHtml(total) + '</div></div>' +
@@ -173,12 +244,13 @@
     if (searchVal.trim()) {
       const q = searchVal.trim().toLowerCase();
       filtered = data.filter((p) =>
-        (p.unit || "").toLowerCase().includes(q) ||
-        (p.tenant || "").toLowerCase().includes(q) ||
-        (p.phone || "").toLowerCase().includes(q) ||
-        (p.carPlate || "").toLowerCase().includes(q) ||
-        (p.permitId || "").toLowerCase().includes(q) ||
-        (p.statusArabic || "").toLowerCase().includes(q)
+        String(p.unit || "").toLowerCase().includes(q) ||
+        String(p.tenant || "").toLowerCase().includes(q) ||
+        String(p.phone || "").toLowerCase().includes(q) ||
+        String(p.carPlate || "").toLowerCase().includes(q) ||
+        String(p.permitId || "").toLowerCase().includes(q) ||
+        String(p.statusArabic || "").toLowerCase().includes(q) ||
+        String(p.paymentArabic || "").toLowerCase().includes(q)
       );
     }
 
@@ -189,19 +261,19 @@
 
     body.innerHTML = filtered.map((p) => {
       const pid = p.permitId || p._id || "";
-      return '<tr>' +
-        '<td>' + escHtml(p.unit) + '</td>' +
-        '<td>' + escHtml(p.tenant) + '</td>' +
-        '<td>' + escHtml(p.startDate) + '</td>' +
-        '<td>' + escHtml(p.endDate) + '</td>' +
-        '<td>' + escHtml(p.statusArabic) + '</td>' +
-        '<td>' + escHtml(p.paymentArabic) + '</td>' +
-        '<td>' + escHtml(p.phone) + '</td>' +
-        '<td>' + escHtml(p.carPlate) + '</td>' +
+      return '<tr data-permit-id="' + attr(pid) + '">' +
+        '<td>' + escHtml(p.unit || "-") + '</td>' +
+        '<td>' + escHtml(p.tenant || "-") + '</td>' +
+        '<td>' + escHtml(p.startDate || "-") + '</td>' +
+        '<td>' + escHtml(p.endDate || "-") + '</td>' +
+        '<td>' + escHtml(p.statusArabic || p.status || "-") + '</td>' +
+        '<td>' + escHtml(getPaymentText(p.paymentArabic || p.paymentStatus || "-")) + '</td>' +
+        '<td>' + escHtml(p.phone || "-") + '</td>' +
+        '<td>' + escHtml(p.carPlate || "-") + '</td>' +
         '<td><div class="admin-row-actions">' +
-        '<button class="admin-action-btn edit" onclick="editAdminPermit(' + safeArg(pid) + ')">Edit</button>' +
-        '<button class="admin-action-btn reset" onclick="generateClientPermitLink(' + safeArg(pid) + ')">Client Card</button>' +
-        '<button class="admin-action-btn delete" onclick="deleteAdminPermit(' + safeArg(pid) + ')">Delete</button>' +
+        buildActionButton("edit-permit", pid, "Edit", "edit") +
+        buildActionButton("client-card", pid, "Client Card", "reset") +
+        buildActionButton("delete-permit", pid, "Delete", "delete") +
         '</div></td>' +
         '</tr>';
     }).join("");
@@ -213,18 +285,6 @@
     renderAdminPermits(adminPermits);
   };
 
-  let searchTimer = null;
-
-  setTimeout(function () {
-    const el = document.getElementById("adminPermitSearch");
-    if (el) {
-      el.addEventListener("input", function () {
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout(() => renderAdminPermits(adminPermits), 250);
-      });
-    }
-  }, 500);
-
   window.openAdminPermitModal = function () {
     editingPermitId = null;
 
@@ -233,7 +293,7 @@
     const form = document.getElementById("adminPermitForm");
 
     if (form) form.reset();
-    if (title) title.textContent = "Ø¥Ø¶Ø§ÙØ© ØªØµØ±ÙŠØ­";
+    if (title) title.textContent = "Add Permit";
     if (document.getElementById("adminPermitId")) document.getElementById("adminPermitId").value = "";
     if (modal) modal.classList.add("show");
   };
@@ -249,7 +309,7 @@
   };
 
   window.editAdminPermit = function (permitId) {
-    const p = adminPermits.find((x) => (x.permitId || x._id) === permitId);
+    const p = findPermitById(permitId);
 
     if (!p) {
       toast("err", "Permit not found.");
@@ -259,7 +319,7 @@
     editingPermitId = permitId;
 
     const title = document.getElementById("adminPermitModalTitle");
-    if (title) title.textContent = "ØªØ¹Ø¯ÙŠÙ„ ØªØµØ±ÙŠØ­";
+    if (title) title.textContent = "Edit Permit";
 
     if (document.getElementById("adminPermitId")) document.getElementById("adminPermitId").value = permitId;
     if (document.getElementById("adminUnit")) document.getElementById("adminUnit").value = p.unit || "";
@@ -268,8 +328,8 @@
     if (document.getElementById("adminEndDate")) document.getElementById("adminEndDate").value = p.endDate || "";
     if (document.getElementById("adminPhone")) document.getElementById("adminPhone").value = p.phone || "";
     if (document.getElementById("adminCarPlate")) document.getElementById("adminCarPlate").value = p.carPlate || "";
-    if (document.getElementById("adminPaymentStatus")) document.getElementById("adminPaymentStatus").value = p.paymentArabic || "ØªÙ… Ø§Ù„Ø¯ÙØ¹";
-    if (document.getElementById("adminOperationalStatus")) document.getElementById("adminOperationalStatus").value = p.statusArabic || "Ø³Ø§Ø±ÙŠ";
+    if (document.getElementById("adminPaymentStatus")) document.getElementById("adminPaymentStatus").value = p.paymentArabic || p.paymentStatus || "paid";
+    if (document.getElementById("adminOperationalStatus")) document.getElementById("adminOperationalStatus").value = p.statusArabic || p.status || "ساري";
 
     const modal = document.getElementById("adminPermitModal");
     if (modal) modal.classList.add("show");
@@ -314,6 +374,7 @@
         toast("err", (res && res.message) || "Failed to save permit.");
       }
     } catch (e) {
+      console.error(e);
       toast("err", "System error saving permit.");
     } finally {
       if (typeof hideLoading === "function") hideLoading();
@@ -346,7 +407,7 @@
         return;
       }
 
-      const clientLink = window.location.origin + "/client?token=" + encodeURIComponent(token);
+      const clientLink = cleanClientLink(token);
       window.lastGeneratedClientLink = clientLink;
 
       const copied = await copyText(clientLink);
@@ -369,7 +430,11 @@
   };
 
   window.deleteAdminPermit = async function (permitId) {
-    if (!permitId) return;
+    if (!permitId) {
+      toast("err", "Missing permit ID.");
+      return;
+    }
+
     if (!confirm("Delete this permit permanently?")) return;
 
     try {
@@ -383,6 +448,7 @@
         toast("err", (res && res.message) || "Failed to delete permit.");
       }
     } catch (e) {
+      console.error(e);
       toast("err", "System error deleting permit.");
     } finally {
       if (typeof hideLoading === "function") hideLoading();
@@ -398,12 +464,13 @@
         return;
       }
 
-      adminUsers = res.data || [];
+      adminUsers = Array.isArray(res.data) ? res.data : [];
       window.adminUsers = adminUsers;
       renderAdminUsers(adminUsers);
 
       if (showMsg) toast("ok", "Users refreshed.");
     } catch (e) {
+      console.error(e);
       toast("err", "System error loading users.");
     }
   };
@@ -419,17 +486,17 @@
 
     body.innerHTML = data.map((u) => {
       const uid = u._id || u.username || "";
-      return '<tr>' +
-        '<td>' + escHtml(u.username) + '</td>' +
-        '<td>' + escHtml(u.fullName) + '</td>' +
-        '<td>' + escHtml(u.role) + '</td>' +
-        '<td>' + escHtml(u.gateName) + '</td>' +
-        '<td>' + escHtml(u.gateLocation) + '</td>' +
-        '<td>' + escHtml(u.status) + '</td>' +
+      return '<tr data-user-id="' + attr(uid) + '">' +
+        '<td>' + escHtml(u.username || "-") + '</td>' +
+        '<td>' + escHtml(u.fullName || "-") + '</td>' +
+        '<td>' + escHtml(u.role || "-") + '</td>' +
+        '<td>' + escHtml(u.gateName || "-") + '</td>' +
+        '<td>' + escHtml(u.gateLocation || "-") + '</td>' +
+        '<td>' + escHtml(u.status || "-") + '</td>' +
         '<td><div class="admin-row-actions">' +
-        '<button class="admin-action-btn edit" onclick="editAdminUser(' + safeArg(uid) + ')">Edit</button>' +
-        '<button class="admin-action-btn reset" onclick="resetAdminUserPassword(' + safeArg(uid) + ')">Reset PW</button>' +
-        '<button class="admin-action-btn delete" onclick="deleteAdminUser(' + safeArg(uid) + ')">Delete</button>' +
+        buildActionButton("edit-user", uid, "Edit", "edit") +
+        buildActionButton("reset-user-password", uid, "Reset PW", "reset") +
+        buildActionButton("delete-user", uid, "Delete", "delete") +
         '</div></td>' +
         '</tr>';
     }).join("");
@@ -462,7 +529,7 @@
   };
 
   window.editAdminUser = function (userId) {
-    const u = adminUsers.find((x) => (x._id || x.username) === userId);
+    const u = findUserById(userId);
 
     if (!u) {
       toast("err", "User not found.");
@@ -528,6 +595,7 @@
         toast("err", (res && res.message) || "Failed to save user.");
       }
     } catch (e) {
+      console.error(e);
       toast("err", "System error saving user.");
     } finally {
       if (typeof hideLoading === "function") hideLoading();
@@ -535,6 +603,11 @@
   };
 
   window.deleteAdminUser = async function (userId) {
+    if (!userId) {
+      toast("err", "Missing user ID.");
+      return;
+    }
+
     if (!confirm("Delete this user permanently?")) return;
 
     try {
@@ -548,6 +621,7 @@
         toast("err", (res && res.message) || "Failed to delete user.");
       }
     } catch (e) {
+      console.error(e);
       toast("err", "System error deleting user.");
     } finally {
       if (typeof hideLoading === "function") hideLoading();
@@ -555,6 +629,11 @@
   };
 
   window.resetAdminUserPassword = async function (userId) {
+    if (!userId) {
+      toast("err", "Missing user ID.");
+      return;
+    }
+
     const pw = prompt("Enter new password for this user:");
 
     if (!pw || pw.length < 4) {
@@ -563,6 +642,8 @@
     }
 
     try {
+      if (typeof showLoading === "function") showLoading("Resetting password...");
+
       const res = await AdminUserService.resetPassword(userId, pw);
 
       if (res && res.success) {
@@ -571,7 +652,10 @@
         toast("err", (res && res.message) || "Password reset failed.");
       }
     } catch (e) {
+      console.error(e);
       toast("err", "System error resetting password.");
+    } finally {
+      if (typeof hideLoading === "function") hideLoading();
     }
   };
 
@@ -584,12 +668,13 @@
         return;
       }
 
-      adminGates = res.data || [];
+      adminGates = Array.isArray(res.data) ? res.data : [];
       window.adminGates = adminGates;
       renderAdminGates(adminGates);
 
       if (showMsg) toast("ok", "Gates refreshed.");
     } catch (e) {
+      console.error(e);
       toast("err", "System error loading gates.");
     }
   };
@@ -605,14 +690,14 @@
 
     body.innerHTML = data.map((g) => {
       const gid = g._id || "";
-      return '<tr>' +
-        '<td>' + escHtml(g.name) + '</td>' +
-        '<td>' + escHtml(g.location) + '</td>' +
-        '<td>' + escHtml(g.description) + '</td>' +
-        '<td>' + escHtml(g.status) + '</td>' +
+      return '<tr data-gate-id="' + attr(gid) + '">' +
+        '<td>' + escHtml(g.name || "-") + '</td>' +
+        '<td>' + escHtml(g.location || "-") + '</td>' +
+        '<td>' + escHtml(g.description || "-") + '</td>' +
+        '<td>' + escHtml(g.status || "-") + '</td>' +
         '<td><div class="admin-row-actions">' +
-        '<button class="admin-action-btn edit" onclick="editAdminGate(' + safeArg(gid) + ')">Edit</button>' +
-        '<button class="admin-action-btn delete" onclick="deleteAdminGate(' + safeArg(gid) + ')">Delete</button>' +
+        buildActionButton("edit-gate", gid, "Edit", "edit") +
+        buildActionButton("delete-gate", gid, "Delete", "delete") +
         '</div></td>' +
         '</tr>';
     }).join("");
@@ -641,7 +726,7 @@
   };
 
   window.editAdminGate = function (gateId) {
-    const g = adminGates.find((x) => x._id === gateId);
+    const g = findGateById(gateId);
 
     if (!g) {
       toast("err", "Gate not found.");
@@ -692,6 +777,7 @@
         toast("err", (res && res.message) || "Failed to save gate.");
       }
     } catch (e) {
+      console.error(e);
       toast("err", "System error saving gate.");
     } finally {
       if (typeof hideLoading === "function") hideLoading();
@@ -699,6 +785,11 @@
   };
 
   window.deleteAdminGate = async function (gateId) {
+    if (!gateId) {
+      toast("err", "Missing gate ID.");
+      return;
+    }
+
     if (!confirm("Delete this gate permanently?")) return;
 
     try {
@@ -712,16 +803,35 @@
         toast("err", (res && res.message) || "Failed to delete gate.");
       }
     } catch (e) {
+      console.error(e);
       toast("err", "System error deleting gate.");
     } finally {
       if (typeof hideLoading === "function") hideLoading();
     }
   };
 
-  setTimeout(function () {
+  function initAdminSearchBinding() {
+    const el = document.getElementById("adminPermitSearch");
+    if (el && !el.__azhaBound) {
+      el.__azhaBound = true;
+      el.addEventListener("input", function () {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => renderAdminPermits(adminPermits), 250);
+      });
+    }
+  }
+
+  function autoLoadAdminTables() {
     if (document.getElementById("adminPermitsTableBody")) loadAdminPermits();
     if (document.getElementById("adminUsersTableBody")) loadAdminUsers();
     if (document.getElementById("adminGatesTableBody")) loadAdminGates();
-  }, 1500);
+  }
+
+  bindEnterpriseActionDelegation();
+
+  setTimeout(function () {
+    initAdminSearchBinding();
+    autoLoadAdminTables();
+  }, 1200);
 
 })();
