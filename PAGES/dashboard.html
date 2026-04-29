@@ -2735,8 +2735,8 @@
                   <select id="adminPaymentStatus" class="select">
                     <option value="paid">Paid</option>
                     <option value="unpaid">Unpaid</option>
-                    <option value="ØªÙ… Ø§Ù„Ø¯ÙØ¹">ØªÙ… Ø§Ù„Ø¯ÙØ¹</option>
-                    <option value="Ù„Ù… ÙŠØªÙ… Ø§Ù„Ø¯ÙØ¹">Ù„Ù… ÙŠØªÙ… Ø§Ù„Ø¯ÙØ¹</option>
+                    <option value="تم الدفع">تم الدفع</option>
+                    <option value="Ù„Ù… ÙŠتم الدفع">Ù„Ù… ÙŠتم الدفع</option>
                   </select>
                 </div>
                 <div class="field">
@@ -3433,18 +3433,18 @@
 
     function translateStatusArabicToEnglish(value) {
       const v = normalizeArabic(value);
-      if (v.includes("Ø§Ø®Ø± ÙŠÙˆÙ… Ø³Ø§Ø±ÙŠ")) return "Last Valid Day";
-      if (v.includes("Ø³Ø§Ø±ÙŠ")) return "Active";
+      if (v.includes("Ø§Ø®Ø± ÙŠÙˆÙ… ساري")) return "Last Valid Day";
+      if (v.includes("ساري")) return "Active";
       if (v.includes("Ù„Ù… ÙŠØ¨Ø¯Ø§")) return "Not Started";
       if (v.includes("ÙŠØ¨Ø¯Ø§ ØºØ¯Ø§")) return "Starts Tomorrow";
-      if (v.includes("Ø§Ù†ØªÙ‡Ù‰") || v.includes("Ø§Ù†ØªÙ‡ÙŠ") || v.includes("Ù…Ù†ØªÙ‡ÙŠ")) return "Expired";
+      if (v.includes("انتهى") || v.includes("Ø§Ù†ØªÙ‡ÙŠ") || v.includes("Ù…Ù†ØªÙ‡ÙŠ")) return "Expired";
       return value || "-";
     }
 
     function translatePaymentArabicToEnglish(value) {
       const v = normalizeArabic(value);
-      if (v.includes("ØªÙ… Ø§Ù„Ø¯ÙØ¹") || v.includes("ØªÙ… Ø§Ù„Ø³Ø¯Ø§Ø¯") || v.includes("Ù…Ø¯ÙÙˆØ¹") || v.includes("Ù…Ø³Ø¯Ø¯")) return "Paid";
-      if (v.includes("Ù„Ù… ÙŠØªÙ… Ø§Ù„Ø¯ÙØ¹") || v.includes("ØºÙŠØ± Ù…Ø¯ÙÙˆØ¹") || v.includes("ØºÙŠØ± Ù…Ø³Ø¯Ø¯")) return "Unpaid";
+      if (v.includes("تم الدفع") || v.includes("ØªÙ… Ø§Ù„Ø³Ø¯Ø§Ø¯") || v.includes("Ù…Ø¯ÙÙˆØ¹") || v.includes("Ù…Ø³Ø¯Ø¯")) return "Paid";
+      if (v.includes("Ù„Ù… ÙŠتم الدفع") || v.includes("ØºÙŠØ± Ù…Ø¯ÙÙˆØ¹") || v.includes("ØºÙŠØ± Ù…Ø³Ø¯Ø¯")) return "Unpaid";
       return value || "-";
     }
 
