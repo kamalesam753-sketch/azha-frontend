@@ -2053,6 +2053,16 @@
         transform: translateX(0) !important;
       }
     }
+  
+    /* AZHA FINAL ENTERPRISE UI FIX */
+    .admin-panel-rtl{direction:ltr !important;text-align:left !important;}
+    .admin-panel-rtl th,.admin-panel-rtl td{text-align:left !important;}
+    .admin-form-grid{direction:ltr !important;text-align:left !important;}
+    .admin-form-grid .field-label{text-align:left !important;}
+    .admin-form-grid .input,.admin-form-grid .select{text-align:left !important;direction:ltr !important;}
+    .status-tag.tag-valid{background:var(--ok-bg);color:var(--ok-text);}
+    .status-tag.tag-warning{background:var(--warn-bg);color:var(--warn-text);}
+    .status-tag.tag-invalid{background:var(--bad-bg);color:var(--bad-text);}
   </style>
 </head>
 
@@ -2316,10 +2326,10 @@
               <div class="field-label">Status</div>
               <select id="scanStatus" class="select">
                 <option value="">All Statuses</option>
-                <option value="Ø³Ø§Ø±ÙŠ">Active</option>
-                <option value="Ø§Ù†ØªÙ‡Ù‰">Expired</option>
-                <option value="Ù„Ù… ÙŠØ¨Ø¯Ø£">Not Started</option>
-                <option value="Ø¢Ø®Ø± ÙŠÙˆÙ… Ø³Ø§Ø±ÙŠ">Last Valid Day</option>
+                <option value="ساري">ساري</option>
+                <option value="انتهى">انتهى</option>
+                <option value="لم يبدأ">لم يبدأ</option>
+                <option value="آخر يوم ساري">آخر يوم ساري</option>
               </select>
             </div>
             <div class="field">
@@ -2603,7 +2613,7 @@
 
           <div class="admin-toolbar">
             <div class="admin-search-wrap">
-              <input id="adminPermitSearch" class="input" type="text" placeholder="Ø¨Ø­Ø« Ø¨Ø§Ù„ÙˆØ­Ø¯Ø© / Ø§Ø³Ù… Ø§Ù„Ù…Ø³ØªØ£Ø¬Ø± / Ø§Ù„Ù‡Ø§ØªÙ / Ø±Ù‚Ù… Ø§Ù„Ø³ÙŠØ§Ø±Ø© / Ø§Ù„Ø­Ø§Ù„Ø©" />
+              <input id="adminPermitSearch" class="input" type="text" placeholder="Search by unit / tenant / phone / car plate / status" />
               <button class="btn btn-soft" onclick="resetAdminPermitSearch()">Reset</button>
             </div>
             <button class="btn btn-primary" onclick="openAdminPermitModal()">➕ Add Permit</button>
@@ -2626,7 +2636,7 @@
               </thead>
               <tbody id="adminPermitsTableBody">
                 <tr>
-                  <td colspan="9" class="empty">Loading permits...</td>
+                  <td colspan="10" class="empty">Loading permits...</td>
                 </tr>
               </tbody>
             </table>
@@ -2637,7 +2647,7 @@
       <div class="admin-modal-backdrop" id="adminPermitModal" onclick="handleAdminModalBackdrop(event)">
         <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="adminPermitModalTitle">
           <div class="admin-modal-head">
-            <h3 class="admin-modal-title" id="adminPermitModalTitle">Ø¥Ø¶Ø§ÙØ© ØªØµØ±ÙŠØ­</h3>
+            <h3 class="admin-modal-title" id="adminPermitModalTitle">Add Permit</h3>
             <p class="admin-modal-sub">Manage permit record data without leaving the enterprise dashboard workspace.</p>
           </div>
           <div class="admin-modal-body">
@@ -2680,11 +2690,11 @@
                 <div class="field">
                   <div class="field-label">Operational Status</div>
                   <select id="adminOperationalStatus" class="select">
-                    <option value="Ø³Ø§Ø±ÙŠ">Ø³Ø§Ø±ÙŠ</option>
-                    <option value="Ù„Ù… ÙŠØ¨Ø¯Ø£">Ù„Ù… ÙŠØ¨Ø¯Ø£</option>
-                    <option value="Ø¢Ø®Ø± ÙŠÙˆÙ… Ø³Ø§Ø±ÙŠ">Ø¢Ø®Ø± ÙŠÙˆÙ… Ø³Ø§Ø±ÙŠ</option>
-                    <option value="Ø§Ù†ØªÙ‡Ù‰">Ø§Ù†ØªÙ‡Ù‰</option>
-                    <option value="ØºÙŠØ± Ù…Ø­Ø¯Ø¯">ØºÙŠØ± Ù…Ø­Ø¯Ø¯</option>
+                    <option value="ساري">ساري</option>
+                    <option value="لم يبدأ">لم يبدأ</option>
+                    <option value="آخر يوم ساري">آخر يوم ساري</option>
+                    <option value="انتهى">انتهى</option>
+                    <option value="غير محدد">غير محدد</option>
                   </select>
                 </div>
               </div>
@@ -4191,7 +4201,8 @@
       }, 30000);
     });
   </script>
-  <script src="../JS/dashboard.js"></script>\n  <script src="../JS/dashboard-hotfix.js"></script>
+  <script src="../JS/dashboard.js"></script>
+  <script src="../JS/dashboard-hotfix.js"></script>
 
   <script>
     (function () {

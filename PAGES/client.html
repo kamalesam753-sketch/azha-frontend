@@ -497,6 +497,32 @@
       .card{box-shadow:none;border:none;border-radius:0}
       .hero{print-color-adjust:exact;-webkit-print-color-adjust:exact}
     }
+  
+    /* AZHA FINAL COMPACT CLIENT CARD - NO DOWNGRADE */
+    .wrap{max-width:680px !important;}
+    .azha-brand-header{max-width:680px !important;margin-bottom:14px !important;padding:12px 18px !important;border-radius:20px !important;}
+    .card,.loading-card,.error-card{border-radius:28px !important;}
+    .hero{padding:26px 18px 22px !important;}
+    .hero h1{font-size:26px !important;}
+    .hero p{font-size:13px !important;margin-top:6px !important;}
+    .secure-strip{padding:12px 14px !important;}
+    .secure-chip{padding:7px 11px !important;font-size:11px !important;}
+    .permit-id{margin:16px !important;padding:11px 14px !important;font-size:15px !important;}
+    .status-pill{margin:0 16px 12px !important;padding:14px !important;font-size:19px !important;}
+    .validity-note{margin:0 16px 14px !important;padding:12px 14px !important;font-size:13px !important;}
+    .countdown-box{margin:0 16px 14px !important;gap:8px !important;}
+    .count-card{padding:12px !important;border-radius:16px !important;}
+    .count-card .v{font-size:18px !important;}
+    .qr-box{margin:14px 16px !important;}
+    .qr-frame{min-width:238px !important;padding:16px !important;border-radius:24px !important;}
+    #qrcode{width:200px !important;min-height:200px !important;}
+    #qrcode img,#qrcode canvas{max-width:200px !important;max-height:200px !important;}
+    .grid{padding:16px !important;gap:10px !important;}
+    .item{padding:12px !important;border-radius:16px !important;}
+    .value{font-size:15px !important;}
+    .note{margin:0 16px 16px !important;padding:13px !important;font-size:13px !important;}
+    .actions{padding:0 16px 16px !important;}
+    .btn{padding:11px 15px !important;border-radius:13px !important;}
   </style>
 </head>
 
@@ -555,11 +581,7 @@
         },
 
         buildInternalVerificationUrl: function (secureToken) {
-          const basePath = location.pathname.includes("/PAGES/")
-            ? location.origin + "/PAGES/"
-            : location.origin + "/";
-
-          return basePath + "/permit?token=" + encodeURIComponent(secureToken);
+          return location.origin + "/permit?token=" + encodeURIComponent(secureToken);
         }
       };
 
@@ -692,8 +714,8 @@
 
         new QRCode(holder, {
           text: value,
-          width: 246,
-          height: 246,
+          width: 200,
+          height: 200,
           correctLevel: QRCode.CorrectLevel.H
         });
       }

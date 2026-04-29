@@ -220,7 +220,7 @@
     const total = data.length;
     const paid = data.filter((p) => isPaid(p.paymentArabic || p.paymentStatus)).length;
     const unpaid = total - paid;
-    const active = data.filter((p) => p.validityClass === "valid" || /ساري|active/i.test(p.statusArabic || p.status || "")).length;
+    const active = data.filter((p) => String(p.validityClass || "").toLowerCase() === "valid").length;
 
     el.innerHTML =
       '<div class="mini-card"><div class="mini-k">Total Permits</div><div class="mini-v">' + escHtml(total) + '</div></div>' +
@@ -234,7 +234,7 @@
     if (!body) return;
 
     if (!data || !data.length) {
-      body.innerHTML = '<tr><td colspan="9" class="empty">No permits found.</td></tr>';
+      body.innerHTML = '<tr><td colspan="10" class="empty">No permits found.</td></tr>';
       return;
     }
 
@@ -246,27 +246,34 @@
       filtered = data.filter((p) =>
         String(p.unit || "").toLowerCase().includes(q) ||
         String(p.tenant || "").toLowerCase().includes(q) ||
+        String(p.tenantCount || "").toLowerCase().includes(q) ||
         String(p.phone || "").toLowerCase().includes(q) ||
         String(p.carPlate || "").toLowerCase().includes(q) ||
         String(p.permitId || "").toLowerCase().includes(q) ||
         String(p.statusArabic || "").toLowerCase().includes(q) ||
+        String(p.validityText || "").toLowerCase().includes(q) ||
         String(p.paymentArabic || "").toLowerCase().includes(q)
       );
     }
 
     if (!filtered.length) {
-      body.innerHTML = '<tr><td colspan="9" class="empty">No matching permits.</td></tr>';
+      body.innerHTML = '<tr><td colspan="10" class="empty">No matching permits.</td></tr>';
       return;
     }
 
     body.innerHTML = filtered.map((p) => {
       const pid = p.permitId || p._id || "";
+      const statusText = p.validityText || p.statusArabic || "-";
+      const statusClass = String(p.validityClass || "soft").toLowerCase();
+      const tagClass = statusClass === "valid" ? "tag-valid" : statusClass === "warning" ? "tag-warning" : statusClass === "invalid" || statusClass === "not_found" ? "tag-invalid" : "tag-soft";
+
       return '<tr data-permit-id="' + attr(pid) + '">' +
         '<td>' + escHtml(p.unit || "-") + '</td>' +
         '<td>' + escHtml(p.tenant || "-") + '</td>' +
+        '<td>' + escHtml(p.tenantCount || "-") + '</td>' +
         '<td>' + escHtml(p.startDate || "-") + '</td>' +
         '<td>' + escHtml(p.endDate || "-") + '</td>' +
-        '<td>' + escHtml(p.statusArabic || p.status || "-") + '</td>' +
+        '<td><span class="status-tag ' + escHtml(tagClass) + '">' + escHtml(statusText) + '</span></td>' +
         '<td>' + escHtml(getPaymentText(p.paymentArabic || p.paymentStatus || "-")) + '</td>' +
         '<td>' + escHtml(p.phone || "-") + '</td>' +
         '<td>' + escHtml(p.carPlate || "-") + '</td>' +
@@ -324,6 +331,7 @@
     if (document.getElementById("adminPermitId")) document.getElementById("adminPermitId").value = permitId;
     if (document.getElementById("adminUnit")) document.getElementById("adminUnit").value = p.unit || "";
     if (document.getElementById("adminTenant")) document.getElementById("adminTenant").value = p.tenant || "";
+    if (document.getElementById("adminTenantCount")) document.getElementById("adminTenantCount").value = p.tenantCount || "";
     if (document.getElementById("adminStartDate")) document.getElementById("adminStartDate").value = p.startDate || "";
     if (document.getElementById("adminEndDate")) document.getElementById("adminEndDate").value = p.endDate || "";
     if (document.getElementById("adminPhone")) document.getElementById("adminPhone").value = p.phone || "";
@@ -341,6 +349,7 @@
     const data = {
       unit: (document.getElementById("adminUnit") || {}).value || "",
       tenant: (document.getElementById("adminTenant") || {}).value || "",
+      tenantCount: (document.getElementById("adminTenantCount") || {}).value || "",
       startDate: (document.getElementById("adminStartDate") || {}).value || "",
       endDate: (document.getElementById("adminEndDate") || {}).value || "",
       phone: (document.getElementById("adminPhone") || {}).value || "",
