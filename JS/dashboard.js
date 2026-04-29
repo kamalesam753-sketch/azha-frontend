@@ -103,7 +103,33 @@
     else alert(msg);
   }
 
-  function getPaymentText(value) {
+  function getStatusMeta(p) {
+    const cls = String((p && p.validityClass) || "").toLowerCase();
+    const txt = (p && (p.validityText || p.statusArabic || p.status)) || "-";
+
+    if (cls === "valid") return { text: txt, tag: "tag-valid" };
+    if (cls === "warning") return { text: txt, tag: "tag-warning" };
+    if (cls === "invalid" || cls === "not_found") return { text: txt, tag: "tag-invalid" };
+
+    const lower = String(txt || "").toLowerCase();
+    if (lower.includes("expired") || txt.includes("انتهى")) return { text: txt, tag: "tag-invalid" };
+    if (lower.includes("warning") || txt.includes("غد") || txt.includes("لم يبدأ") || txt.includes("آخر يوم")) return { text: txt, tag: "tag-warning" };
+    if (lower.includes("active") || txt.includes("ساري")) return { text: txt, tag: "tag-valid" };
+
+    return { text: txt, tag: "tag-soft" };
+  }
+
+  function getSortValue(p, key) {
+    if (!p) return "";
+    if (key === "startAsc") return p.startDate || "";
+    if (key === "endAsc") return p.endDate || "";
+    if (key === "unitAsc") return p.unit || "";
+    if (key === "tenantAsc") return p.tenant || "";
+    if (key === "statusAsc") return p.validityText || p.statusArabic || "";
+    return p.updatedAt || p.createdAt || p.startDate || "";
+  }
+
+
     const v = String(value || "").trim();
     if (!v) return "-";
     if (/paid|تم الدفع|تم السداد|مدفوع|مسدد/i.test(v)) return "Paid";
@@ -221,12 +247,16 @@
     const paid = data.filter((p) => isPaid(p.paymentArabic || p.paymentStatus)).length;
     const unpaid = total - paid;
     const active = data.filter((p) => String(p.validityClass || "").toLowerCase() === "valid").length;
+    const warning = data.filter((p) => String(p.validityClass || "").toLowerCase() === "warning").length;
+    const expired = data.filter((p) => String(p.validityClass || "").toLowerCase() === "invalid").length;
 
     el.innerHTML =
       '<div class="mini-card"><div class="mini-k">Total Permits</div><div class="mini-v">' + escHtml(total) + '</div></div>' +
+      '<div class="mini-card"><div class="mini-k">Active</div><div class="mini-v">' + escHtml(active) + '</div></div>' +
+      '<div class="mini-card"><div class="mini-k">Warning</div><div class="mini-v">' + escHtml(warning) + '</div></div>' +
+      '<div class="mini-card"><div class="mini-k">Expired</div><div class="mini-v">' + escHtml(expired) + '</div></div>' +
       '<div class="mini-card"><div class="mini-k">Paid</div><div class="mini-v">' + escHtml(paid) + '</div></div>' +
-      '<div class="mini-card"><div class="mini-k">Unpaid</div><div class="mini-v">' + escHtml(unpaid) + '</div></div>' +
-      '<div class="mini-card"><div class="mini-k">Active / Current</div><div class="mini-v">' + escHtml(active) + '</div></div>';
+      '<div class="mini-card"><div class="mini-k">Unpaid</div><div class="mini-v">' + escHtml(unpaid) + '</div></div>';
   }
 
   function renderAdminPermits(data) {
@@ -239,11 +269,15 @@
     }
 
     const searchVal = (document.getElementById("adminPermitSearch") || {}).value || "";
-    let filtered = data;
+    const statusFilter = (document.getElementById("adminStatusFilter") || {}).value || "";
+    const paymentFilter = (document.getElementById("adminPaymentFilter") || {}).value || "";
+    const sortFilter = (document.getElementById("adminSortFilter") || {}).value || "updatedDesc";
+
+    let filtered = data.slice();
 
     if (searchVal.trim()) {
       const q = searchVal.trim().toLowerCase();
-      filtered = data.filter((p) =>
+      filtered = filtered.filter((p) =>
         String(p.unit || "").toLowerCase().includes(q) ||
         String(p.tenant || "").toLowerCase().includes(q) ||
         String(p.tenantCount || "").toLowerCase().includes(q) ||
@@ -256,6 +290,21 @@
       );
     }
 
+    if (statusFilter) {
+      filtered = filtered.filter((p) => String(p.validityClass || "").toLowerCase() === statusFilter);
+    }
+
+    if (paymentFilter) {
+      filtered = filtered.filter((p) => paymentFilter === "paid" ? isPaid(p.paymentArabic || p.paymentStatus) : !isPaid(p.paymentArabic || p.paymentStatus));
+    }
+
+    filtered.sort((a, b) => {
+      const av = String(getSortValue(a, sortFilter) || "");
+      const bv = String(getSortValue(b, sortFilter) || "");
+      if (sortFilter === "updatedDesc") return bv.localeCompare(av);
+      return av.localeCompare(bv);
+    });
+
     if (!filtered.length) {
       body.innerHTML = '<tr><td colspan="10" class="empty">No matching permits.</td></tr>';
       return;
@@ -263,9 +312,7 @@
 
     body.innerHTML = filtered.map((p) => {
       const pid = p.permitId || p._id || "";
-      const statusText = p.validityText || p.statusArabic || "-";
-      const statusClass = String(p.validityClass || "soft").toLowerCase();
-      const tagClass = statusClass === "valid" ? "tag-valid" : statusClass === "warning" ? "tag-warning" : statusClass === "invalid" || statusClass === "not_found" ? "tag-invalid" : "tag-soft";
+      const status = getStatusMeta(p);
 
       return '<tr data-permit-id="' + attr(pid) + '">' +
         '<td>' + escHtml(p.unit || "-") + '</td>' +
@@ -273,7 +320,7 @@
         '<td>' + escHtml(p.tenantCount || "-") + '</td>' +
         '<td>' + escHtml(p.startDate || "-") + '</td>' +
         '<td>' + escHtml(p.endDate || "-") + '</td>' +
-        '<td><span class="status-tag ' + escHtml(tagClass) + '">' + escHtml(statusText) + '</span></td>' +
+        '<td><span class="status-tag ' + escHtml(status.tag) + '">' + escHtml(status.text) + '</span><span class="status-subline">' + escHtml(p.validityNote || "") + '</span></td>' +
         '<td>' + escHtml(getPaymentText(p.paymentArabic || p.paymentStatus || "-")) + '</td>' +
         '<td>' + escHtml(p.phone || "-") + '</td>' +
         '<td>' + escHtml(p.carPlate || "-") + '</td>' +
@@ -820,14 +867,16 @@
   };
 
   function initAdminSearchBinding() {
-    const el = document.getElementById("adminPermitSearch");
-    if (el && !el.__azhaBound) {
-      el.__azhaBound = true;
-      el.addEventListener("input", function () {
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout(() => renderAdminPermits(adminPermits), 250);
-      });
-    }
+    ["adminPermitSearch", "adminStatusFilter", "adminPaymentFilter", "adminSortFilter"].forEach(function (id) {
+      const el = document.getElementById(id);
+      if (el && !el.__azhaBound) {
+        el.__azhaBound = true;
+        el.addEventListener(id === "adminPermitSearch" ? "input" : "change", function () {
+          clearTimeout(searchTimer);
+          searchTimer = setTimeout(() => renderAdminPermits(adminPermits), 180);
+        });
+      }
+    });
   }
 
   function autoLoadAdminTables() {

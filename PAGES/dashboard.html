@@ -2063,6 +2063,58 @@
     .status-tag.tag-valid{background:var(--ok-bg);color:var(--ok-text);}
     .status-tag.tag-warning{background:var(--warn-bg);color:var(--warn-text);}
     .status-tag.tag-invalid{background:var(--bad-bg);color:var(--bad-text);}
+  
+    /* AZHA ENTERPRISE DASHBOARD FINAL UPGRADE */
+    .admin-enterprise-filters{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(180px, 1fr));
+      gap:10px;
+      margin:0 0 14px;
+    }
+    .admin-enterprise-filters .select{
+      min-height:44px;
+      font-weight:800;
+      background:#fff;
+    }
+    .status-tag{
+      box-shadow:0 6px 14px rgba(15,76,129,.06);
+    }
+    .status-tag.tag-valid{
+      background:var(--ok-bg)!important;
+      color:var(--ok-text)!important;
+      border:1px solid #cdebd5;
+    }
+    .status-tag.tag-warning{
+      background:var(--warn-bg)!important;
+      color:var(--warn-text)!important;
+      border:1px solid #f2dfab;
+    }
+    .status-tag.tag-invalid{
+      background:var(--bad-bg)!important;
+      color:var(--bad-text)!important;
+      border:1px solid #f5c2c7;
+    }
+    .status-subline{
+      display:block;
+      margin-top:6px;
+      font-size:11px;
+      color:#64748b;
+      font-weight:800;
+      line-height:1.5;
+    }
+    .admin-table table{
+      min-width:1320px!important;
+    }
+    .admin-row-actions{
+      display:flex!important;
+      flex-wrap:wrap;
+      gap:7px!important;
+    }
+    @media(max-width:860px){
+      .admin-enterprise-filters{
+        grid-template-columns:1fr;
+      }
+    }
   </style>
 </head>
 
