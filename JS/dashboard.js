@@ -163,7 +163,7 @@ function bindEnterpriseActionDelegation() {
       '<div class="mini-card"><div class="mini-k">Unpaid</div><div class="mini-v">' + escHtml(unpaid) + '</div></div>';
   }
 
-  function renderAdminPermits(data) {
+  function window.renderAdminPermits(data) {
     const body = document.getElementById("adminPermitsTableBody");
     if (!body) return;
 
@@ -240,7 +240,7 @@ function bindEnterpriseActionDelegation() {
   window.resetAdminPermitSearch = function () {
     const el = document.getElementById("adminPermitSearch");
     if (el) el.value = "";
-    renderAdminPermits(adminPermits);
+    window.renderAdminPermits(adminPermits);
   };
 
   window.openAdminPermitModal = function () {
@@ -329,7 +329,7 @@ function bindEnterpriseActionDelegation() {
       if (res && res.success) {
         toast("ok", editingPermitId ? "Permit updated." : "Permit created.");
         closeAdminPermitModal();
-        await loadAdminPermits();
+        await window.loadAdminPermits();
       } else {
         toast("err", (res && res.message) || "Failed to save permit.");
       }
@@ -403,7 +403,7 @@ function bindEnterpriseActionDelegation() {
 
       if (res && res.success) {
         toast("ok", "Permit deleted.");
-        await loadAdminPermits();
+        await window.loadAdminPermits();
       } else {
         toast("err", (res && res.message) || "Failed to delete permit.");
       }
@@ -550,7 +550,7 @@ function bindEnterpriseActionDelegation() {
       if (res && res.success) {
         toast("ok", editingUserId ? "User updated." : "User created.");
         closeAdminUserModal();
-        await loadAdminUsers();
+        await window.loadAdminUsers();
       } else {
         toast("err", (res && res.message) || "Failed to save user.");
       }
@@ -576,7 +576,7 @@ function bindEnterpriseActionDelegation() {
 
       if (res && res.success) {
         toast("ok", "User deleted.");
-        await loadAdminUsers();
+        await window.loadAdminUsers();
       } else {
         toast("err", (res && res.message) || "Failed to delete user.");
       }
@@ -732,7 +732,7 @@ function bindEnterpriseActionDelegation() {
       if (res && res.success) {
         toast("ok", editingGateId ? "Gate updated." : "Gate created.");
         closeAdminGateModal();
-        await loadAdminGates();
+        await window.loadAdminGates();
       } else {
         toast("err", (res && res.message) || "Failed to save gate.");
       }
@@ -758,7 +758,7 @@ function bindEnterpriseActionDelegation() {
 
       if (res && res.success) {
         toast("ok", "Gate deleted.");
-        await loadAdminGates();
+        await window.loadAdminGates();
       } else {
         toast("err", (res && res.message) || "Failed to delete gate.");
       }
@@ -777,16 +777,16 @@ function bindEnterpriseActionDelegation() {
         el.__azhaBound = true;
         el.addEventListener(id === "adminPermitSearch" ? "input" : "change", function () {
           clearTimeout(searchTimer);
-          searchTimer = setTimeout(() => renderAdminPermits(adminPermits), 180);
+          searchTimer = setTimeout(() => window.renderAdminPermits(adminPermits), 180);
         });
       }
     });
   }
 
   function autoLoadAdminTables() {
-    if (document.getElementById("adminPermitsTableBody")) loadAdminPermits();
-    if (document.getElementById("adminUsersTableBody")) loadAdminUsers();
-    if (document.getElementById("adminGatesTableBody")) loadAdminGates();
+    if (document.getElementById("adminPermitsTableBody")) window.loadAdminPermits();
+    if (document.getElementById("adminUsersTableBody")) window.loadAdminUsers();
+    if (document.getElementById("adminGatesTableBody")) window.loadAdminGates();
   }
 
   bindEnterpriseActionDelegation();

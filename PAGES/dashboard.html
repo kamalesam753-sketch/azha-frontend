@@ -3444,7 +3444,7 @@
     function translatePaymentArabicToEnglish(value) {
       const v = normalizeArabic(value);
       if (v.includes("تم الدفع") || v.includes("ØªÙ… Ø§Ù„Ø³Ø¯Ø§Ø¯") || v.includes("Ù…Ø¯ÙÙˆØ¹") || v.includes("Ù…Ø³Ø¯Ø¯")) return "Paid";
-      if (v.includes("Ù„Ù… ÙŠتم الدفع") || v.includes("ØºÙŠØ± Ù…Ø¯ÙÙˆØ¹") || v.includes("ØºÙŠØ± Ù…Ø³Ø¯Ø¯")) return "Unpaid";
+      if (v.includes("Ù„Ù… ÙŠتم الدفع") || v.includes("ØºÙŠØ± Ù…Ø¯ÙÙˆØ¹") || v.includes("غير محدد")) return "Unpaid";
       return value || "-";
     }
 
