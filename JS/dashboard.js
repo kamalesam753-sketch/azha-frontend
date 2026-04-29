@@ -163,7 +163,7 @@ function bindEnterpriseActionDelegation() {
       '<div class="mini-card"><div class="mini-k">Unpaid</div><div class="mini-v">' + escHtml(unpaid) + '</div></div>';
   }
 
-  function window.renderAdminPermits(data) {
+  window.renderAdminPermits = function (data) {
     const body = document.getElementById("adminPermitsTableBody");
     if (!body) return;
 
