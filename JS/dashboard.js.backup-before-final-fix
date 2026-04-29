@@ -198,9 +198,9 @@
         '<td>' + escHtml(p.phone) + '</td>' +
         '<td>' + escHtml(p.carPlate) + '</td>' +
         '<td><div class="admin-row-actions">' +
-        '<button class="admin-action-btn edit" onclick="editAdminPermit(' + safeArg(pid) + ')">Edit</button>' +
-        '<button class="admin-action-btn reset" onclick="generateClientPermitLink(' + safeArg(pid) + ')">Client Card</button>' +
-        '<button class="admin-action-btn delete" onclick="deleteAdminPermit(' + safeArg(pid) + ')">Delete</button>' +
+        '<button class="admin-action-btn edit" onclick="editAdminPermit(' + safeJson(pid) + ')">Edit</button>' +
+        '<button class="admin-action-btn reset" onclick="generateClientPermitLink(' + safeJson(pid) + ')">Client Card</button>' +
+        '<button class="admin-action-btn delete" onclick="deleteAdminPermit(' + safeJson(pid) + ')">Delete</button>' +
         '</div></td>' +
         '</tr>';
     }).join("");
@@ -328,11 +328,7 @@
     try {
       if (typeof showLoading === "function") showLoading("Generating client card link...");
 
-      let res = await AdminPermitService.generateClientToken(permitId);
-
-      if (!(res && res.success && res.data)) {
-        res = await svc.get({ action: "getTokenByPermit", id: permitId });
-      }
+      const res = await AdminPermitService.generateClientToken(permitId);
 
       if (!(res && res.success && res.data)) {
         toast("err", (res && res.message) || "Failed to generate client card link.");
@@ -345,7 +341,7 @@
         return;
       }
 
-      const clientLink = window.location.origin + "/client?token=" + encodeURIComponent(token);
+      const clientLink = cleanClientLink(token);
       window.lastGeneratedClientLink = clientLink;
 
       const copied = await copyText(clientLink);
@@ -354,13 +350,13 @@
         showNotice("ok", "Client Card Link: " + clientLink, false);
       }
 
-      toast("ok", copied ? "Client card link generated and copied." : "Client card link generated.");
-
-      if (!copied) {
+      if (copied) {
+        toast("ok", "Client card link generated and copied.");
+      } else {
         prompt("Copy client card link:", clientLink);
+        toast("ok", "Client card link generated.");
       }
     } catch (e) {
-      console.error(e);
       toast("err", "System error generating client card link.");
     } finally {
       if (typeof hideLoading === "function") hideLoading();
@@ -425,9 +421,9 @@
         '<td>' + escHtml(u.gateLocation) + '</td>' +
         '<td>' + escHtml(u.status) + '</td>' +
         '<td><div class="admin-row-actions">' +
-        '<button class="admin-action-btn edit" onclick="editAdminUser(' + safeArg(uid) + ')">Edit</button>' +
-        '<button class="admin-action-btn reset" onclick="resetAdminUserPassword(' + safeArg(uid) + ')">Reset PW</button>' +
-        '<button class="admin-action-btn delete" onclick="deleteAdminUser(' + safeArg(uid) + ')">Delete</button>' +
+        '<button class="admin-action-btn edit" onclick="editAdminUser(' + safeJson(uid) + ')">Edit</button>' +
+        '<button class="admin-action-btn reset" onclick="resetAdminUserPassword(' + safeJson(uid) + ')">Reset PW</button>' +
+        '<button class="admin-action-btn delete" onclick="deleteAdminUser(' + safeJson(uid) + ')">Delete</button>' +
         '</div></td>' +
         '</tr>';
     }).join("");
@@ -608,8 +604,8 @@
         '<td>' + escHtml(g.description) + '</td>' +
         '<td>' + escHtml(g.status) + '</td>' +
         '<td><div class="admin-row-actions">' +
-        '<button class="admin-action-btn edit" onclick="editAdminGate(' + safeArg(gid) + ')">Edit</button>' +
-        '<button class="admin-action-btn delete" onclick="deleteAdminGate(' + safeArg(gid) + ')">Delete</button>' +
+        '<button class="admin-action-btn edit" onclick="editAdminGate(' + safeJson(gid) + ')">Edit</button>' +
+        '<button class="admin-action-btn delete" onclick="deleteAdminGate(' + safeJson(gid) + ')">Delete</button>' +
         '</div></td>' +
         '</tr>';
     }).join("");
