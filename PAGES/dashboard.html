@@ -2447,6 +2447,7 @@
                   <th>User</th>
                   <th>Mode</th>
                   <th>Tenant</th>
+                  <th>Guests</th>
                   <th>Unit</th>
                   <th>Status</th>
                   <th>Payment</th>
@@ -2635,7 +2636,7 @@
               </thead>
               <tbody id="searchTableBody">
                 <tr>
-                  <td colspan="9" class="empty">No search has been executed yet.</td>
+                  <td colspan="10" class="empty">No search has been executed yet.</td>
                 </tr>
               </tbody>
             </table>
@@ -3580,7 +3581,7 @@
       const body = document.getElementById("searchTableBody");
 
       if (!data || !data.length) {
-        body.innerHTML = '<tr><td colspan="9" class="empty">No matching results were found.</td></tr>';
+        body.innerHTML = '<tr><td colspan="10" class="empty">No matching results were found.</td></tr>';
         return;
       }
 
