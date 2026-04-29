@@ -2589,7 +2589,7 @@
             <p class="section-sub">Enterprise permit administration workspace for creating, editing, deleting, and supervising permit records through the secured backend API.</p>
           </div>
           <div class="section-head-actions">
-            <button class="btn btn-primary btn-small" onclick="openAdminPermitModal()">âž• Add Permit</button>
+            <button class="btn btn-primary btn-small" onclick="openAdminPermitModal()">➕ Add Permit</button>
             <button class="btn btn-light btn-small" onclick="loadAdminPermits(true)">Refresh Permits</button>
           </div>
         </div>
@@ -2606,7 +2606,7 @@
               <input id="adminPermitSearch" class="input" type="text" placeholder="Ø¨Ø­Ø« Ø¨Ø§Ù„ÙˆØ­Ø¯Ø© / Ø§Ø³Ù… Ø§Ù„Ù…Ø³ØªØ£Ø¬Ø± / Ø§Ù„Ù‡Ø§ØªÙ / Ø±Ù‚Ù… Ø§Ù„Ø³ÙŠØ§Ø±Ø© / Ø§Ù„Ø­Ø§Ù„Ø©" />
               <button class="btn btn-soft" onclick="resetAdminPermitSearch()">Reset</button>
             </div>
-            <button class="btn btn-primary" onclick="openAdminPermitModal()">âž• Add Permit</button>
+            <button class="btn btn-primary" onclick="openAdminPermitModal()">➕ Add Permit</button>
           </div>
 
           <div class="table-wrap admin-table">
@@ -2706,7 +2706,7 @@
             <p class="section-sub">Enterprise user administration workspace for creating, editing, and managing security personnel accounts and role assignments.</p>
           </div>
           <div class="section-head-actions">
-            <button class="btn btn-primary btn-small" onclick="openAdminUserModal()">âž• Add User</button>
+            <button class="btn btn-primary btn-small" onclick="openAdminUserModal()">➕ Add User</button>
             <button class="btn btn-light btn-small" onclick="loadAdminUsers(true)">Refresh Users</button>
           </div>
         </div>
@@ -2796,7 +2796,7 @@
             <p class="section-sub">Central registry for all physical and virtual gate access points within the enterprise security perimeter.</p>
           </div>
           <div class="section-head-actions">
-            <button class="btn btn-primary btn-small" onclick="openAdminGateModal()">âž• Add Gate</button>
+            <button class="btn btn-primary btn-small" onclick="openAdminGateModal()">➕ Add Gate</button>
             <button class="btn btn-light btn-small" onclick="loadAdminGates(true)">Refresh Gates</button>
           </div>
         </div>
@@ -3321,9 +3321,9 @@
 
         document.getElementById("sessionName").textContent = res.data.fullName || res.data.username || "-";
         document.getElementById("sessionRole").textContent = "Role: " + (res.data.role || "-");
-        document.getElementById("sessionGate").textContent = (res.data.gateName || "-") + " â€¢ " + (res.data.gateLocation || "-");
+        document.getElementById("sessionGate").textContent = (res.data.gateName || "-") + " • " + (res.data.gateLocation || "-");
         document.getElementById("topRole").textContent = "Role: " + (res.data.role || "-");
-        document.getElementById("topGate").textContent = "Gate: " + (res.data.gateName || "-") + " â€¢ " + (res.data.gateLocation || "-");
+        document.getElementById("topGate").textContent = "Gate: " + (res.data.gateName || "-") + " • " + (res.data.gateLocation || "-");
         return true;
       } catch (error) {
         AzhaAuth.redirectToLogin();
@@ -3455,7 +3455,7 @@
         return;
       }
 
-      const gateText = [data.gateName, data.gateLocation].filter(Boolean).join(" â€¢ ") || "-";
+      const gateText = [data.gateName, data.gateLocation].filter(Boolean).join(" • ") || "-";
 
       box.innerHTML = `
         <div class="latest-card ${escapeHtml(data.validityClass || "")}">
@@ -3465,8 +3465,8 @@
             Tenant: ${escapeHtml(data.tenant || "-")}<br>
             Unit: ${escapeHtml(data.unit || "-")}<br>
             Gate: ${escapeHtml(gateText)}<br>
-            User: ${escapeHtml(data.securityUsername || "-")} â€¢ ${escapeHtml(data.role || "-")}<br>
-            ${escapeHtml(translateStatusArabicToEnglish(data.statusArabic || "-"))} â€¢ ${escapeHtml(translatePaymentArabicToEnglish(data.paymentArabic || "-"))}<br>
+            User: ${escapeHtml(data.securityUsername || "-")} • ${escapeHtml(data.role || "-")}<br>
+            ${escapeHtml(translateStatusArabicToEnglish(data.statusArabic || "-"))} • ${escapeHtml(translatePaymentArabicToEnglish(data.paymentArabic || "-"))}<br>
             ${escapeHtml(data.timestamp || "-")}
           </div>
           <div class="metric-pair">
@@ -3558,7 +3558,7 @@
           <td>${escapeHtml(row[4] || "-")}</td>
           <td>${escapeHtml(row[11] || "-")}</td>
           <td>${escapeHtml(row[12] || "-")}</td>
-          <td>${escapeHtml((row[13] || "-") + " â€¢ " + (row[14] || "-"))}</td>
+          <td>${escapeHtml((row[13] || "-") + " • " + (row[14] || "-"))}</td>
         </tr>
       `).join("");
     }
@@ -3590,7 +3590,7 @@
           <td>${escapeHtml(formatDecision(row[2] || "-"))}</td>
           <td>${escapeHtml(row[3] || "-")}</td>
           <td>${escapeHtml(row[5] || row[4] || "-")}</td>
-          <td>${escapeHtml((row[7] || "-") + " â€¢ " + (row[8] || "-"))}</td>
+          <td>${escapeHtml((row[7] || "-") + " • " + (row[8] || "-"))}</td>
           <td style="white-space:nowrap">${applyBtns}</td>
         </tr>
       `;
@@ -3657,7 +3657,7 @@
         <tr>
           <td>${escapeHtml(item.fullName || item.username || "-")}</td>
           <td>${escapeHtml(item.role || "-")}</td>
-          <td>${escapeHtml((item.gateName || "-") + " â€¢ " + (item.gateLocation || "-"))}</td>
+          <td>${escapeHtml((item.gateName || "-") + " • " + (item.gateLocation || "-"))}</td>
           <td>${escapeHtml(item.createdAt || "-")}</td>
           <td>${escapeHtml(item.expiresAt || "-")}</td>
           <td>${escapeHtml(item.lastActivity || "-")}</td>
@@ -3790,8 +3790,8 @@
         <div class="list-item">
           <div class="list-item-title">${escapeHtml(translateValidityTextToEnglish(row.validityText || "-"))} â€” ${escapeHtml(row.permitId || "-")}</div>
           <div class="list-item-sub">
-            ${escapeHtml(row.tenant || "-")} â€¢ ${escapeHtml(row.unit || "-")}<br>
-            ${escapeHtml(row.securityUsername || "-")} â€¢ ${escapeHtml(row.timestamp || "-")}
+            ${escapeHtml(row.tenant || "-")} • ${escapeHtml(row.unit || "-")}<br>
+            ${escapeHtml(row.securityUsername || "-")} • ${escapeHtml(row.timestamp || "-")}
           </div>
         </div>
       `).join("") : `<div class="empty">No main gate rows for the current filter.</div>`;
@@ -3800,8 +3800,8 @@
         <div class="list-item">
           <div class="list-item-title">${escapeHtml(translateValidityTextToEnglish(row.validityText || "-"))} â€” ${escapeHtml(row.permitId || "-")}</div>
           <div class="list-item-sub">
-            ${escapeHtml(row.tenant || "-")} â€¢ ${escapeHtml(row.unit || "-")}<br>
-            ${escapeHtml(row.securityUsername || "-")} â€¢ ${escapeHtml(row.timestamp || "-")}
+            ${escapeHtml(row.tenant || "-")} • ${escapeHtml(row.unit || "-")}<br>
+            ${escapeHtml(row.securityUsername || "-")} • ${escapeHtml(row.timestamp || "-")}
           </div>
         </div>
       `).join("") : `<div class="empty">No beach gate rows for the current filter.</div>`;
@@ -3815,8 +3815,8 @@
         <tr>
           <td>${escapeHtml(row.timestamp || "-")}</td>
           <td>${escapeHtml(row.permitId || "-")}</td>
-          <td>${escapeHtml((row.gateName || "-") + " â€¢ " + (row.gateLocation || "-"))}</td>
-          <td>${escapeHtml((row.securityUsername || "-") + " â€¢ " + (row.role || "-"))}</td>
+          <td>${escapeHtml((row.gateName || "-") + " • " + (row.gateLocation || "-"))}</td>
+          <td>${escapeHtml((row.securityUsername || "-") + " • " + (row.role || "-"))}</td>
           <td>${escapeHtml(row.mode || "-")}</td>
           <td>${escapeHtml(row.tenant || "-")}</td>
           <td>${escapeHtml(row.unit || "-")}</td>
@@ -3869,8 +3869,8 @@
         <tr>
           <td>${escapeHtml(row.timestamp || "-")}</td>
           <td>${escapeHtml(row.permitId || "-")}</td>
-          <td>${escapeHtml((row.gateName || "-") + " â€¢ " + (row.gateLocation || "-"))}</td>
-          <td>${escapeHtml((row.securityUsername || "-") + " â€¢ " + (row.role || "-"))}</td>
+          <td>${escapeHtml((row.gateName || "-") + " • " + (row.gateLocation || "-"))}</td>
+          <td>${escapeHtml((row.securityUsername || "-") + " • " + (row.role || "-"))}</td>
           <td>${escapeHtml(row.tenant || "-")}</td>
           <td>${escapeHtml(row.unit || "-")}</td>
           <td><span class="status-tag ${statusTagClass(row.validityClass || "")}">${escapeHtml(translateValidityTextToEnglish(row.validityText || "-"))}</span></td>

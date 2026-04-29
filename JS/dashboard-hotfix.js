@@ -12,13 +12,39 @@
   function getRowPermitId(btn) {
     const row = btn.closest("tr");
     if (!row) return "";
+
+    const rows = Array.from(document.querySelectorAll("#adminPermitsTableBody tr"));
+    const rowIndex = rows.indexOf(row);
+    const all = window.adminPermits || [];
+
     const cells = row.querySelectorAll("td");
     const unit = cells[8] ? cells[8].textContent.trim() : "";
     const tenant = cells[7] ? cells[7].textContent.trim() : "";
-    const all = window.adminPermits || [];
-    const found = all.find(function (p) {
-      return String(p.unit || "").trim() === unit || String(p.tenant || "").trim() === tenant;
+    const phone = cells[2] ? cells[2].textContent.trim() : "";
+    const carPlate = cells[1] ? cells[1].textContent.trim() : "";
+
+    let found = all.find(function (p) {
+      return (
+        String(p.unit || "").trim() === unit &&
+        String(p.tenant || "").trim() === tenant
+      );
     });
+
+    if (!found) {
+      found = all.find(function (p) {
+        return (
+          String(p.unit || "").trim() === unit ||
+          String(p.tenant || "").trim() === tenant ||
+          String(p.phone || "").trim() === phone ||
+          String(p.carPlate || "").trim() === carPlate
+        );
+      });
+    }
+
+    if (!found && rowIndex >= 0 && all[rowIndex]) {
+      found = all[rowIndex];
+    }
+
     return found ? (found.permitId || found._id || "") : "";
   }
 

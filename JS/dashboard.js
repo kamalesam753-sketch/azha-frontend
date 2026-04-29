@@ -132,6 +132,7 @@
       }
 
       adminPermits = res.data || [];
+      window.adminPermits = adminPermits;
       renderAdminPermits(adminPermits);
       renderAdminPermitSummary(adminPermits);
 
@@ -398,6 +399,7 @@
       }
 
       adminUsers = res.data || [];
+      window.adminUsers = adminUsers;
       renderAdminUsers(adminUsers);
 
       if (showMsg) toast("ok", "Users refreshed.");
@@ -583,6 +585,7 @@
       }
 
       adminGates = res.data || [];
+      window.adminGates = adminGates;
       renderAdminGates(adminGates);
 
       if (showMsg) toast("ok", "Gates refreshed.");
