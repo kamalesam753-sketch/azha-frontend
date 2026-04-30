@@ -762,5 +762,75 @@ if ("serviceWorker" in navigator) {
   loadPermit();
 })();
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  const container = document.querySelector(".card, .permit-card, .section");
+  if(!container) return;
+
+  const d = window.currentPermitData || {};
+
+  const list = String(d.tenantsNames || "")
+    .split(/[,\n]/)
+    .map(s=>s.trim())
+    .filter(Boolean);
+
+  if(!list.length) return;
+
+  const htmlBlock = `
+    <div class="identity-check-section">
+      <div class="identity-title">Identity Verification</div>
+      <div class="identity-note">
+        يرجى إبراز بطاقة الهوية أو جواز السفر لجميع الأسماء التالية للتحقق
+      </div>
+      <div class="identity-list">
+        ${list.map((n,i)=>"<div>"+(i+1)+". "+n+"</div>").join("")}
+      </div>
+    </div>
+  `;
+
+  container.insertAdjacentHTML("beforeend", htmlBlock);
+});
+</script>
+
+<style>
+.identity-check-section{
+  margin-top:14px;
+  padding:14px;
+  border-radius:18px;
+  background:#fff8e6;
+  border:1px solid #facc15;
+}
+
+.identity-title{
+  font-weight:900;
+  margin-bottom:6px;
+  font-size:15px;
+}
+
+.identity-note{
+  font-size:12px;
+  margin-bottom:10px;
+  color:#92400e;
+}
+
+.identity-list{
+  font-size:14px;
+  line-height:1.9;
+  font-weight:700;
+}
+
+.names-preview{
+  font-size:14px;
+  line-height:1.7;
+}
+
+.more{
+  margin-top:4px;
+  font-size:12px;
+  color:#64748b;
+}
+</style>
+
 </body>
 </html>
