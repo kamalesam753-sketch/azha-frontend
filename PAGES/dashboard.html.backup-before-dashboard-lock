@@ -4256,7 +4256,7 @@
     });
   </script>
   <script src="../JS/dashboard.js"></script>
-  <!-- dashboard-hotfix disabled after dashboard lock -->
+  <script src="../JS/dashboard-hotfix.js"></script>
 
   <script>
     (function () {
