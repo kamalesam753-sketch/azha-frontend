@@ -846,6 +846,19 @@ if ("serviceWorker" in navigator) {
 }
 </style>
 
+
+<script id="azha-token-sanitizer">
+(function(){
+  const params = new URLSearchParams(location.search);
+  const raw = params.get("token") || "";
+  const match = raw.match(/AZHASEC-[A-Za-z0-9-]+/);
+  if(match && raw !== match[0]){
+    params.set("token", match[0]);
+    history.replaceState(null, "", location.pathname + "?" + params.toString());
+  }
+})();
+</script>
+
 </head>
 
 <body>

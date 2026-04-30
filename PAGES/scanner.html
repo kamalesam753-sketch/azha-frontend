@@ -120,10 +120,22 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
   }
 
   function extractToken(value){
-    const raw=String(value||"").trim();
-    try{const u=new URL(raw);return u.searchParams.get("token") || raw;}catch(e){
-      const m=raw.match(/[?&]token=([^&]+)/);
-      return m ? decodeURIComponent(m[1]) : raw;
+    const raw = String(value || "").trim();
+
+    const direct = raw.match(/AZHASEC-[A-Za-z0-9-]+/);
+    if (direct) return direct[0];
+
+    try {
+      const u = new URL(raw);
+      const t = u.searchParams.get("token") || "";
+      const m = t.match(/AZHASEC-[A-Za-z0-9-]+/);
+      return m ? m[0] : t;
+    } catch(e) {
+      const m = raw.match(/[?&]token=([^&]+)/);
+      if (!m) return raw;
+      const decoded = decodeURIComponent(m[1]);
+      const clean = decoded.match(/AZHASEC-[A-Za-z0-9-]+/);
+      return clean ? clean[0] : decoded;
     }
   }
 
