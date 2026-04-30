@@ -116,7 +116,14 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
     document.getElementById("overlayTitle").textContent=title || "Result";
     document.getElementById("overlayInfo").innerHTML=info || "";
     o.className="overlay-result show " + (type || "invalid");
+    
     beep(type || "invalid");
+    try {
+      if (navigator.vibrate) {
+        navigator.vibrate(type === "valid" ? [80] : type === "warning" ? [80,40,80] : [160,60,160]);
+      }
+    } catch(e) {}
+    
   }
 
   function extractToken(value){
@@ -218,12 +225,46 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
 
     await scanner.start(
       {facingMode:"environment"},
-      {fps:30, qrbox:{width:360,height:360}, aspectRatio:1.0, disableFlip:true},
+      {fps:30, qrbox:{width:380,height:380}, aspectRatio:1.0, disableFlip:true, experimentalFeatures:{useBarCodeDetectorIfSupported:true}},
       onScanSuccess,
       function(){}
     );
 
+    
+    try {
+      const video = document.querySelector("#reader video");
+      const track = video && video.srcObject && video.srcObject.getVideoTracks && video.srcObject.getVideoTracks()[0];
+
+      if (track && track.getCapabilities) {
+        const caps = track.getCapabilities();
+        const advanced = {};
+
+        if (caps.focusMode && caps.focusMode.includes("continuous")) {
+          advanced.focusMode = "continuous";
+        }
+
+        if (caps.exposureMode && caps.exposureMode.includes("continuous")) {
+          advanced.exposureMode = "continuous";
+        }
+
+        if (caps.torch) {
+          // Low-light enhancement when supported
+          advanced.torch = true;
+        }
+
+        if (caps.zoom) {
+          // Auto zoom boost
+          advanced.zoom = Math.min(caps.zoom.max || 1, Math.max(caps.zoom.min || 1, 1.5));
+        }
+
+        if (Object.keys(advanced).length) {
+          track.applyConstraints({ advanced:[advanced] }).catch(function(){});
+        }
+      }
+    } catch(e) {}
+
     setStatus("Ready","");
+    
   }
 
   async function restart(){

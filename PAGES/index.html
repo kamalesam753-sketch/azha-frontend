@@ -859,7 +859,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     const counter = document.createElement("div");
     counter.className = "identity-counter";
-    counter.textContent = "Verified: 0 / " + rows.length;
+    counter.textContent = "Present: 0 / " + rows.length;
 
     rows.forEach(function(row, index){
       row.className = "identity-person-row";
@@ -873,20 +873,17 @@ document.addEventListener("DOMContentLoaded", function(){
 
     const complete = document.createElement("button");
     complete.className = "identity-complete-btn";
-    complete.textContent = "Complete Verification";
+    complete.textContent = "Save Present Guests";
     complete.addEventListener("click", function(){
       const checked = section.querySelectorAll(".identity-person-row.checked").length;
-      if(checked < rows.length){
-        alert("Please verify all listed guests first. / يرجى التحقق من جميع الأسماء أولاً");
-        return;
-      }
-      complete.textContent = "Verification Completed ✓";
+      if(checked === 0){ alert("يرجى تحديد شخص واحد على الأقل"); return; }
+      complete.textContent = "Present Guests Saved ✓";
       complete.classList.add("done");
     });
 
     function updateCounter(){
       const checked = section.querySelectorAll(".identity-person-row.checked").length;
-      counter.textContent = "Verified: " + checked + " / " + rows.length;
+      counter.textContent = "Present: " + checked + " / " + rows.length;
       counter.classList.toggle("done", checked === rows.length);
     }
 
@@ -1042,7 +1039,7 @@ document.addEventListener("DOMContentLoaded", function(){
       '<div class="svp-head"><div><div class="svp-title">Identity Verification</div><div class="svp-sub">يرجى إبراز بطاقة الهوية أو جواز السفر لجميع الأسماء التالية</div></div><div class="svp-count" id="svpCounter">0 / '+names.length+'</div></div>'+
       '<div class="svp-meta"><div><b>Unit</b><span>'+esc(d.unit||"-")+'</span></div><div><b>Guests</b><span>'+esc(d.tenantCount||names.length)+'</span></div></div>'+
       '<div class="svp-list">'+names.map((n,i)=>'<button type="button" class="svp-row"><span class="svp-check">☐</span><span class="svp-name">'+(i+1)+'. '+esc(n)+'</span></button>').join("")+'</div>'+
-      '<button type="button" class="svp-complete" id="svpComplete">Complete Verification</button>';
+      '<button type="button" class="svp-complete" id="svpComplete">Save Present Guests</button>';
 
     target.appendChild(btn);
     target.appendChild(panel);
@@ -1073,8 +1070,8 @@ document.addEventListener("DOMContentLoaded", function(){
 
     complete.addEventListener("click",function(){
       const checked=panel.querySelectorAll(".svp-row.checked").length;
-      if(checked<rows.length){alert("يرجى التحقق من جميع الأسماء أولاً");return;}
-      complete.textContent="Verification Completed ✓";
+      if(checked === 0){alert("يرجى تحديد شخص واحد على الأقل");return;}
+      complete.textContent="Present Guests Saved ✓";
       complete.classList.add("done");
     });
   }
