@@ -171,50 +171,22 @@
     return isPaid(value) ? "Paid" : "Unpaid";
   }
 
-  function parseDashboardDateOnly(v) {
-    const s = String(v || "").trim();
-    const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if (!m) return "";
-    return m[1] + "-" + m[2] + "-" + m[3];
-  }
-
-  function todayDashboardYmd() {
-    const d = new Date();
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    return y + "-" + m + "-" + day;
-  }
-
   function getStatusMeta(p) {
-    const startDate = parseDashboardDateOnly(p && p.startDate);
-    const endDate = parseDashboardDateOnly(p && p.endDate);
-    const today = todayDashboardYmd();
-
-    if (startDate && endDate) {
-      if (today > endDate) {
-        return { text: "التصريح منتهي", tag: "tag-invalid", cls: "invalid", note: "Permit expired" };
-      }
-
-      if (today < startDate) {
-        return { text: "لم يبدأ بعد", tag: "tag-warning", cls: "warning", note: "Not started yet" };
-      }
-
-      if (today === endDate) {
-        return { text: "آخر يوم ساري", tag: "tag-warning", cls: "warning", note: "Last valid day" };
-      }
-
-      return { text: "ساري", tag: "tag-valid", cls: "valid", note: "Valid for entry" };
-    }
-
     const cls = String((p && p.validityClass) || "").toLowerCase();
     const txt = (p && (p.validityText || p.statusArabic || p.status)) || "-";
 
-    if (cls === "valid") return { text: txt, tag: "tag-valid", cls: "valid" };
-    if (cls === "warning") return { text: txt, tag: "tag-warning", cls: "warning" };
-    if (cls === "invalid" || cls === "not_found") return { text: txt, tag: "tag-invalid", cls: "invalid" };
+    if (cls === "valid") return { text: txt, tag: "tag-valid" };
+    if (cls === "warning") return { text: txt, tag: "tag-warning" };
+    if (cls === "invalid" || cls === "not_found") return { text: txt, tag: "tag-invalid" };
 
-    return { text: txt, tag: "tag-soft", cls: "unknown" };
+    const lower = String(txt || "").toLowerCase();
+    if (lower.includes("expired") || txt.includes("انتهى")) return { text: txt, tag: "tag-invalid" };
+    if (lower.includes("warning") || txt.includes("غد") || txt.includes("لم يبدأ") || txt.includes("آخر يوم")) {
+      return { text: txt, tag: "tag-warning" };
+    }
+    if (lower.includes("active") || txt.includes("ساري")) return { text: txt, tag: "tag-valid" };
+
+    return { text: txt, tag: "tag-soft" };
   }
 
   function getSortValue(p, key) {
@@ -326,9 +298,9 @@
 
     const list = Array.isArray(data) ? data : [];
     const total = list.length;
-    const active = list.filter((p) => getStatusMeta(p).cls === "valid").length;
-    const warning = list.filter((p) => getStatusMeta(p).cls === "warning").length;
-    const expired = list.filter((p) => getStatusMeta(p).cls === "invalid").length;
+    const active = list.filter((p) => String(p.validityClass || "").toLowerCase() === "valid").length;
+    const warning = list.filter((p) => String(p.validityClass || "").toLowerCase() === "warning").length;
+    const expired = list.filter((p) => String(p.validityClass || "").toLowerCase() === "invalid").length;
     const paid = list.filter((p) => isPaid(p.paymentArabic || p.paymentStatus)).length;
     const unpaid = total - paid;
 
@@ -412,7 +384,7 @@
         "<td>" + escHtml(p.startDate || "-") + "</td>" +
         "<td>" + escHtml(p.endDate || "-") + "</td>" +
         '<td><span class="status-tag ' + escHtml(status.tag) + '">' + escHtml(status.text) + "</span>" +
-        ((status.note || p.validityNote) ? '<span class="status-subline">' + escHtml(status.note || p.validityNote) + "</span>" : "") +
+        (p.validityNote ? '<span class="status-subline">' + escHtml(p.validityNote) + "</span>" : "") +
         "</td>" +
         "<td>" + escHtml(getPaymentText(p.paymentArabic || p.paymentStatus || "-")) + "</td>" +
         "<td>" + escHtml(p.phone || "-") + "</td>" +
