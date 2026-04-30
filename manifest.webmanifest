@@ -1,0 +1,39 @@
+{
+  "name": "AZHA Security Scanner",
+  "short_name": "AZHA Scanner",
+  "description": "AZHA Enterprise Security Operating System",
+  "start_url": "/login",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#082d4b",
+  "theme_color": "#0f4c81",
+  "icons": [
+    {
+      "src": "/ASSETS/azha-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/ASSETS/azha-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Gate Console",
+      "url": "/gate"
+    },
+    {
+      "name": "Scanner",
+      "url": "/gate"
+    },
+    {
+      "name": "Dashboard",
+      "url": "/dashboard"
+    }
+  ]
+}
