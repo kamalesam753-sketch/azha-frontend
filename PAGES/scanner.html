@@ -40,6 +40,58 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
 .overlay-info{font-size:15px;font-weight:800;line-height:1.8}
 .offline-pill{position:fixed;top:12px;left:12px;z-index:9999;display:none;background:#f97316;color:#fff;padding:9px 12px;border-radius:999px;font-size:12px;font-weight:900}
 .offline-pill.show{display:block}
+
+.scan-reticle{
+  position:absolute;
+  width:min(72vw,390px);
+  height:min(72vw,390px);
+  max-width:390px;
+  max-height:390px;
+  pointer-events:none;
+  border-radius:22px;
+  z-index:5;
+}
+
+.scan-reticle::before,
+.scan-reticle::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:22px;
+}
+
+.scan-reticle::before{
+  border:3px solid rgba(255,255,255,.18);
+}
+
+.corner{
+  position:absolute;
+  width:44px;
+  height:44px;
+  border-color:#ffffff;
+  border-style:solid;
+}
+
+.c1{top:0;left:0;border-width:5px 0 0 5px}
+.c2{top:0;right:0;border-width:5px 5px 0 0}
+.c3{bottom:0;left:0;border-width:0 0 5px 5px}
+.c4{bottom:0;right:0;border-width:0 5px 5px 0}
+
+.scan-line{
+  position:absolute;
+  left:18px;
+  right:18px;
+  height:3px;
+  top:20px;
+  background:linear-gradient(90deg,transparent,#22c55e,transparent);
+  box-shadow:0 0 18px rgba(34,197,94,.9);
+  animation:scanLine 1.35s linear infinite;
+}
+
+@keyframes scanLine{
+  0%{transform:translateY(0)}
+  100%{transform:translateY(calc(min(72vw,390px) - 40px))}
+}
 </style>
 </head>
 <body>
@@ -64,6 +116,13 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
 
   <div class="reader-wrap">
     <div id="reader"></div>
+    <div class="scan-reticle">
+      <span class="corner c1"></span>
+      <span class="corner c2"></span>
+      <span class="corner c3"></span>
+      <span class="corner c4"></span>
+      <span class="scan-line"></span>
+    </div>
     <div class="scan-note" id="scanNote">وجّه الكاميرا نحو QR الخاص بالعميل</div>
   </div>
 
@@ -225,7 +284,7 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
 
     await scanner.start(
       {facingMode:"environment"},
-      {fps:30, qrbox:{width:380,height:380}, aspectRatio:1.0, disableFlip:true, experimentalFeatures:{useBarCodeDetectorIfSupported:true}},
+      {fps:30, qrbox:{width:390,height:390}, aspectRatio:1.0, disableFlip:true, experimentalFeatures:{useBarCodeDetectorIfSupported:true}},
       onScanSuccess,
       function(){}
     );
@@ -247,10 +306,7 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
           advanced.exposureMode = "continuous";
         }
 
-        if (caps.torch) {
-          // Low-light enhancement when supported
-          advanced.torch = true;
-        }
+        
 
         if (caps.zoom) {
           // Auto zoom boost
