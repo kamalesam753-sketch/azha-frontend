@@ -943,5 +943,58 @@ document.addEventListener("DOMContentLoaded", function(){
 }
 </style>
 
+
+<script id="azha-optional-verification-toggle">
+document.addEventListener("DOMContentLoaded", function(){
+  function applyOptional(){
+    const panel =
+      document.getElementById("scannerVerificationPanel") ||
+      document.querySelector(".identity-check-section");
+
+    if(!panel || panel.dataset.optionalReady === "1") return;
+
+    panel.dataset.optionalReady = "1";
+    panel.classList.add("verification-hidden");
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "verification-toggle-btn";
+    btn.textContent = "Show Identity Verification";
+
+    btn.addEventListener("click", function(){
+      panel.classList.toggle("verification-hidden");
+      btn.textContent = panel.classList.contains("verification-hidden")
+        ? "Show Identity Verification"
+        : "Hide Identity Verification";
+    });
+
+    panel.parentNode.insertBefore(btn, panel);
+  }
+
+  setTimeout(applyOptional, 500);
+  setTimeout(applyOptional, 1200);
+  setTimeout(applyOptional, 2200);
+});
+</script>
+
+<style id="azha-optional-verification-toggle-style">
+.verification-hidden{
+  display:none!important;
+}
+
+.verification-toggle-btn{
+  width:calc(100% - 20px);
+  margin:12px 10px;
+  min-height:50px;
+  border:none;
+  border-radius:16px;
+  background:#0f4c81;
+  color:#fff;
+  font-size:14px;
+  font-weight:900;
+  box-shadow:0 14px 35px rgba(15,76,129,.18);
+}
+</style>
+
 </body>
 </html>

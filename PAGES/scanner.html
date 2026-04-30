@@ -190,6 +190,16 @@ button{
   background:#edf4fb;
   color:#0f4c81;
 }
+
+.footer{
+  padding-bottom:calc(12px + env(safe-area-inset-bottom))!important;
+}
+.reader-wrap{
+  padding-bottom:88px!important;
+}
+#reader video{
+  object-fit:cover!important;
+}
 </style>
 
 <style id="azha-final-real-logo-system">
@@ -463,7 +473,7 @@ button{
           showOverlay("invalid", d.validityText || "Invalid Permit", "Permit: " + (d.permitId || "-") + "<br>Unit: " + (d.unit || "-"));
         }
 
-        setTimeout(function(){ openPermitApp(token); }, 850);
+        setTimeout(function(){ openPermitApp(token); }, 250);
         return;
       }
 
@@ -493,7 +503,7 @@ button{
 
     await scanner.start(
       { facingMode:"environment" },
-      { fps:10, qrbox:{ width:260, height:260 } },
+      { fps:18, qrbox:{ width:320, height:320 }, aspectRatio:1.0 },
       onScanSuccess,
       function(){}
     );
@@ -511,7 +521,12 @@ button{
     start().catch(function(){ setStatus("Camera Error", "result-invalid"); });
   };
 
-  window.goGate = function(){ location.href = GATE_ROUTE + "?app=1"; };
+  window.goGate = async function(){
+    try{
+      if(scanner) await scanner.stop();
+    }catch(e){}
+    location.href = "/gate?app=1";
+  };
 
   window.addEventListener("online", syncOfflineQueue);
   window.addEventListener("offline", updateOfflinePill);
