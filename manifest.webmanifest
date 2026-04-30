@@ -18,12 +18,12 @@
   ],
   "shortcuts": [
     {
-      "name": "Gate Console",
-      "url": "/gate?app=1"
+      "name": "Scanner",
+      "url": "/scanner"
     },
     {
-      "name": "Scanner",
-      "url": "/gate?app=1&mode=scanner"
+      "name": "Gate Console",
+      "url": "/gate?app=1"
     },
     {
       "name": "Dashboard",

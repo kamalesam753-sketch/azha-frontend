@@ -2079,6 +2079,29 @@ if ("serviceWorker" in navigator) {
 })();
 </script>
 
-</body>
+
+<script id="azha-open-scanner-direct">
+(function(){
+  function goScanner(){
+    location.href = "/scanner";
+  }
+
+  window.addEventListener("load", function(){
+    document.addEventListener("click", function(e){
+      const btn = e.target.closest("button,.btn,a");
+      if(!btn) return;
+
+      const t = (btn.innerText || btn.textContent || "").toLowerCase();
+
+      if(t.includes("scan secure qr") || t.includes("secure token scan") || t.includes("scanner mode")){
+        e.preventDefault();
+        e.stopPropagation();
+        goScanner();
+      }
+    }, true);
+  });
+})();
+</script>
+\n</body>
 
 </html>

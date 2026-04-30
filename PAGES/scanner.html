@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>AZHA Scanner</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#061827">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="AZHA Scanner">
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="../JS/core/config.js"></script>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  background:#061827;
+  color:#fff;
+  font-family:Arial,sans-serif;
+  overflow:hidden;
+}
+.app{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+.top{
+  padding:14px 16px;
+  background:linear-gradient(135deg,#082d4b,#0f4c81);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.brand{
+  font-weight:900;
+  letter-spacing:.05em;
+  font-size:16px;
+}
+.meta{
+  font-size:11px;
+  color:rgba(255,255,255,.75);
+  margin-top:3px;
+}
+.status{
+  padding:10px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.12);
+  font-size:12px;
+  font-weight:900;
+}
+.reader-wrap{
+  flex:1;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px;
+}
+#reader{
+  width:100%;
+  max-width:460px;
+  overflow:hidden;
+  border-radius:26px;
+  background:#000;
+  border:1px solid rgba(255,255,255,.16);
+}
+.scan-note{
+  position:absolute;
+  left:16px;
+  right:16px;
+  bottom:92px;
+  background:rgba(15,76,129,.88);
+  border:1px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(12px);
+  border-radius:20px;
+  padding:14px;
+  text-align:center;
+  font-weight:900;
+  line-height:1.7;
+}
+.footer{
+  padding:12px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  background:#061827;
+}
+button{
+  border:none;
+  border-radius:18px;
+  min-height:52px;
+  font-weight:900;
+  font-size:14px;
+}
+.primary{background:#1977b5;color:#fff}
+.light{background:#edf4fb;color:#0f4c81}
+.danger{background:#b91c1c;color:#fff}
+.result-valid{background:#16a34a!important}
+.result-warning{background:#d97706!important}
+.result-invalid{background:#b91c1c!important}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div>
+      <div class="brand">AZHA SCANNER</div>
+      <div class="meta" id="sessionMeta">Secure gate verification</div>
+    </div>
+    <div class="status" id="statusBadge">Ready</div>
+  </div>
+
+  <div class="reader-wrap">
+    <div id="reader"></div>
+    <div class="scan-note" id="scanNote">وجّه الكاميرا نحو QR الخاص بالعميل</div>
+  </div>
+
+  <div class="footer">
+    <button class="light" onclick="restartScanner()">Restart</button>
+    <button class="danger" onclick="goGate()">Gate</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const API_BASE =
+    (window.AZHA_CONFIG && (window.AZHA_CONFIG.API_BASE || (window.AZHA_CONFIG.API && window.AZHA_CONFIG.API.BASE_URL))) ||
+    "https://azha-backend-production.up.railway.app/api";
+
+  const ROUTES = (window.AZHA_CONFIG && window.AZHA_CONFIG.ROUTES) || {};
+  const LOGIN_ROUTE = ROUTES.login || "/login";
+  const GATE_ROUTE = ROUTES.gate || "/gate";
+  const PERMIT_ROUTE = ROUTES.permitPreview || "/permit";
+
+  let scanner = null;
+  let locked = false;
+
+  function getSessionToken(){
+    return localStorage.getItem("sessionToken") || sessionStorage.getItem("sessionToken") || "";
+  }
+
+  function getRole(){
+    return String(localStorage.getItem("role") || sessionStorage.getItem("role") || "").toLowerCase();
+  }
+
+  function allowed(){
+    return ["admin","supervisor","guard","scanner"].includes(getRole());
+  }
+
+  function setStatus(text, cls){
+    const badge = document.getElementById("statusBadge");
+    const note = document.getElementById("scanNote");
+    badge.className = "status " + (cls || "");
+    badge.textContent = text || "Ready";
+    if(note) note.textContent = text || "جاهز للمسح";
+  }
+
+  function extractToken(value){
+    const raw = String(value || "").trim();
+    try{
+      const u = new URL(raw);
+      return u.searchParams.get("token") || raw;
+    }catch(e){
+      const m = raw.match(/[?&]token=([^&]+)/);
+      return m ? decodeURIComponent(m[1]) : raw;
+    }
+  }
+
+  function openPermitApp(token){
+    const url =
+      PERMIT_ROUTE +
+      "?token=" + encodeURIComponent(token) +
+      "&mode=security" +
+      "&app=1" +
+      "&from=scanner" +
+      "&sessionToken=" + encodeURIComponent(getSessionToken());
+
+    location.href = url;
+  }
+
+  async function onScanSuccess(decodedText){
+    if(locked) return;
+    locked = true;
+
+    const token = extractToken(decodedText);
+    setStatus("Checking...", "");
+
+    try{
+      const qs = new URLSearchParams({
+        action:"scanToken",
+        token:token,
+        sessionToken:getSessionToken(),
+        mode:"pwa_scanner",
+        _t:Date.now()
+      });
+
+      const res = await fetch(API_BASE + "?" + qs.toString(), { method:"GET", cache:"no-store" });
+      const json = await res.json();
+
+      if(json && json.success){
+        const cls = ((json.data || {}).validityClass || "").toLowerCase();
+        if(cls === "valid") setStatus("Valid - Opening Permit", "result-valid");
+        else if(cls === "warning") setStatus("Warning - Opening Permit", "result-warning");
+        else setStatus("Invalid - Opening Permit", "result-invalid");
+
+        setTimeout(function(){ openPermitApp(token); }, 450);
+        return;
+      }
+
+      setStatus("Invalid QR", "result-invalid");
+      setTimeout(function(){ locked = false; }, 1800);
+    }catch(e){
+      setStatus("Connection Error", "result-invalid");
+      setTimeout(function(){ locked = false; }, 1800);
+    }
+  }
+
+  async function start(){
+    if(!getSessionToken() || !allowed()){
+      location.href = LOGIN_ROUTE;
+      return;
+    }
+
+    document.getElementById("sessionMeta").textContent =
+      (localStorage.getItem("sessionUsername") || sessionStorage.getItem("sessionUsername") || "security") +
+      " • " +
+      (localStorage.getItem("sessionGateName") || sessionStorage.getItem("sessionGateName") || "Gate");
+
+    scanner = new Html5Qrcode("reader");
+
+    await scanner.start(
+      { facingMode:"environment" },
+      { fps:10, qrbox:{ width:260, height:260 } },
+      onScanSuccess,
+      function(){}
+    );
+
+    setStatus("Ready", "");
+  }
+
+  window.restartScanner = async function(){
+    locked = false;
+    setStatus("Restarting...", "");
+    try{
+      if(scanner) await scanner.stop();
+    }catch(e){}
+    document.getElementById("reader").innerHTML = "";
+    start().catch(function(){ setStatus("Camera Error", "result-invalid"); });
+  };
+
+  window.goGate = function(){ location.href = GATE_ROUTE + "?app=1"; };
+
+  start().catch(function(){
+    setStatus("Camera Permission Required", "result-invalid");
+  });
+})();
+</script>
+</body>
+</html>

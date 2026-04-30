@@ -340,7 +340,76 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
-</head>
+
+<style id="azha-permit-mobile-app-result">
+@media(max-width:760px){
+  body{
+    padding:10px!important;
+    background:#061827!important;
+    min-height:100vh!important;
+  }
+
+  body.azha-permit-app-mode .azha-brand-header,
+  body.azha-permit-app-mode header,
+  body.azha-permit-app-mode .hero,
+  body.azha-permit-app-mode .actions,
+  body.azha-permit-app-mode .footer-note{
+    display:none!important;
+  }
+
+  body.azha-permit-app-mode .wrap,
+  body.azha-permit-app-mode .container,
+  body.azha-permit-app-mode main,
+  body.azha-permit-app-mode #app{
+    max-width:100%!important;
+    width:100%!important;
+    margin:0!important;
+  }
+
+  body.azha-permit-app-mode .card,
+  body.azha-permit-app-mode .permit-card,
+  body.azha-permit-app-mode .section,
+  body.azha-permit-app-mode .result-card{
+    border-radius:26px!important;
+    margin:0!important;
+    box-shadow:0 24px 70px rgba(0,0,0,.24)!important;
+  }
+
+  body.azha-permit-app-mode table,
+  body.azha-permit-app-mode .grid{
+    font-size:13px!important;
+  }
+
+  body.azha-permit-app-mode .status-tag,
+  body.azha-permit-app-mode .status-pill{
+    font-size:18px!important;
+    padding:14px!important;
+    border-radius:18px!important;
+    text-align:center!important;
+    display:block!important;
+    width:100%!important;
+  }
+
+  body.azha-permit-app-mode button,
+  body.azha-permit-app-mode .btn{
+    min-height:50px!important;
+    border-radius:16px!important;
+    font-size:14px!important;
+  }
+}
+</style>
+<script id="azha-permit-app-mode-controller">
+(function(){
+  const q = new URLSearchParams(location.search);
+  if(q.get("app") === "1" || q.get("from") === "scanner"){
+    document.addEventListener("DOMContentLoaded", function(){
+      document.body.classList.add("azha-permit-app-mode");
+      setTimeout(function(){ window.scrollTo({top:0, behavior:"instant"}); }, 250);
+    });
+  }
+})();
+</script>
+\n</head>
 <body>
 
 <header class="azha-brand-header">

@@ -23,6 +23,10 @@
     {
       "src": "/permit",
       "dest": "/PAGES/index.html"
+    },
+    {
+      "src": "/scanner",
+      "dest": "/PAGES/scanner.html"
     }
   ]
 }
