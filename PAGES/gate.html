@@ -960,6 +960,93 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
+
+<style id="azha-mobile-app-mode">
+@media (max-width: 760px){
+  body{
+    padding:10px!important;
+    background:#eaf4fb!important;
+  }
+
+  body.azha-app-mode .azha-brand-header{
+    min-height:66px!important;
+    margin:0 auto 12px!important;
+    padding:10px 14px!important;
+    border-radius:22px!important;
+    background:linear-gradient(135deg,#0b3558,#1977b5)!important;
+  }
+
+  body.azha-app-mode .azha-brand-header img{
+    display:none!important;
+  }
+
+  body.azha-app-mode .azha-brand-header::after{
+    content:"AZHA";
+    font-size:24px!important;
+    font-weight:900!important;
+    color:#fff!important;
+    letter-spacing:.08em!important;
+  }
+
+  body.azha-app-mode .azha-brand-title strong{
+    font-size:14px!important;
+    color:#fff!important;
+  }
+
+  body.azha-app-mode .azha-brand-title span{
+    font-size:9px!important;
+    color:rgba(255,255,255,.72)!important;
+  }
+
+  body.azha-app-mode .hero,
+  body.azha-app-mode .gate-hero,
+  body.azha-app-mode .command-hero{
+    padding:20px 16px!important;
+    border-radius:26px!important;
+    margin-bottom:14px!important;
+  }
+
+  body.azha-app-mode h1{
+    font-size:28px!important;
+    line-height:1.15!important;
+  }
+
+  body.azha-app-mode .section,
+  body.azha-app-mode .panel,
+  body.azha-app-mode .card{
+    border-radius:24px!important;
+  }
+
+  body.azha-app-mode button,
+  body.azha-app-mode .btn{
+    min-height:52px!important;
+    border-radius:18px!important;
+    font-size:15px!important;
+  }
+
+  body.azha-scanner-mode .hero,
+  body.azha-scanner-mode .gate-hero,
+  body.azha-scanner-mode .command-hero{
+    display:none!important;
+  }
+
+  body.azha-scanner-mode .azha-brand-header{
+    display:none!important;
+  }
+
+  body.azha-scanner-mode{
+    padding:8px!important;
+    background:#061827!important;
+  }
+
+  body.azha-scanner-mode #reader,
+  body.azha-scanner-mode video,
+  body.azha-scanner-mode canvas{
+    max-width:100%!important;
+  }
+}
+</style>
+
 </head>
 
 <body>
@@ -1920,6 +2007,78 @@ if ("serviceWorker" in navigator) {
 
     initGateConsole();
   </script>
+
+<script id="azha-gate-mobile-app-controller">
+(function(){
+  function qs(){ return new URLSearchParams(location.search); }
+
+  function isMobile(){
+    return window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
+  }
+
+  function findButtonByText(parts){
+    const buttons = Array.from(document.querySelectorAll("button,.btn,a"));
+    return buttons.find(function(btn){
+      const t = (btn.innerText || btn.textContent || "").toLowerCase();
+      return parts.every(function(p){ return t.includes(p); });
+    });
+  }
+
+  function findScannerTarget(){
+    return document.querySelector("#reader") ||
+           document.querySelector("#qrcode") ||
+           document.querySelector("[id*='scanner' i]") ||
+           document.querySelector("[class*='scanner' i]") ||
+           document.querySelector("[id*='scan' i]") ||
+           document.querySelector("[class*='scan' i]");
+  }
+
+  function scrollToScanner(){
+    setTimeout(function(){
+      const target = findScannerTarget();
+      if(target){
+        target.scrollIntoView({behavior:"smooth", block:"start"});
+      }
+    }, 500);
+  }
+
+  function openScannerMode(){
+    document.body.classList.add("azha-scanner-mode");
+
+    const scanBtn =
+      findButtonByText(["scan", "secure"]) ||
+      findButtonByText(["scanner"]) ||
+      findButtonByText(["qr"]);
+
+    if(scanBtn){
+      scanBtn.click();
+    }
+
+    scrollToScanner();
+  }
+
+  window.addEventListener("load", function(){
+    if(isMobile() || qs().get("app") === "1"){
+      document.body.classList.add("azha-app-mode");
+    }
+
+    if(qs().get("mode") === "scanner"){
+      setTimeout(openScannerMode, 700);
+    }
+
+    document.addEventListener("click", function(e){
+      const btn = e.target.closest("button,.btn,a");
+      if(!btn) return;
+
+      const t = (btn.innerText || btn.textContent || "").toLowerCase();
+      if(t.includes("scan secure qr") || t.includes("secure qr") || t.includes("scanner")){
+        setTimeout(scrollToScanner, 400);
+      }
+    }, true);
+  });
+})();
+</script>
+
 </body>
 
 </html>

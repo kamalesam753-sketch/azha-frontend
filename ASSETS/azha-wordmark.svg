@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="180" viewBox="0 0 520 180">
+  <rect width="520" height="180" rx="34" fill="#ffffff"/>
+  <text x="260" y="78" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="900" letter-spacing="6" fill="#0f4c81">AZHA</text>
+  <text x="260" y="120" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#0f4c81">أزهي</text>
+  <line x1="130" y1="138" x2="390" y2="138" stroke="#d4af37" stroke-width="5" stroke-linecap="round"/>
+</svg>
