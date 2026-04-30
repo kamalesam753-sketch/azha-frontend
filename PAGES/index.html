@@ -409,11 +409,56 @@ if ("serviceWorker" in navigator) {
   }
 })();
 </script>
-\n</head>
+\n
+<style id="azha-final-real-logo-system">
+  img[src*="azha-logo-final"]{
+    width:auto!important;
+    height:58px!important;
+    object-fit:contain!important;
+    background:transparent!important;
+    filter:none!important;
+  }
+
+  img[src*="madaar-logo-final"]{
+    width:auto!important;
+    height:34px!important;
+    object-fit:contain!important;
+    background:transparent!important;
+    filter:none!important;
+    opacity:.95!important;
+  }
+
+  .azha-brand-header img[src*="azha-logo-final"]{
+    height:64px!important;
+    max-width:220px!important;
+  }
+
+  .logo-chip img[src*="azha-logo-final"],
+  .logo-chip img[src*="madaar-logo-final"]{
+    filter:none!important;
+  }
+
+  @media(max-width:760px){
+    img[src*="azha-logo-final"]{
+      height:44px!important;
+    }
+
+    img[src*="madaar-logo-final"]{
+      height:26px!important;
+    }
+
+    .azha-brand-header img[src*="azha-logo-final"]{
+      height:48px!important;
+      max-width:170px!important;
+    }
+  }
+</style>
+
+</head>
 <body>
 
 <header class="azha-brand-header">
-  <img src="../ASSETS/azha-wordmark.svg" alt="Azha Logo">
+  <img src="../ASSETS/azha-logo-final.png" alt="Azha Logo">
   <div class="azha-brand-title">
     <strong>AZHA Enterprise Security System</strong>
     <span>Community Security Operating System</span>
@@ -423,7 +468,7 @@ if ("serviceWorker" in navigator) {
 <div id="app">
   <div class="loading-wrap">
     <div class="loading-card">
-      <img class="madaar-card-logo" src="../ASSETS/madaar-logo.png" alt="Madaar Logo">
+      <img class="madaar-card-logo" src="../ASSETS/madaar-logo-final.png" alt="Madaar Logo">
       <div class="loading-title">Loading Permit / جاري تحميل التصريح</div>
       <div class="loading-sub">Please wait while the system verifies secure token access.</div>
     </div>
@@ -544,7 +589,7 @@ if ("serviceWorker" in navigator) {
     document.getElementById("app").innerHTML = `
       <div class="error-wrap">
         <div class="error-card">
-          <img class="madaar-card-logo" src="../ASSETS/madaar-logo.png" alt="Madaar Logo">
+          <img class="madaar-card-logo" src="../ASSETS/madaar-logo-final.png" alt="Madaar Logo">
           <div class="error-head">
             <h1>تعذر تحميل التصريح</h1>
           </div>
@@ -612,7 +657,7 @@ if ("serviceWorker" in navigator) {
     document.getElementById("app").innerHTML = `
       <div class="shell">
         <div class="card">
-          <img class="madaar-card-logo" src="../ASSETS/madaar-logo.png" alt="Madaar Logo">
+          <img class="madaar-card-logo" src="../ASSETS/madaar-logo-final.png" alt="Madaar Logo">
           <div class="watermark">AZHA</div>
 
           <div class="header">

@@ -165,7 +165,7 @@
       left: 18px;
       width: 86px;
       height: 26px;
-      background-image: url('../ASSETS/madaar-logo.png');
+      background-image: url('../ASSETS/madaar-logo-final.png');
       background-size: contain;
       background-repeat: no-repeat;
       background-position: left center;
@@ -1047,12 +1047,57 @@ if ("serviceWorker" in navigator) {
 }
 </style>
 
+
+<style id="azha-final-real-logo-system">
+  img[src*="azha-logo-final"]{
+    width:auto!important;
+    height:58px!important;
+    object-fit:contain!important;
+    background:transparent!important;
+    filter:none!important;
+  }
+
+  img[src*="madaar-logo-final"]{
+    width:auto!important;
+    height:34px!important;
+    object-fit:contain!important;
+    background:transparent!important;
+    filter:none!important;
+    opacity:.95!important;
+  }
+
+  .azha-brand-header img[src*="azha-logo-final"]{
+    height:64px!important;
+    max-width:220px!important;
+  }
+
+  .logo-chip img[src*="azha-logo-final"],
+  .logo-chip img[src*="madaar-logo-final"]{
+    filter:none!important;
+  }
+
+  @media(max-width:760px){
+    img[src*="azha-logo-final"]{
+      height:44px!important;
+    }
+
+    img[src*="madaar-logo-final"]{
+      height:26px!important;
+    }
+
+    .azha-brand-header img[src*="azha-logo-final"]{
+      height:48px!important;
+      max-width:170px!important;
+    }
+  }
+</style>
+
 </head>
 
 <body>
   <div class="wrap">
     <header class="azha-brand-header">
-      <img src="../ASSETS/azha-logo.png" alt="Azha Logo">
+      <img src="../ASSETS/azha-logo-final.png" alt="Azha Logo">
       <div class="azha-brand-title">
         <strong>AZHA Enterprise Security System</strong>
         <span>Community Security Operating System</span>
@@ -1063,12 +1108,12 @@ if ("serviceWorker" in navigator) {
         <div class="brand">AZHA Community • Gate Console</div>
         <div class="brand-logos">
           <div class="logo-chip">
-            <img src="../ASSETS/azha-logo.png" alt="AZHA Logo"
+            <img src="../ASSETS/azha-logo-final.png" alt="AZHA Logo"
               onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
             <span class="logo-fallback" style="display:none;">AZHA</span>
           </div>
           <div class="logo-chip">
-            <img src="../ASSETS/madaar-logo.png" alt="MADAAR Logo"
+            <img src="../ASSETS/madaar-logo-final.png" alt="MADAAR Logo"
               onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
             <span class="logo-fallback" style="display:none;">MADAAR</span>
           </div>

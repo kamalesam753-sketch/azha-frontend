@@ -530,12 +530,57 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
+
+<style id="azha-final-real-logo-system">
+  img[src*="azha-logo-final"]{
+    width:auto!important;
+    height:58px!important;
+    object-fit:contain!important;
+    background:transparent!important;
+    filter:none!important;
+  }
+
+  img[src*="madaar-logo-final"]{
+    width:auto!important;
+    height:34px!important;
+    object-fit:contain!important;
+    background:transparent!important;
+    filter:none!important;
+    opacity:.95!important;
+  }
+
+  .azha-brand-header img[src*="azha-logo-final"]{
+    height:64px!important;
+    max-width:220px!important;
+  }
+
+  .logo-chip img[src*="azha-logo-final"],
+  .logo-chip img[src*="madaar-logo-final"]{
+    filter:none!important;
+  }
+
+  @media(max-width:760px){
+    img[src*="azha-logo-final"]{
+      height:44px!important;
+    }
+
+    img[src*="madaar-logo-final"]{
+      height:26px!important;
+    }
+
+    .azha-brand-header img[src*="azha-logo-final"]{
+      height:48px!important;
+      max-width:170px!important;
+    }
+  }
+</style>
+
 </head>
 
 <body>
   <div class="shell">
     <header class="azha-brand-header">
-      <img src="../ASSETS/azha-wordmark.svg" alt="Azha Logo">
+      <img src="../ASSETS/azha-logo-final.png" alt="Azha Logo">
       <div class="azha-brand-title">
         <strong>AZHA Enterprise Security System</strong>
         <span>Community Security Operating System</span>
@@ -543,7 +588,7 @@ if ("serviceWorker" in navigator) {
     </header>
 
     <div class="card">
-      <img class="madaar-card-logo" src="../ASSETS/madaar-logo.png" alt="Madaar Logo">
+      <img class="madaar-card-logo" src="../ASSETS/madaar-logo-final.png" alt="Madaar Logo">
 
       <section class="hero">
         <div class="hero-badge">AZHA COMMUNITY • SECURITY ACCESS</div>
@@ -575,7 +620,7 @@ if ("serviceWorker" in navigator) {
         <div class="brandline">AZHA INTERNAL SECURITY SYSTEM</div>
 
         <div class="form-card">
-          <img class="madaar-card-logo" src="../ASSETS/madaar-logo.png" alt="Madaar Logo">
+          <img class="madaar-card-logo" src="../ASSETS/madaar-logo-final.png" alt="Madaar Logo">
           <div class="title">Secure Login</div>
           <div class="subtitle">Enter your credentials to access the operational modules assigned to your role.</div>
 

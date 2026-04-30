@@ -178,7 +178,7 @@
       left: 18px;
       width: 86px;
       height: 26px;
-      background-image: url('../ASSETS/madaar-logo.png');
+      background-image: url('../ASSETS/madaar-logo-final.png');
       background-size: contain;
       background-repeat: no-repeat;
       background-position: left center;
@@ -2131,6 +2131,51 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
+
+<style id="azha-final-real-logo-system">
+  img[src*="azha-logo-final"]{
+    width:auto!important;
+    height:58px!important;
+    object-fit:contain!important;
+    background:transparent!important;
+    filter:none!important;
+  }
+
+  img[src*="madaar-logo-final"]{
+    width:auto!important;
+    height:34px!important;
+    object-fit:contain!important;
+    background:transparent!important;
+    filter:none!important;
+    opacity:.95!important;
+  }
+
+  .azha-brand-header img[src*="azha-logo-final"]{
+    height:64px!important;
+    max-width:220px!important;
+  }
+
+  .logo-chip img[src*="azha-logo-final"],
+  .logo-chip img[src*="madaar-logo-final"]{
+    filter:none!important;
+  }
+
+  @media(max-width:760px){
+    img[src*="azha-logo-final"]{
+      height:44px!important;
+    }
+
+    img[src*="madaar-logo-final"]{
+      height:26px!important;
+    }
+
+    .azha-brand-header img[src*="azha-logo-final"]{
+      height:48px!important;
+      max-width:170px!important;
+    }
+  }
+</style>
+
 </head>
 
 <body>
@@ -2151,12 +2196,12 @@ if ("serviceWorker" in navigator) {
 
         <div class="brand-logos">
           <div class="logo-chip">
-            <img src="../ASSETS/azha-wordmark.svg" alt="AZHA Logo"
+            <img src="../ASSETS/azha-logo-final.png" alt="AZHA Logo"
               onerror="this.onerror=null;this.src=this.src.endsWith('.png.png')?this.src:this.src+'.png';">
             <span class="logo-fallback" style="display:none;">AZHA</span>
           </div>
           <div class="logo-chip">
-            <img src="../ASSETS/madaar-logo.png" alt="MADAAR Logo"
+            <img src="../ASSETS/madaar-logo-final.png" alt="MADAAR Logo"
               onerror="this.onerror=null;this.src=this.src.endsWith('.png.png')?this.src:this.src+'.png';">
             <span class="logo-fallback" style="display:none;">MADAAR</span>
           </div>
@@ -2202,7 +2247,7 @@ if ("serviceWorker" in navigator) {
 
     <main class="main">
       <header class="azha-brand-header">
-        <img src="../ASSETS/azha-wordmark.svg" alt="Azha Logo">
+        <img src="../ASSETS/azha-logo-final.png" alt="Azha Logo">
         <div class="azha-brand-title">
           <strong>AZHA Enterprise Security System</strong>
           <span>Community Security Operating System</span>
@@ -4303,8 +4348,8 @@ if ("serviceWorker" in navigator) {
 
       function fixAssetImages() {
         const roots = ["../ASSETS/", "/ASSETS/", "./ASSETS/", "ASSETS/"];
-        const azhaNames = ["azha-logo.png", "AZHA-logo.png", "AZHA_logo_navy.png", "azha_logo.png", "azha_logo_transparent.png"];
-        const madaarNames = ["madaar-logo.png", "MADAAR-logo.png", "MADAAR_logo_gold.png", "madaar_logo.png", "madaar_logo_transparent.png"];
+        const azhaNames = ["azha-logo-final.png", "AZHA-logo.png", "AZHA_logo_navy.png", "azha_logo.png", "azha_logo_transparent.png"];
+        const madaarNames = ["madaar-logo-final.png", "MADAAR-logo.png", "MADAAR_logo_gold.png", "madaar_logo.png", "madaar_logo_transparent.png"];
         const bgNames = ["bg-light.png", "bg-light_texture.png", "bg_texture.png", "bg-light.png.png"];
 
         function buildCandidates(names) {
