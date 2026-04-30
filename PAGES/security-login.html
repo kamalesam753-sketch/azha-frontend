@@ -898,6 +898,31 @@ if ("serviceWorker" in navigator) {
       init();
     })();
   </script>
+
+<script id="azha-login-scanner-auto-redirect">
+(function(){
+  function getRole(){
+    return String(localStorage.getItem("role") || sessionStorage.getItem("role") || "").toLowerCase();
+  }
+
+  function getToken(){
+    return localStorage.getItem("sessionToken") || sessionStorage.getItem("sessionToken") || "";
+  }
+
+  function goScannerIfSecurity(){
+    const role = getRole();
+    if(getToken() && (role === "guard" || role === "scanner")){
+      location.href = "/scanner";
+    }
+  }
+
+  window.addEventListener("load", function(){
+    setTimeout(goScannerIfSecurity, 600);
+    setTimeout(goScannerIfSecurity, 1400);
+  });
+})();
+</script>
+
 </body>
 
 </html>
