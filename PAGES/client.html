@@ -674,6 +674,178 @@ if ("serviceWorker" in navigator) {
   }
 </style>
 
+
+<style id="azha-client-mobile-final-clarity">
+@media(max-width:760px){
+  html,body{
+    width:100%!important;
+    min-height:100%!important;
+    overflow-x:hidden!important;
+  }
+
+  body{
+    padding:8px!important;
+    background:#061827!important;
+  }
+
+  .azha-brand-header{
+    display:none!important;
+  }
+
+  .wrap{
+    max-width:100%!important;
+    width:100%!important;
+    margin:0!important;
+  }
+
+  .card{
+    width:100%!important;
+    max-width:100%!important;
+    border-radius:22px!important;
+    box-shadow:0 18px 45px rgba(0,0,0,.24)!important;
+  }
+
+  .hero{
+    padding:16px 12px 14px!important;
+  }
+
+  .hero h1{
+    font-size:22px!important;
+  }
+
+  .hero p{
+    font-size:11px!important;
+    line-height:1.45!important;
+  }
+
+  .secure-strip{
+    display:none!important;
+  }
+
+  .permit-id{
+    margin:10px!important;
+    padding:10px!important;
+    font-size:14px!important;
+  }
+
+  .status-pill{
+    margin:0 10px 8px!important;
+    padding:12px!important;
+    font-size:20px!important;
+    border-radius:16px!important;
+  }
+
+  .validity-note{
+    margin:0 10px 10px!important;
+    padding:10px!important;
+    font-size:13px!important;
+    line-height:1.6!important;
+  }
+
+  .countdown-box{
+    margin:0 10px 10px!important;
+    grid-template-columns:repeat(3,1fr)!important;
+    gap:6px!important;
+  }
+
+  .count-card{
+    padding:9px 6px!important;
+    border-radius:13px!important;
+  }
+
+  .count-card .k{
+    font-size:9px!important;
+  }
+
+  .count-card .v{
+    font-size:12px!important;
+  }
+
+  .badges,
+  .qr-caption,
+  .token-line,
+  .note,
+  .time{
+    display:none!important;
+  }
+
+  .qr-box{
+    margin:10px!important;
+  }
+
+  .qr-frame{
+    width:190px!important;
+    min-width:190px!important;
+    padding:10px!important;
+    border-radius:18px!important;
+  }
+
+  #qrcode{
+    width:168px!important;
+    min-height:168px!important;
+  }
+
+  #qrcode img,
+  #qrcode canvas{
+    max-width:168px!important;
+    max-height:168px!important;
+  }
+
+  .qr-title{
+    font-size:11px!important;
+    margin-top:7px!important;
+  }
+
+  .grid{
+    padding:10px!important;
+    gap:7px!important;
+    grid-template-columns:1fr!important;
+  }
+
+  .item{
+    padding:10px!important;
+    border-radius:14px!important;
+  }
+
+  .label{
+    font-size:10px!important;
+    margin-bottom:4px!important;
+  }
+
+  .value{
+    font-size:14px!important;
+    line-height:1.45!important;
+  }
+
+  .actions{
+    padding:0 10px 12px!important;
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:8px!important;
+  }
+
+  .btn{
+    margin:0!important;
+    padding:10px 8px!important;
+    font-size:11px!important;
+    border-radius:12px!important;
+  }
+
+  .id-required-note{
+    margin:10px!important;
+    padding:12px!important;
+    border-radius:16px!important;
+    background:#fff8e6!important;
+    border:1px solid #facc15!important;
+    color:#92400e!important;
+    font-size:13px!important;
+    font-weight:900!important;
+    line-height:1.7!important;
+    text-align:center!important;
+  }
+}
+</style>
+
 </head>
 
 <body>
@@ -997,11 +1169,11 @@ if ("serviceWorker" in navigator) {
               </div>
 
               <div class="actions">
-                <button class="btn primary" onclick="window.print()">Print / PDF</button>
-                <button class="btn light" onclick="copyLink()">Copy Link</button>
+                <button class="btn primary" onclick="window.print()">Print</button>
+                <button class="btn light" onclick="copyLink()">Copy</button>
                 <button class="btn share" onclick="shareLink()">Share</button>
                 <button class="btn whatsapp" onclick="shareWhatsapp()">WhatsApp</button>
-                <button class="btn dark" onclick="openInNewTab()">Open Full Screen</button>
+                <button class="btn dark" onclick="openInNewTab()">Full Screen</button>
                 <div id="feedbackBox" class="feedback"></div>
               </div>
 

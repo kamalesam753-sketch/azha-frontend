@@ -1004,7 +1004,10 @@ document.addEventListener("DOMContentLoaded", function(){
   function apiBase(){return (window.AZHA_CONFIG && (window.AZHA_CONFIG.API_BASE || (window.AZHA_CONFIG.API && window.AZHA_CONFIG.API.BASE_URL))) || "https://azha-backend-production.up.railway.app/api";}
   function splitNames(d){
     const raw=d.tenantsNames||d.tenantNames||d.guestsNames||d.guests||d.tenant||"";
-    return String(raw).split(/[,،\n]+/).map(s=>s.trim()).filter(Boolean);
+    return String(raw)
+      .split(/\s+-\s+|[-–—•]+|[,،\n]+/g)
+      .map(s=>s.trim())
+      .filter(Boolean);
   }
 
   function build(d){

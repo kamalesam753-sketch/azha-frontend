@@ -178,7 +178,7 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
         const cls=String(d.validityClass||"").toLowerCase();
         const type=cls==="valid"?"valid":cls==="warning"?"warning":"invalid";
         showOverlay(type, d.validityText || (type==="valid"?"Valid Permit":"Permit Result"), "Permit: " + (d.permitId||"-") + "<br>Unit: " + (d.unit||"-"));
-        setTimeout(function(){openPermitApp(token);}, 180);
+        setTimeout(function(){openPermitApp(token);}, 80);
         return;
       }
 
@@ -206,7 +206,7 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
 
     await scanner.start(
       {facingMode:"environment"},
-      {fps:24, qrbox:{width:340,height:340}, aspectRatio:1.0, disableFlip:true},
+      {fps:30, qrbox:{width:360,height:360}, aspectRatio:1.0, disableFlip:true},
       onScanSuccess,
       function(){}
     );
