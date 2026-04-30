@@ -1,4 +1,10 @@
-<!DOCTYPE html>
+﻿const fs = require("fs");
+
+const scannerPath = "PAGES/scanner.html";
+const indexPath = "PAGES/index.html";
+const swPath = "sw.js";
+
+const scannerHtml = String.raw`<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"/>
@@ -240,4 +246,133 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
 })();
 </script>
 </body>
-</html>
+</html>`;
+
+fs.writeFileSync(scannerPath, scannerHtml, "utf8");
+
+let index = fs.readFileSync(indexPath, "utf8");
+
+const panel = String.raw`
+<script id="azha-optional-security-verification-panel-final">
+(function(){
+  function params(){return new URLSearchParams(location.search);}
+  function esc(v){return String(v||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+  function apiBase(){return (window.AZHA_CONFIG && (window.AZHA_CONFIG.API_BASE || (window.AZHA_CONFIG.API && window.AZHA_CONFIG.API.BASE_URL))) || "https://azha-backend-production.up.railway.app/api";}
+  function splitNames(d){
+    const raw=d.tenantsNames||d.tenantNames||d.guestsNames||d.guests||d.tenant||"";
+    return String(raw).split(/[,،\n]+/).map(s=>s.trim()).filter(Boolean);
+  }
+
+  function build(d){
+    if(document.getElementById("azhaSecurityVerificationPanel")) return;
+    const names=splitNames(d);
+    if(!names.length) return;
+
+    const target=document.querySelector("#app .card")||document.querySelector(".card")||document.querySelector(".permit-card")||document.querySelector("#app")||document.body;
+
+    const btn=document.createElement("button");
+    btn.type="button";
+    btn.className="verification-toggle-btn";
+    btn.textContent="Show Identity Verification";
+
+    const panel=document.createElement("section");
+    panel.id="azhaSecurityVerificationPanel";
+    panel.className="scanner-verification-panel verification-hidden";
+    panel.innerHTML=
+      '<div class="svp-head"><div><div class="svp-title">Identity Verification</div><div class="svp-sub">يرجى إبراز بطاقة الهوية أو جواز السفر لجميع الأسماء التالية</div></div><div class="svp-count" id="svpCounter">0 / '+names.length+'</div></div>'+
+      '<div class="svp-meta"><div><b>Unit</b><span>'+esc(d.unit||"-")+'</span></div><div><b>Guests</b><span>'+esc(d.tenantCount||names.length)+'</span></div></div>'+
+      '<div class="svp-list">'+names.map((n,i)=>'<button type="button" class="svp-row"><span class="svp-check">☐</span><span class="svp-name">'+(i+1)+'. '+esc(n)+'</span></button>').join("")+'</div>'+
+      '<button type="button" class="svp-complete" id="svpComplete">Complete Verification</button>';
+
+    target.appendChild(btn);
+    target.appendChild(panel);
+
+    btn.addEventListener("click",function(){
+      panel.classList.toggle("verification-hidden");
+      btn.textContent=panel.classList.contains("verification-hidden")?"Show Identity Verification":"Hide Identity Verification";
+      if(!panel.classList.contains("verification-hidden")) panel.scrollIntoView({behavior:"smooth",block:"start"});
+    });
+
+    const rows=Array.from(panel.querySelectorAll(".svp-row"));
+    const counter=panel.querySelector("#svpCounter");
+    const complete=panel.querySelector("#svpComplete");
+
+    function update(){
+      const checked=panel.querySelectorAll(".svp-row.checked").length;
+      counter.textContent=checked+" / "+rows.length;
+      counter.classList.toggle("done",checked===rows.length);
+    }
+
+    rows.forEach(row=>{
+      row.addEventListener("click",function(){
+        row.classList.toggle("checked");
+        row.querySelector(".svp-check").textContent=row.classList.contains("checked")?"☑":"☐";
+        update();
+      });
+    });
+
+    complete.addEventListener("click",function(){
+      const checked=panel.querySelectorAll(".svp-row.checked").length;
+      if(checked<rows.length){alert("يرجى التحقق من جميع الأسماء أولاً");return;}
+      complete.textContent="Verification Completed ✓";
+      complete.classList.add("done");
+    });
+  }
+
+  async function load(){
+    const q=params();
+    if(!(q.get("from")==="scanner" || q.get("app")==="1")) return;
+    const token=q.get("token");
+    if(!token) return;
+
+    try{
+      const qs=new URLSearchParams({action:"getClientPermit",token:token,_t:Date.now()});
+      const res=await fetch(apiBase()+"?"+qs.toString(),{method:"GET",cache:"no-store"});
+      const json=await res.json();
+      if(json&&json.success&&json.data) build(json.data);
+    }catch(e){}
+  }
+
+  document.addEventListener("DOMContentLoaded",function(){
+    setTimeout(load,500);
+    setTimeout(load,1400);
+    setTimeout(load,2400);
+  });
+})();
+</script>
+
+<style id="azha-optional-security-verification-panel-style-final">
+.verification-hidden{display:none!important}
+.verification-toggle-btn{width:calc(100% - 20px);margin:12px 10px;min-height:50px;border:none;border-radius:16px;background:#0f4c81;color:#fff;font-size:14px;font-weight:900;box-shadow:0 14px 35px rgba(15,76,129,.18)}
+.scanner-verification-panel{margin:14px 10px 18px;padding:14px;border-radius:22px;background:#fff8e6;border:1px solid #facc15;box-shadow:0 18px 45px rgba(0,0,0,.10)}
+.svp-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:12px}
+.svp-title{font-size:17px;font-weight:900;color:#0f172a}
+.svp-sub{font-size:12px;color:#92400e;line-height:1.7;font-weight:800;margin-top:4px}
+.svp-count{min-width:64px;text-align:center;padding:8px 10px;border-radius:999px;background:#0f4c81;color:#fff;font-weight:900}
+.svp-count.done{background:#16a34a}
+.svp-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.svp-meta div{background:#fff;border:1px solid #f2dfab;border-radius:14px;padding:9px}
+.svp-meta b{display:block;font-size:11px;color:#64748b;margin-bottom:4px}
+.svp-meta span{font-size:14px;font-weight:900;color:#0f172a}
+.svp-list{display:grid;gap:8px}
+.svp-row{width:100%;border:none;display:flex;align-items:center;gap:10px;text-align:right;direction:rtl;background:#fff;border:1px solid #f2dfab;border-radius:15px;padding:12px;font-weight:900;color:#0f172a}
+.svp-row.checked{background:#eaf8ee;border-color:#86efac;color:#166534}
+.svp-check{font-size:22px;min-width:28px}
+.svp-name{flex:1;line-height:1.5}
+.svp-complete{width:100%;margin-top:12px;min-height:50px;border:none;border-radius:16px;background:#0f4c81;color:#fff;font-weight:900;font-size:14px}
+.svp-complete.done{background:#16a34a}
+</style>
+`;
+
+if(!index.includes("azha-optional-security-verification-panel-final")){
+  index = index.replace("</body>", panel + "\n</body>");
+}
+fs.writeFileSync(indexPath, index, "utf8");
+
+if(fs.existsSync(swPath)){
+  let sw = fs.readFileSync(swPath, "utf8");
+  sw = sw.replace(/azha-security-pwa-v\d+/g, "azha-security-pwa-v9");
+  fs.writeFileSync(swPath, sw, "utf8");
+}
+
+console.log("✅ Scanner fully rebuilt: faster scan, working exit, optional verification panel.");

@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "azha-security-pwa-v1";
+const CACHE_NAME = "azha-security-pwa-v9";
 
 const APP_SHELL = [
   "/",
