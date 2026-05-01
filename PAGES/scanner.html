@@ -93,6 +93,36 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
   100%{transform:translateY(calc(min(72vw,390px) - 40px))}
 }
 </style>
+
+<script id="azha-scanner-date-validity-lock">
+(function(){
+  window.azhaComputePermitValidity = function(d){
+    function ymd(v){
+      const m = String(v || "").match(/(\d{4})-(\d{2})-(\d{2})/);
+      return m ? m[1]+"-"+m[2]+"-"+m[3] : "";
+    }
+    const s = ymd(d.startDate);
+    const e = ymd(d.endDate);
+    const now = new Date();
+    const t = now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
+
+    if(s && e){
+      if(t > e) return {type:"invalid", text:"التصريح منتهي", en:"Permit expired"};
+      if(t < s) return {type:"warning", text:"لم يبدأ بعد", en:"Not started yet"};
+      if(t === e) return {type:"warning", text:"آخر يوم ساري", en:"Last valid day"};
+      return {type:"valid", text:"صالح للدخول", en:"Valid for entry"};
+    }
+
+    const cls = String(d.validityClass || "").toLowerCase();
+    return {
+      type: cls === "valid" ? "valid" : cls === "warning" ? "warning" : "invalid",
+      text: d.validityText || d.statusArabic || "Permit Result",
+      en: d.validityNote || ""
+    };
+  };
+})();
+</script>
+
 </head>
 <body>
 <div id="offlinePill" class="offline-pill">Offline Queue: 0</div>
@@ -252,11 +282,17 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
       const json=await res.json();
 
       if(json && json.success){
-        const d=json.data||{};
-        const cls=String(d.validityClass||"").toLowerCase();
-        const type=cls==="valid"?"valid":cls==="warning"?"warning":"invalid";
-        showOverlay(type, d.validityText || (type==="valid"?"Valid Permit":"Permit Result"), "Permit: " + (d.permitId||"-") + "<br>Unit: " + (d.unit||"-"));
-        setTimeout(function(){openPermitApp(token);}, 80);
+        let d = json.data || {};
+        try{
+          const qs2 = new URLSearchParams({action:"getClientPermit", token:token, _t:Date.now()});
+          const r2 = await fetch(API_BASE+"?"+qs2.toString(), {method:"GET", cache:"no-store"});
+          const j2 = await r2.json();
+          if(j2 && j2.success && j2.data) d = j2.data;
+        }catch(e){}
+
+        const result = window.azhaComputePermitValidity ? window.azhaComputePermitValidity(d) : {type:"valid", text:d.validityText || "Permit Result"};
+        showOverlay(result.type, result.text, "Permit: " + (d.permitId||"-") + "<br>Unit: " + (d.unit||"-"));
+        setTimeout(function(){openPermitApp(token);}, 120);
         return;
       }
 
