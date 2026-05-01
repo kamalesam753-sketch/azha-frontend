@@ -1,0 +1,319 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+<title>AZHA Security Logs</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Inter,system-ui;
+  background:#07111b;
+  color:#fff;
+  min-height:100vh;
+  padding:16px;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+}
+
+.title{
+  font-size:22px;
+  font-weight:900;
+}
+
+.badge{
+  background:#163047;
+  padding:8px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-bottom:18px;
+}
+
+.card{
+  background:#0f1f2d;
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:22px;
+  padding:16px;
+}
+
+.card-title{
+  font-size:12px;
+  opacity:.7;
+  margin-bottom:8px;
+}
+
+.card-value{
+  font-size:24px;
+  font-weight:900;
+}
+
+.filters{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.input{
+  width:100%;
+  min-height:48px;
+  border:none;
+  border-radius:16px;
+  background:#102434;
+  color:#fff;
+  padding:0 14px;
+  font-size:14px;
+}
+
+.logs{
+  display:grid;
+  gap:12px;
+}
+
+.log{
+  background:#0d1925;
+  border-radius:20px;
+  padding:16px;
+  border:1px solid rgba(255,255,255,.06);
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.name{
+  font-size:18px;
+  font-weight:900;
+}
+
+.time{
+  font-size:12px;
+  opacity:.7;
+}
+
+.meta{
+  margin-top:10px;
+  display:grid;
+  gap:6px;
+  font-size:13px;
+  opacity:.92;
+}
+
+.present{
+  margin-top:12px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 12px;
+  border-radius:999px;
+  background:#12381f;
+  color:#6ee7a8;
+  font-size:12px;
+  font-weight:900;
+}
+
+.empty{
+  text-align:center;
+  opacity:.6;
+  padding:40px 10px;
+}
+
+.refresh{
+  width:100%;
+  min-height:54px;
+  border:none;
+  border-radius:18px;
+  background:#1977b5;
+  color:#fff;
+  font-size:15px;
+  font-weight:900;
+  margin-top:16px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <div class="title">Security Logs</div>
+  <div class="badge" id="liveBadge">LIVE</div>
+</div>
+
+<section class="stats">
+  <div class="card">
+    <div class="card-title">Total Logs</div>
+    <div class="card-value" id="totalLogs">0</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Present</div>
+    <div class="card-value" id="presentCount">0</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Gates</div>
+    <div class="card-value" id="gateCount">0</div>
+  </div>
+</section>
+
+<section class="filters">
+  <input class="input" id="searchInput" placeholder="Search guest..." />
+  <input class="input" id="gateInput" placeholder="Filter gate..." />
+</section>
+
+<section class="logs" id="logs"></section>
+
+<button class="refresh" id="refreshBtn">
+Refresh Logs
+</button>
+
+<script>
+const API = "https://azha-backend-production.up.railway.app/api/presence";
+
+const logsEl = document.getElementById("logs");
+const totalLogsEl = document.getElementById("totalLogs");
+const presentCountEl = document.getElementById("presentCount");
+const gateCountEl = document.getElementById("gateCount");
+
+const searchInput = document.getElementById("searchInput");
+const gateInput = document.getElementById("gateInput");
+
+let ALL = [];
+
+function esc(v){
+  return String(v || "")
+   .replace(/&/g,"&amp;")
+   .replace(/</g,"&lt;")
+   .replace(/>/g,"&gt;");
+}
+
+async function loadLogs(){
+
+  try{
+
+    const res = await fetch(API + "?_t=" + Date.now(), {
+      cache:"no-store"
+    });
+
+    const json = await res.json();
+
+    ALL = Array.isArray(json.data)
+      ? json.data.reverse()
+      : [];
+
+    render();
+
+  }catch(e){
+
+    logsEl.innerHTML = `
+      <div class="empty">
+        Failed to load logs
+      </div>
+    `;
+  }
+}
+
+function render(){
+
+  const q = searchInput.value.trim().toLowerCase();
+  const gate = gateInput.value.trim().toLowerCase();
+
+  const list = ALL.filter(x => {
+
+    const okSearch =
+      !q ||
+      String(x.guestName || "").toLowerCase().includes(q) ||
+      String(x.permitId || "").toLowerCase().includes(q);
+
+    const okGate =
+      !gate ||
+      String(x.gateName || "").toLowerCase().includes(gate);
+
+    return okSearch && okGate;
+
+  });
+
+  totalLogsEl.textContent = list.length;
+
+  presentCountEl.textContent =
+    list.filter(x => x.present).length;
+
+  gateCountEl.textContent =
+    new Set(list.map(x => x.gateName || "-")).size;
+
+  if(!list.length){
+    logsEl.innerHTML = `
+      <div class="empty">
+        No logs found
+      </div>
+    `;
+    return;
+  }
+
+  logsEl.innerHTML = list.map(x => {
+
+    const t = new Date(x.timestamp);
+
+    return `
+      <article class="log">
+
+        <div class="row">
+          <div class="name">${esc(x.guestName)}</div>
+          <div class="time">
+            ${t.toLocaleDateString()}
+            <br>
+            ${t.toLocaleTimeString()}
+          </div>
+        </div>
+
+        <div class="meta">
+          <div>Permit: ${esc(x.permitId)}</div>
+          <div>Unit: ${esc(x.unit)}</div>
+          <div>Gate: ${esc(x.gateName)}</div>
+          <div>Security: ${esc(x.securityUsername)}</div>
+        </div>
+
+        <div class="present">
+          PRESENT
+        </div>
+
+      </article>
+    `;
+
+  }).join("");
+}
+
+searchInput.addEventListener("input", render);
+gateInput.addEventListener("input", render);
+
+document
+  .getElementById("refreshBtn")
+  .addEventListener("click", loadLogs);
+
+loadLogs();
+
+setInterval(loadLogs, 15000);
+</script>
+
+</body>
+</html>
