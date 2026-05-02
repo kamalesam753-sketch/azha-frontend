@@ -1,0 +1,103 @@
+/* ============================================================
+   AZHA DESIGN TOKENS — Single Source of Truth
+   All colors, spacing, typography, elevation, and animations.
+   ============================================================ */
+
+:root {
+  /* Brand Colors */
+  --azha-blue-900: #062337;
+  --azha-blue-800: #082d4b;
+  --azha-blue-700: #0b3558;
+  --azha-blue-600: #0f4c81;
+  --azha-blue-500: #1977b5;
+  --azha-blue-400: #2f88c5;
+  --azha-blue-300: #6bb3de;
+  --azha-blue-200: #a8d4ee;
+  --azha-blue-100: #d7eaf7;
+  --azha-blue-50: #edf4fb;
+
+  /* Neutral */
+  --azha-gray-900: #0f172a;
+  --azha-gray-800: #1e293b;
+  --azha-gray-700: #334155;
+  --azha-gray-600: #475569;
+  --azha-gray-500: #64748b;
+  --azha-gray-400: #94a3b8;
+  --azha-gray-300: #cbd5e1;
+  --azha-gray-200: #e2e8f0;
+  --azha-gray-100: #f1f5f9;
+  --azha-gray-50: #f8fafc;
+  --azha-white: #ffffff;
+
+  /* Semantic */
+  --azha-success-bg: #eaf8ee;
+  --azha-success: #166534;
+  --azha-success-accent: #16a34a;
+  --azha-warning-bg: #fff8e6;
+  --azha-warning: #92400e;
+  --azha-warning-accent: #d97706;
+  --azha-danger-bg: #fdecec;
+  --azha-danger: #b91c1c;
+  --azha-danger-accent: #dc2626;
+  --azha-info-bg: var(--azha-blue-50);
+  --azha-info: var(--azha-blue-600);
+
+  /* Gold accent */
+  --azha-gold: #d4af37;
+  --azha-gold-soft: rgba(212, 175, 55, 0.45);
+
+  /* Typography */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-xs: 11px;
+  --font-sm: 12px;
+  --font-base: 14px;
+  --font-md: 15px;
+  --font-lg: 18px;
+  --font-xl: 22px;
+  --font-2xl: 26px;
+  --font-3xl: 31px;
+  --font-4xl: 38px;
+
+  /* Spacing */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+
+  /* Radius */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-2xl: 30px;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-sm: 0 4px 12px rgba(15, 76, 129, 0.04);
+  --shadow-md: 0 8px 20px rgba(15, 76, 129, 0.08);
+  --shadow-lg: 0 16px 40px rgba(15, 76, 129, 0.12);
+  --shadow-xl: 0 22px 55px rgba(15, 76, 129, 0.14);
+  --shadow-brand: 0 18px 40px rgba(0, 0, 0, 0.18);
+
+  /* Transitions */
+  --transition-fast: 0.12s ease;
+  --transition-base: 0.18s ease;
+  --transition-slow: 0.3s ease;
+}
+
+/* ===== Global Reset ===== */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  color: var(--azha-gray-900);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}

@@ -1,34 +1,7 @@
-:root{
-  --blue1:#0a3557;
-  --blue2:#1977b5;
-  --text:#111827;
-  --muted:#6b7280;
-  --line:#e7eef6;
-  --soft:#edf4fb;
-  --white:#ffffff;
-  --shadow:0 20px 50px rgba(15,76,129,.12);
-}
-
-body{
-  font-family: Arial, sans-serif;
-  margin:0;
-  background: linear-gradient(180deg,#eef5fb,#f8fbff);
-  direction: rtl;
-  color: var(--text);
-}
-
-.card{
-  background:#fff;
-  border-radius:18px;
-  box-shadow:var(--shadow);
-  padding:20px;
-}
-
-.btn{
-  background:linear-gradient(90deg,var(--blue1),var(--blue2));
-  color:#fff;
-  border:none;
-  border-radius:10px;
-  padding:10px 16px;
-  cursor:pointer;
-}
+/* AZHA Main CSS — Aggregator
+   Import this single file in every page. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+@import url('./design-tokens.css');
+@import url('./animations.css');
+@import url('./components.css');
+@import url('./layouts.css');

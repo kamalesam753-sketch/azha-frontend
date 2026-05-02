@@ -1,0 +1,119 @@
+/* ============================================================
+   AZHA LAYOUT SYSTEM
+   Sidebar, grid, responsive breakpoints
+   ============================================================ */
+
+/* ===== Page Layouts ===== */
+.layout-sidebar {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 324px 1fr;
+  transition: grid-template-columns var(--transition-base);
+  position: relative;
+  z-index: 1;
+}
+body.sidebar-collapsed .layout-sidebar {
+  grid-template-columns: 108px 1fr;
+}
+
+.layout-full {
+  min-height: 100vh;
+  padding: var(--sp-5);
+}
+
+.layout-centered {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-5);
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  border-right: 1px solid var(--azha-gray-200);
+  box-shadow: var(--shadow-sm);
+  padding: var(--sp-5) var(--sp-4);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 30;
+  transition: width var(--transition-base), padding var(--transition-base);
+}
+.sidebar::-webkit-scrollbar { width: 5px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--azha-gray-300); border-radius: 10px; }
+
+/* ===== Main Content ===== */
+.main-content {
+  padding: var(--sp-5);
+  min-width: 0;
+}
+
+/* ===== Grid Utilities ===== */
+.grid { display: grid; gap: var(--sp-3); }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-6 { grid-template-columns: repeat(6, 1fr); }
+
+/* ===== Flex Utilities ===== */
+.flex { display: flex; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: var(--sp-2); }
+.gap-3 { gap: var(--sp-3); }
+.gap-4 { gap: var(--sp-4); }
+
+/* ===== Hero Section ===== */
+.hero-section {
+  position: relative;
+  padding: 30px 24px 22px;
+  color: var(--azha-white);
+  background:
+    radial-gradient(circle at top right, rgba(255,255,255,0.16), transparent 26%),
+    linear-gradient(135deg, var(--azha-blue-800), var(--azha-blue-600) 60%, var(--azha-blue-500));
+  overflow: hidden;
+  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+}
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.06) 40%, transparent 70%);
+  transform: translateX(-100%);
+  animation: shimmer 8s linear infinite;
+  pointer-events: none;
+}
+.hero-section::after {
+  content: "AZHA";
+  position: absolute;
+  inset: auto 0 8px 0;
+  text-align: center;
+  font-size: 74px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+
+/* ===== Wrap ===== */
+.wrap { max-width: 1540px; margin: auto; }
+
+/* ===== Responsive ===== */
+@media (max-width: 1250px) {
+  .layout-sidebar { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  body.sidebar-open .sidebar { display: block; position: fixed; inset: 0; width: 324px; z-index: 100; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 760px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: 1fr; }
+  .hero-section { padding: 20px 16px; }
+  .layout-full { padding: var(--sp-3); }
+}
