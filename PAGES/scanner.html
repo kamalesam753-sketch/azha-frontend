@@ -12,7 +12,7 @@
 <script src="../JS/core/config.js"></script>
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#061827;color:#fff;font-family:Arial,sans-serif}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#061827;color:#fff;font-family:'Inter',Arial,sans-serif}
 .app{height:100dvh;display:flex;flex-direction:column}
 .top{height:72px;padding:12px 14px;background:linear-gradient(135deg,#082d4b,#0f4c81);display:flex;align-items:center;justify-content:space-between}
 .brand{font-weight:900;letter-spacing:.06em;font-size:16px}
@@ -260,8 +260,7 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
     const remaining=[];
     for(const item of list){
       try{
-        const qs=new URLSearchParams({action:"scanToken",token:item.token,sessionToken:item.sessionToken||getSessionToken(),mode:"pwa_scanner_offline_sync",offlineCreatedAt:item.createdAt||"",_t:Date.now()});
-        const res=await fetch(API_BASE+"?"+qs.toString(),{method:"GET",cache:"no-store"});
+        const res=await fetch(API_BASE,{method:"POST",headers:{"Content-Type":"application/json"},cache:"no-store",body:JSON.stringify({action:"scanToken",token:item.token,sessionToken:item.sessionToken||getSessionToken(),mode:"pwa_scanner_offline_sync",offlineCreatedAt:item.createdAt||""})});
         const json=await res.json();
         if(!(json&&json.success)) remaining.push(item);
       }catch(e){remaining.push(item);}
@@ -277,8 +276,7 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
     setStatus("Checking...","");
 
     try{
-      const qs=new URLSearchParams({action:"scanToken",token:token,sessionToken:getSessionToken(),mode:"pwa_scanner",_t:Date.now()});
-      const res=await fetch(API_BASE+"?"+qs.toString(),{method:"GET",cache:"no-store"});
+      const res=await fetch(API_BASE,{method:"POST",headers:{"Content-Type":"application/json"},cache:"no-store",body:JSON.stringify({action:"scanToken",token:token,sessionToken:getSessionToken(),mode:"pwa_scanner"})});
       const json=await res.json();
 
       if(json && json.success){
@@ -292,7 +290,14 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
 
         const result = window.azhaComputePermitValidity ? window.azhaComputePermitValidity(d) : {type:"valid", text:d.validityText || "Permit Result"};
         showOverlay(result.type, result.text, "Permit: " + (d.permitId||"-") + "<br>Unit: " + (d.unit||"-"));
-        setTimeout(function(){openPermitApp(token);}, 120);
+        setTimeout(function(){openPermitApp(token);}, 1500);
+        return;
+      }
+
+      // Emergency lockdown check
+      if(res.status === 403){
+        showOverlay("invalid","ACCESS DISABLED","⚠️ تم تعليق الدخول مؤقتاً — حالة طوارئ");
+        setTimeout(function(){locked=false;document.getElementById("overlayResult").className="overlay-result";},3000);
         return;
       }
 
@@ -320,7 +325,7 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
 
     await scanner.start(
       {facingMode:"environment"},
-      {fps:30, qrbox:{width:390,height:390}, aspectRatio:1.0, disableFlip:true, experimentalFeatures:{useBarCodeDetectorIfSupported:true}},
+      {fps:60, qrbox:{width:390,height:390}, aspectRatio:1.0, disableFlip:true, experimentalFeatures:{useBarCodeDetectorIfSupported:true}, formatsToSupport:[0]},
       onScanSuccess,
       function(){}
     );
@@ -346,7 +351,7 @@ button{border:none;border-radius:18px;min-height:54px;font-weight:900;font-size:
 
         if (caps.zoom) {
           // Auto zoom boost
-          advanced.zoom = Math.min(caps.zoom.max || 1, Math.max(caps.zoom.min || 1, 1.5));
+          advanced.zoom = Math.min(caps.zoom.max || 1, Math.max(caps.zoom.min || 1, 1.8));
         }
 
         if (Object.keys(advanced).length) {

@@ -24,8 +24,8 @@
 
     body{
       margin:0;
-      padding:20px;
-      font-family:Arial,sans-serif;
+      padding:12px;
+      font-family:'Inter',Arial,sans-serif;
       direction:rtl;
       color:var(--text);
       min-height:100vh;
@@ -1099,12 +1099,6 @@ if ("serviceWorker" in navigator) {
                 <p>بطاقة تصريح الإيجار قصير المدة / Short Term Rent Permit</p>
               </div>
 
-              <div class="secure-strip">
-                <div class="secure-chip">AZHA SECURE CARD</div>
-                <div class="secure-chip">TOKEN BASED</div>
-                <div class="secure-chip">SECURITY VERIFICATION</div>
-              </div>
-
               <div class="permit-id">Permit ID / رقم التصريح: ${escapeHtml(d.permitId)}</div>
 
               <div class="status-pill ${escapeHtml(validityClass)}">
@@ -1130,7 +1124,7 @@ if ("serviceWorker" in navigator) {
                 </div>
               </div>
 
-              <div class="badges">${badges}</div>
+
 
               <div class="qr-box">
                 <div class="qr-frame" onclick="openQrFullScreen()">
@@ -1164,21 +1158,11 @@ if ("serviceWorker" in navigator) {
                   <div class="label">Payment / السداد</div>
                   <div class="value">${escapeHtml(d.paymentArabic || "-")}</div>
                 </div>
-
-                <div class="item">
-                  <div class="label">Phone / الهاتف</div>
-                  <div class="value">${escapeHtml(d.phone || "-")}</div>
-                </div>
-
-                <div class="item">
-                  <div class="label">Car Plate / رقم السيارة</div>
-                  <div class="value">${escapeHtml(d.carPlate || "-")}</div>
-                </div>
               </div>
 
-              <div class="note">
-                هذه البطاقة مخصصة للعرض فقط، ويتم التحقق الكامل من خلال فريق الأمن.<br>
-                This card is for display only. Full verification is performed by the security team.
+              <div class="note" style="background:#fff8e6;border:2px solid #facc15;color:#92400e;font-size:15px;font-weight:900;text-align:center;padding:16px;border-radius:18px;line-height:1.9">
+                يرجى إبراز بطاقات الهوية للتحقق<br>
+                Please present your ID for verification
               </div>
 
               <div class="actions">

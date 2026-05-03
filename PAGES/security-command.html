@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AZHA Security Command Center</title>
+  <link rel="stylesheet" href="../STYLES/main.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="../JS/core/config.js"></script>
+  <script src="../JS/core/auth.js"></script>
+  <script src="../JS/shared/utils.js"></script>
+  <script src="../JS/shared/notifications.js"></script>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <style>
+    body{margin:0;font-family:'Inter',sans-serif;background:#0a1628;color:#e2e8f0;min-height:100vh}
+    .top-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(212,175,55,.35);backdrop-filter:blur(18px)}
+    .top-bar img{height:36px}
+    .top-bar-title{color:#fff;font-size:15px;font-weight:800;letter-spacing:.04em}
+    .top-bar-sub{font-size:11px;color:rgba(255,255,255,.6);letter-spacing:.08em;text-transform:uppercase}
+    .top-right{display:flex;align-items:center;gap:14px}
+    .live-dot{width:10px;height:10px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}50%{box-shadow:0 0 0 8px rgba(34,197,94,0)}}
+    .top-btn{border:none;padding:10px 16px;border-radius:14px;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit}
+    .btn-danger{background:#dc2626;color:#fff}
+    .btn-soft{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.15)}
+
+    .grid-main{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;padding:20px;max-width:1600px;margin:auto}
+    .span-2{grid-column:span 2}
+    .span-3{grid-column:span 3}
+    .span-4{grid-column:span 4}
+
+    .cmd-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:18px;position:relative;overflow:hidden}
+    .cmd-card::after{content:"AZHA";position:absolute;right:10px;bottom:6px;font-size:48px;font-weight:900;color:rgba(255,255,255,.02);pointer-events:none}
+    .cmd-title{font-size:13px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px}
+    .cmd-value{font-size:32px;font-weight:900;color:#fff;line-height:1.2}
+    .cmd-sub{font-size:12px;color:rgba(255,255,255,.45);margin-top:4px}
+
+    .stat-row{display:flex;gap:10px;flex-wrap:wrap}
+    .stat-chip{flex:1;min-width:100px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;text-align:center}
+    .stat-chip .num{font-size:26px;font-weight:900;color:#fff}
+    .stat-chip .lbl{font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;font-weight:700}
+
+    .live-table{width:100%;border-collapse:collapse;font-size:13px}
+    .live-table th{text-align:left;padding:10px 12px;color:rgba(255,255,255,.45);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .live-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.04);color:#cbd5e1;font-weight:600}
+    .live-table tr:hover td{background:rgba(255,255,255,.03)}
+
+    .tag{display:inline-block;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:800}
+    .tag-valid{background:rgba(34,197,94,.15);color:#4ade80}
+    .tag-warning{background:rgba(234,179,8,.15);color:#fbbf24}
+    .tag-invalid{background:rgba(239,68,68,.15);color:#f87171}
+    .tag-info{background:rgba(59,130,246,.15);color:#60a5fa}
+    .tag-critical{background:rgba(239,68,68,.25);color:#fca5a5;animation:blink 1s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+
+    .alert-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;margin-bottom:8px;font-size:13px;font-weight:700}
+    .alert-item.high{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
+    .alert-item.medium{background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.2);color:#fde68a}
+    .alert-item.low{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:#86efac}
+    .alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .alert-item.high .alert-dot{background:#ef4444}
+    .alert-item.medium .alert-dot{background:#eab308}
+    .alert-item.low .alert-dot{background:#22c55e}
+    .alert-item.critical{background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.4);color:#fca5a5;animation:blink 1s infinite}
+    .alert-item.critical .alert-dot{background:#ef4444}
+
+    .gate-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .gate-name{font-weight:800;color:#fff;font-size:14px}
+    .gate-meta{font-size:11px;color:rgba(255,255,255,.45)}
+    .gate-status{padding:6px 12px;border-radius:999px;font-size:11px;font-weight:800}
+    .gate-online{background:rgba(34,197,94,.15);color:#4ade80}
+    .gate-offline{background:rgba(239,68,68,.15);color:#f87171}
+
+    .wl-form{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+    .wl-input{flex:1;min-width:120px;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;font-family:inherit;font-size:13px;font-weight:700}
+    .wl-input:focus{outline:none;border-color:rgba(59,130,246,.5)}
+    .wl-input::placeholder{color:rgba(255,255,255,.3)}
+    .wl-select{padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;font-family:inherit;font-size:13px;font-weight:700}
+    .wl-btn{padding:10px 18px;border:none;border-radius:12px;background:#dc2626;color:#fff;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit}
+
+    .search-box{width:100%;padding:14px 18px;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;font-size:14px;font-weight:700;font-family:inherit;margin-bottom:14px}
+    .search-box:focus{outline:none;border-color:rgba(59,130,246,.5)}
+    .search-box::placeholder{color:rgba(255,255,255,.3)}
+
+    .empty{text-align:center;padding:30px;color:rgba(255,255,255,.3);font-weight:700;font-size:13px}
+
+    @media(max-width:1200px){.grid-main{grid-template-columns:1fr 1fr}.span-3,.span-4{grid-column:span 2}}
+    @media(max-width:768px){.grid-main{grid-template-columns:1fr;padding:12px}.span-2,.span-3,.span-4{grid-column:span 1}.stat-row{flex-direction:column}.wl-form{flex-direction:column}}
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div style="display:flex;align-items:center;gap:14px">
+    <img src="../ASSETS/azha-logo-final.png" alt="AZHA" onerror="this.src='../ASSETS/azha-logo.png'">
+    <div>
+      <div class="top-bar-title">Security Command Center</div>
+      <div class="top-bar-sub">AZHA Enterprise Security Operating System</div>
+    </div>
+  </div>
+  <div class="top-right">
+    <div class="live-dot"></div>
+    <span style="font-size:12px;font-weight:800;color:#4ade80">LIVE</span>
+    <span id="clockDisplay" style="font-size:12px;font-weight:700;color:rgba(255,255,255,.6)"></span>
+    <button class="top-btn btn-soft" onclick="location.href='/dashboard'">Dashboard</button>
+    <button class="top-btn btn-danger" id="logoutBtn">Logout</button>
+  </div>
+</div>
+
+<div class="grid-main">
+  <!-- KPI Stats Row -->
+  <div class="cmd-card span-4">
+    <div class="cmd-title">Real-Time Overview</div>
+    <div class="stat-row" id="statsRow">
+      <div class="stat-chip"><div class="num" id="statTotal">-</div><div class="lbl">Total Permits</div></div>
+      <div class="stat-chip"><div class="num" id="statValid" style="color:#4ade80">-</div><div class="lbl">Active</div></div>
+      <div class="stat-chip"><div class="num" id="statWarning" style="color:#fbbf24">-</div><div class="lbl">Warning</div></div>
+      <div class="stat-chip"><div class="num" id="statExpired" style="color:#f87171">-</div><div class="lbl">Expired</div></div>
+      <div class="stat-chip"><div class="num" id="statTodayScans" style="color:#60a5fa">-</div><div class="lbl">Today Scans</div></div>
+      <div class="stat-chip"><div class="num" id="statPresent" style="color:#c084fc">-</div><div class="lbl">Present Now</div></div>
+      <div class="stat-chip"><div class="num" id="statSessions" style="color:#2dd4bf">-</div><div class="lbl">Active Guards</div></div>
+      <div class="stat-chip"><div class="num" id="statWatchlist" style="color:#fca5a5">-</div><div class="lbl">Watchlist</div></div>
+    </div>
+  </div>
+
+  <!-- Live Scan Feed -->
+  <div class="cmd-card span-2">
+    <div class="cmd-title">Live Scan Feed</div>
+    <div style="max-height:380px;overflow-y:auto" id="scanFeed">
+      <table class="live-table"><thead><tr><th>Time</th><th>Permit</th><th>Unit</th><th>Guard</th><th>Result</th></tr></thead><tbody id="scanBody"></tbody></table>
+    </div>
+  </div>
+
+  <!-- Live Alerts -->
+  <div class="cmd-card span-2">
+    <div class="cmd-title">Live Alerts</div>
+    <div id="alertsFeed" style="max-height:380px;overflow-y:auto"></div>
+  </div>
+
+  <!-- Gate Monitoring -->
+  <div class="cmd-card span-2">
+    <div class="cmd-title">Gate Monitoring</div>
+    <div id="gateList"></div>
+  </div>
+
+  <!-- Watchlist Management -->
+  <div class="cmd-card span-2">
+    <div class="cmd-title">Watchlist Management</div>
+    <div class="wl-form" id="wlForm">
+      <select class="wl-select" id="wlType"><option value="person">Person</option><option value="vehicle">Vehicle</option><option value="permit">Permit</option></select>
+      <input class="wl-input" id="wlValue" placeholder="Name, plate, or permit ID...">
+      <input class="wl-input" id="wlReason" placeholder="Reason...">
+      <select class="wl-select" id="wlSeverity"><option value="medium">Medium</option><option value="low">Low</option><option value="high">High</option><option value="critical">Critical</option></select>
+      <button class="wl-btn" id="wlAdd">+ Add to Watchlist</button>
+    </div>
+    <div style="max-height:260px;overflow-y:auto">
+      <table class="live-table"><thead><tr><th>Type</th><th>Value</th><th>Severity</th><th>Reason</th><th>Action</th></tr></thead><tbody id="wlBody"></tbody></table>
+    </div>
+  </div>
+
+  <!-- Global Search -->
+  <div class="cmd-card span-2">
+    <div class="cmd-title">Global Search</div>
+    <input class="search-box" id="globalSearch" placeholder="Search permits, visitors, phones, vehicles, tokens...">
+    <div id="searchResults" style="max-height:300px;overflow-y:auto"></div>
+  </div>
+
+  <!-- Emergency Actions -->
+  <div class="cmd-card span-2">
+    <div class="cmd-title">Emergency Actions</div>
+    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+      <input class="wl-input" id="revokePermitId" placeholder="Enter Permit ID to revoke..." style="flex:2">
+      <button class="wl-btn" id="revokeBtn" style="background:#b91c1c">Revoke & Block</button>
+    </div>
+    <div id="revokeResult"></div>
+
+    <!-- Audit Log -->
+    <div class="cmd-title" style="margin-top:18px">Recent Audit Log</div>
+    <div style="max-height:200px;overflow-y:auto">
+      <table class="live-table"><thead><tr><th>Time</th><th>Action</th><th>User</th><th>Details</th></tr></thead><tbody id="auditBody"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var API = (window.AZHA_CONFIG && (AZHA_CONFIG.API_BASE || (AZHA_CONFIG.API && AZHA_CONFIG.API.BASE_URL))) || "https://azha-backend-production.up.railway.app/api";
+  var esc = window.AzhaUtils ? AzhaUtils.escapeHtml : function(v){return String(v||"")};
+
+  function token(){return localStorage.getItem("sessionToken")||""}
+  function role(){return(localStorage.getItem("role")||"").toLowerCase()}
+
+  if(!token()||!["admin","supervisor"].includes(role())){location.href="/login";return;}
+
+  // Clock
+  setInterval(function(){document.getElementById("clockDisplay").textContent=new Date().toLocaleTimeString()},1000);
+
+  // Logout
+  document.getElementById("logoutBtn").onclick=function(){localStorage.clear();location.href="/login"};
+
+  // API helper
+  function api(action,extra){
+    var params=Object.assign({action:action,sessionToken:token()},extra||{});
+    return fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(params)}).then(function(r){return r.json()});
+  }
+
+  // Load dashboard data
+  function loadDashboard(){
+    api("dashboardBundle").then(function(res){
+      if(!res||!res.success) return;
+      var d=res.data;
+      var s=d.stats||{};
+
+      document.getElementById("statTotal").textContent=s.totalPermits||0;
+      document.getElementById("statValid").textContent=s.validPermits||0;
+      document.getElementById("statWarning").textContent=s.warningPermits||0;
+      document.getElementById("statExpired").textContent=s.expiredPermits||0;
+      document.getElementById("statTodayScans").textContent=s.todayScans||0;
+      document.getElementById("statPresent").textContent=s.totalPresent||0;
+      document.getElementById("statSessions").textContent=s.activeSessions||0;
+      document.getElementById("statWatchlist").textContent=s.activeWatchlist||0;
+
+      // Scan feed
+      var scans=d.recentScans||[];
+      var sb=document.getElementById("scanBody");
+      sb.innerHTML=scans.length?scans.map(function(s){
+        var cls=s.result==="valid"?"tag-valid":s.result==="warning"?"tag-warning":"tag-invalid";
+        return "<tr><td>"+esc(new Date(s.createdAt).toLocaleTimeString())+"</td><td>"+esc(s.permitId||"-")+"</td><td>"+esc(s.unit||"-")+"</td><td>"+esc(s.scannedBy||"-")+"</td><td><span class='tag "+cls+"'>"+esc(s.resultText||s.result||"-")+"</span></td></tr>";
+      }).join(""):"<tr><td colspan='5' class='empty'>No scans yet</td></tr>";
+
+      // Alerts from scan log
+      var alerts=[];
+      scans.forEach(function(s){
+        if(s.result==="invalid") alerts.push({level:"high",text:"Expired permit scanned: "+(s.permitId||"unknown")+" at "+(s.gateName||"gate"),time:s.createdAt});
+        if(s.watchlistAlert) alerts.push({level:"high",text:"WATCHLIST HIT: "+(s.permitId||"unknown"),time:s.createdAt});
+        if(s.result==="not_found") alerts.push({level:"medium",text:"Unknown QR scanned by "+(s.scannedBy||"guard"),time:s.createdAt});
+      });
+      var af=document.getElementById("alertsFeed");
+      af.innerHTML=alerts.length?alerts.map(function(a){
+        return "<div class='alert-item "+a.level+"'><div class='alert-dot'></div><div><div>"+esc(a.text)+"</div><div style='font-size:11px;opacity:.6;margin-top:2px'>"+esc(new Date(a.time).toLocaleTimeString())+"</div></div></div>";
+      }).join(""):"<div class='empty'>No alerts</div>";
+
+      // Gates
+      var gates=d.gates||[];
+      var gl=document.getElementById("gateList");
+      gl.innerHTML=gates.length?gates.map(function(g){
+        var online=g.status==="active";
+        return "<div class='gate-card'><div><div class='gate-name'>"+esc(g.name)+"</div><div class='gate-meta'>"+esc(g.location||g.type||"")+"</div></div><span class='gate-status "+(online?"gate-online":"gate-offline")+"'>"+(online?"Online":"Offline")+"</span></div>";
+      }).join(""):"<div class='empty'>No gates configured</div>";
+
+      // Audit
+      var audit=d.recentAudit||[];
+      var ab=document.getElementById("auditBody");
+      ab.innerHTML=audit.length?audit.map(function(a){
+        return "<tr><td>"+esc(new Date(a.createdAt).toLocaleTimeString())+"</td><td>"+esc(a.actionType||"-")+"</td><td>"+esc(a.username||"-")+"</td><td>"+esc(a.details||"-")+"</td></tr>";
+      }).join(""):"<tr><td colspan='4' class='empty'>No audit entries</td></tr>";
+    }).catch(function(){});
+  }
+
+  // Watchlist
+  function loadWatchlist(){
+    api("getWatchlist",{status:"active"}).then(function(res){
+      if(!res||!res.success) return;
+      var items=(res.data||[]);
+      var wb=document.getElementById("wlBody");
+      wb.innerHTML=items.length?items.map(function(w){
+        var sev=w.severity==="critical"?"tag-critical":w.severity==="high"?"tag-invalid":w.severity==="medium"?"tag-warning":"tag-info";
+        return "<tr><td>"+esc(w.type)+"</td><td style='color:#fff;font-weight:800'>"+esc(w.value)+"</td><td><span class='tag "+sev+"'>"+esc(w.severity)+"</span></td><td>"+esc(w.reason||"-")+"</td><td><button class='wl-btn' style='font-size:11px;padding:6px 10px;background:#1e40af' data-id='"+w._id+"'>Resolve</button></td></tr>";
+      }).join(""):"<tr><td colspan='5' class='empty'>No watchlist entries</td></tr>";
+
+      wb.querySelectorAll("button[data-id]").forEach(function(btn){
+        btn.onclick=function(){
+          api("resolveWatchlist",{id:btn.dataset.id}).then(function(){loadWatchlist()});
+        };
+      });
+    }).catch(function(){});
+  }
+
+  document.getElementById("wlAdd").onclick=function(){
+    var type=document.getElementById("wlType").value;
+    var value=document.getElementById("wlValue").value.trim();
+    var reason=document.getElementById("wlReason").value.trim();
+    var severity=document.getElementById("wlSeverity").value;
+    if(!value){alert("Enter a value");return;}
+    api("addWatchlist",{type:type,value:value,reason:reason,severity:severity}).then(function(res){
+      if(res&&res.success){document.getElementById("wlValue").value="";document.getElementById("wlReason").value="";loadWatchlist();}
+    });
+  };
+
+  // Search
+  var searchTimer;
+  document.getElementById("globalSearch").oninput=function(){
+    clearTimeout(searchTimer);
+    var q=this.value.trim();
+    if(q.length<2){document.getElementById("searchResults").innerHTML="";return;}
+    searchTimer=setTimeout(function(){
+      api("searchPermits",{query:q}).then(function(res){
+        if(!res||!res.success) return;
+        var items=res.data||[];
+        var sr=document.getElementById("searchResults");
+        sr.innerHTML=items.length?"<table class='live-table'><thead><tr><th>Permit</th><th>Unit</th><th>Tenant</th><th>Status</th></tr></thead><tbody>"+items.map(function(p){
+          var cls=p.validityClass==="valid"?"tag-valid":p.validityClass==="warning"?"tag-warning":"tag-invalid";
+          return "<tr><td style='color:#fff'>"+esc(p.permitId)+"</td><td>"+esc(p.unit)+"</td><td>"+esc(p.tenant)+"</td><td><span class='tag "+cls+"'>"+esc(p.validityText||"-")+"</span></td></tr>";
+        }).join("")+"</tbody></table>":"<div class='empty'>No results</div>";
+      });
+    },400);
+  };
+
+  // Revoke
+  document.getElementById("revokeBtn").onclick=function(){
+    var id=document.getElementById("revokePermitId").value.trim();
+    if(!id){alert("Enter a permit ID");return;}
+    if(!confirm("EMERGENCY: Revoke permit "+id+"? This will disable the token immediately.")){return;}
+    api("revokePermit",{id:id}).then(function(res){
+      var el=document.getElementById("revokeResult");
+      if(res&&res.success){
+        el.innerHTML="<div class='alert-item high'><div class='alert-dot'></div>Permit "+esc(id)+" REVOKED and token DISABLED</div>";
+        document.getElementById("revokePermitId").value="";
+        loadDashboard();
+      }else{
+        el.innerHTML="<div class='alert-item medium'><div class='alert-dot'></div>"+(res&&res.message||"Failed to revoke")+"</div>";
+      }
+    });
+  };
+
+  // Initial load
+  loadDashboard();
+  loadWatchlist();
+
+  // Socket.IO realtime — replace polling
+  var SOCKET_URL = API.replace("/api", "");
+  try {
+    var socket = io(SOCKET_URL, { transports: ["websocket", "polling"] });
+    socket.on("connect", function() {
+      document.querySelector(".live-dot").style.background = "#22c55e";
+    });
+    socket.on("disconnect", function() {
+      document.querySelector(".live-dot").style.background = "#f87171";
+    });
+    socket.on("scan:new", function() { loadDashboard(); });
+    socket.on("permit:revoked", function() { loadDashboard(); });
+    socket.on("watchlist:new", function() { loadWatchlist(); loadDashboard(); });
+    socket.on("watchlist:resolved", function() { loadWatchlist(); loadDashboard(); });
+    socket.on("guard:online", function() { loadDashboard(); });
+    socket.on("guard:offline", function() { loadDashboard(); });
+    socket.on("emergency:on", function(d) {
+      document.body.style.borderTop = "4px solid #ef4444";
+      loadDashboard();
+    });
+    socket.on("emergency:off", function() {
+      document.body.style.borderTop = "none";
+      loadDashboard();
+    });
+    socket.on("alert:new", function(d) {
+      var af = document.getElementById("alertsFeed");
+      var html = "<div class='alert-item " + (d.level || "high") + "'><div class='alert-dot'></div><div><div>" + esc(d.text || "") + "</div><div style='font-size:11px;opacity:.6;margin-top:2px'>" + new Date().toLocaleTimeString() + "</div></div></div>";
+      af.insertAdjacentHTML("afterbegin", html);
+    });
+  } catch(e) {
+    // Fallback to polling if socket fails
+    setInterval(loadDashboard, 15000);
+    setInterval(loadWatchlist, 30000);
+  }
+})();
+</script>
+</body>
+</html>

@@ -27,6 +27,10 @@
     {
       "src": "/scanner",
       "dest": "/PAGES/scanner.html"
+    },
+    {
+      "src": "/command",
+      "dest": "/PAGES/security-command.html"
     }
   ]
 }
