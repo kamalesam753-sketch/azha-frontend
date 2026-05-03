@@ -65,10 +65,7 @@
   }
 
   async function handleResponse(response) {
-    if (!response.ok) {
-      throw new Error("Network error: " + response.status);
-    }
-
+    // Always try to parse JSON — even on 401/403/500 the backend returns JSON
     const data = await safeJson(response);
 
     if (data && data.error) {
