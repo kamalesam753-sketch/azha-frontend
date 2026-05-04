@@ -1378,28 +1378,28 @@ if ("serviceWorker" in navigator) {
       },
 
       verifySession: function (sessionToken) {
-        return this.get({
+        return this.post({
           action: "verifySession",
           sessionToken: sessionToken
         });
       },
 
       logout: function (sessionToken) {
-        return this.get({
+        return this.post({
           action: "logout",
           sessionToken: sessionToken
         });
       },
 
       latestScan: function (sessionToken) {
-        return this.get({
+        return this.post({
           action: "latestScan",
           sessionToken: sessionToken
         });
       },
 
       searchPermits: function (sessionToken, query) {
-        return this.get({
+        return this.post({
           action: "searchPermits",
           sessionToken: sessionToken,
           query: query
@@ -1407,7 +1407,7 @@ if ("serviceWorker" in navigator) {
       },
 
       scanToken: function (sessionToken, secureToken) {
-        return this.get({
+        return this.post({
           action: "scanToken",
           sessionToken: sessionToken,
           token: secureToken
@@ -1415,7 +1415,7 @@ if ("serviceWorker" in navigator) {
       },
 
       getTokenByPermit: function (sessionToken, permitId) {
-        return this.get({
+        return this.post({
           action: "getTokenByPermit",
           sessionToken: sessionToken,
           id: permitId

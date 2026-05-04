@@ -213,16 +213,16 @@
     api("dashboardBundle").then(function(res){
       if(!res||!res.success) return;
       var d=res.data;
-      var s=d.stats||{};
+      var db=d.dashboard||{}; var sm=d.summary||{};
 
-      document.getElementById("statTotal").textContent=s.totalPermits||0;
-      document.getElementById("statValid").textContent=s.validPermits||0;
-      document.getElementById("statWarning").textContent=s.warningPermits||0;
-      document.getElementById("statExpired").textContent=s.expiredPermits||0;
-      document.getElementById("statTodayScans").textContent=s.todayScans||0;
-      document.getElementById("statPresent").textContent=s.totalPresent||0;
-      document.getElementById("statSessions").textContent=s.activeSessions||0;
-      document.getElementById("statWatchlist").textContent=s.activeWatchlist||0;
+      document.getElementById("statTotal").textContent=db.total||0;
+      document.getElementById("statValid").textContent=db.active||0;
+      document.getElementById("statWarning").textContent=db.warning||0;
+      document.getElementById("statExpired").textContent=db.expired||0;
+      document.getElementById("statTodayScans").textContent=db.todayScans||0;
+      document.getElementById("statPresent").textContent=sm.presentCount||0;
+      document.getElementById("statSessions").textContent=sm.activeSessions||0;
+      document.getElementById("statWatchlist").textContent=0;
 
       // Scan feed
       var scans=d.recentScans||[];

@@ -3218,7 +3218,7 @@ if ("serviceWorker" in navigator) {
   <script src="../JS/api/client.js"></script>
 
   <script>
-    const API_BASE = (window.AZHA_CONFIG && (AZHA_CONFIG.API_BASE || (AZHA_CONFIG.API && AZHA_CONFIG.API.BASE_URL))) || "https://script.google.com/macros/s/AKfycbyI-Yk2u70rNwiPYlioD_VeetTJqMMdn__dAVjHhdk-17k46Lwy3vT7nzngZvmHkYed/exec";
+    const API_BASE = (window.AZHA_CONFIG && (AZHA_CONFIG.API_BASE || (AZHA_CONFIG.API && AZHA_CONFIG.API.BASE_URL))) || "";
 
     const SESSION_KEYS = {
       token: "sessionToken",
@@ -3269,31 +3269,31 @@ if ("serviceWorker" in navigator) {
       },
 
       verifySession: function (sessionToken) {
-        return this.get({ action: "verifySession", sessionToken: sessionToken });
+        return this.post({ action: "verifySession", sessionToken: sessionToken });
       },
 
       logout: function (sessionToken) {
-        return this.get({ action: "logout", sessionToken: sessionToken });
+        return this.post({ action: "logout", sessionToken: sessionToken });
       },
 
       dashboardBundle: function (sessionToken) {
-        return this.get({ action: "dashboardBundle", sessionToken: sessionToken });
+        return this.post({ action: "dashboardBundle", sessionToken: sessionToken });
       },
 
       scanLog: function (sessionToken, filters) {
-        return this.get({ action: "getScanLog", sessionToken: sessionToken, ...(filters || {}) });
+        return this.post({ action: "getScanLog", sessionToken: sessionToken, ...(filters || {}) });
       },
 
       reports: function (sessionToken, filters) {
-        return this.get({ action: "getReports", sessionToken: sessionToken, ...(filters || {}) });
+        return this.post({ action: "getReports", sessionToken: sessionToken, ...(filters || {}) });
       },
 
       searchPermits: function (sessionToken, query) {
-        return this.get({ action: "searchPermits", sessionToken: sessionToken, query: query });
+        return this.post({ action: "searchPermits", sessionToken: sessionToken, query: query });
       },
 
       applyDecision: function (sessionToken, permitId, decision, notes) {
-        return this.get({
+        return this.post({
           action: "applySecurityDecision",
           sessionToken: sessionToken,
           id: permitId,
@@ -4095,14 +4095,15 @@ if ("serviceWorker" in navigator) {
         applyDashboardPermissions(data.userContext.permissions);
       }
 
-      renderStats(data.dashboard || {}, data.summary || {});
-      renderLatestVerification(data.latest || {});
-      renderSummary(data.summary || {}, data.operations || {});
-      renderAuditLogs(data.auditLogs || []);
+      // Each section renders independently — one failure won't break others
+      try { renderStats(data.dashboard || {}, data.summary || {}); } catch(e) { console.warn("renderStats:", e.message); }
+      try { renderLatestVerification(data.latest || {}); } catch(e) { console.warn("renderLatest:", e.message); }
+      try { renderSummary(data.summary || {}, data.operations || {}); } catch(e) { console.warn("renderSummary:", e.message); }
+      try { renderAuditLogs(data.auditLogs || []); } catch(e) { console.warn("renderAudit:", e.message); }
       // renderSecurityActions removed
-      renderActiveSessions(data.activeSessions || []);
-      renderTokens(data.permitTokens || []);
-      renderSettings(data.systemSettings || []);
+      try { renderActiveSessions(data.activeSessions || []); } catch(e) { console.warn("renderSessions:", e.message); }
+      try { renderTokens(data.permitTokens || []); } catch(e) { console.warn("renderTokens:", e.message); }
+      try { renderSettings(data.systemSettings || []); } catch(e) { console.warn("renderSettings:", e.message); }
       setBundleGeneratedAt(data.userContext && data.userContext.generatedAt);
     }
 
