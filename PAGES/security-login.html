@@ -573,6 +573,58 @@ if ("serviceWorker" in navigator) {
       max-width:170px!important;
     }
   }
+
+  /* ======= MOBILE RESPONSIVE LOGIN ======= */
+  @media (max-width: 768px) {
+    body { padding: 12px; }
+    .shell { max-width: 100%; }
+
+    .azha-brand-header {
+      padding: 10px 14px;
+      border-radius: 16px;
+      margin-bottom: 14px;
+    }
+    .azha-brand-header img { height: 30px; }
+    .azha-brand-title strong { font-size: 12px; }
+    .azha-brand-title span { font-size: 9px; }
+
+    .card {
+      flex-direction: column;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 20px 16px;
+      border-radius: 18px 18px 0 0;
+    }
+    .hero h1 { font-size: 20px; line-height: 1.3; }
+    .hero p { font-size: 12px; }
+    .hero-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .hero-mini { padding: 10px; }
+    .hero-mini .k { font-size: 10px; }
+    .hero-mini .v { font-size: 11px; }
+
+    .panel {
+      padding: 20px 16px;
+      min-width: auto;
+      max-width: 100%;
+    }
+
+    .form-card {
+      padding: 18px 14px;
+      border-radius: 14px;
+    }
+    .form-card .title { font-size: 18px; }
+    .form-card input { font-size: 15px; padding: 12px 14px; }
+    .btn-primary { font-size: 15px; padding: 14px; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 18px; }
+    .hero-badge { font-size: 10px; }
+  }
 </style>
 
 </head>

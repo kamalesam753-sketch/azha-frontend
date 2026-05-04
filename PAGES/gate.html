@@ -1090,6 +1090,62 @@ if ("serviceWorker" in navigator) {
       max-width:170px!important;
     }
   }
+
+  /* ======= MOBILE RESPONSIVE GATE CONSOLE ======= */
+  @media (max-width: 768px) {
+    body { padding: 10px; }
+    .wrap { max-width: 100%; }
+
+    .azha-brand-header {
+      padding: 10px 14px;
+      border-radius: 16px;
+      margin-bottom: 10px;
+    }
+    .azha-brand-header img { height: 30px; }
+    .azha-brand-title strong { font-size: 12px; }
+    .azha-brand-title span { font-size: 9px; }
+
+    .topbar {
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 16px;
+    }
+    .brand { font-size: 13px; }
+    .chip { font-size: 10px; padding: 4px 8px; }
+
+    .gate-workspace {
+      flex-direction: column;
+      gap: 12px;
+    }
+    .gate-left, .gate-right {
+      width: 100%;
+      min-width: auto;
+    }
+
+    .action-strip {
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .action-strip .btn { font-size: 12px; padding: 8px 12px; }
+
+    .mode-tabs {
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .mode-tab { font-size: 12px; padding: 8px 14px; }
+
+    .section-card { padding: 14px; border-radius: 16px; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .table-wrap table { min-width: 500px; }
+
+    .preview-card { padding: 14px; border-radius: 16px; }
+  }
+
+  @media (max-width: 480px) {
+    .action-strip .btn { width: 100%; text-align: center; }
+    .mode-tab { flex: 1; text-align: center; }
+  }
 </style>
 
 </head>

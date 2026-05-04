@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" dir="ltr">
 
 <head>
@@ -2174,6 +2174,109 @@ if ("serviceWorker" in navigator) {
       max-width:170px!important;
     }
   }
+
+  /* ======= ENHANCED MOBILE RESPONSIVE ======= */
+  @media (max-width: 768px) {
+    body { padding: 8px; }
+    .wrap { padding: 0; }
+    .main { padding: 10px; }
+
+    .azha-brand-header {
+      padding: 10px 14px;
+      border-radius: 16px;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+    .azha-brand-header img { height: 32px; }
+    .azha-brand-title strong { font-size: 12px; }
+    .azha-brand-title span { font-size: 9px; }
+
+    .topbar {
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 16px;
+    }
+    .topbar-left, .topbar-right {
+      width: 100%;
+      justify-content: center;
+    }
+    .topbar .chip { font-size: 11px; padding: 4px 8px; }
+
+    .toolbar {
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 10px;
+    }
+    .toolbar .btn { font-size: 12px; padding: 8px 12px; }
+
+    .hero { padding: 20px 14px; border-radius: 16px; }
+    .hero-title { font-size: 20px; line-height: 1.3; }
+    .hero-sub { font-size: 12px; }
+    .hero-features { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .hero-features .feat { padding: 10px; font-size: 11px; }
+
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .stat-card { padding: 14px 10px; border-radius: 14px; }
+    .stat-value { font-size: 22px; }
+    .stat-label { font-size: 11px; }
+    .stat-note { font-size: 10px; }
+
+    .section { padding: 14px; border-radius: 16px; margin-bottom: 12px; }
+    .section-title { font-size: 16px; }
+    .section-sub { font-size: 11px; }
+
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .table-wrap table { min-width: 600px; }
+
+    .mini-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .mini-card { padding: 12px; }
+
+    .grid-2 { grid-template-columns: 1fr; gap: 12px; }
+    .subpanels { grid-template-columns: 1fr; }
+
+    .filters, .filters.filters-5, .filters.filters-4 {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .report-summary-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .report-card { padding: 12px; }
+
+    .sidebar {
+      position: fixed;
+      left: -100%;
+      top: 0;
+      z-index: 999;
+      width: 280px;
+      max-width: 85vw;
+      height: 100vh;
+      transition: left 0.3s ease;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.3);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 998;
+    }
+    .sidebar-overlay.active { display: block; }
+    .mobile-side-toggle { display: inline-flex !important; }
+  }
+
+  @media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .hero-features { grid-template-columns: 1fr; }
+    .mini-grid { grid-template-columns: 1fr; }
+    .report-summary-grid { grid-template-columns: 1fr; }
+    .toolbar .btn { width: 100%; text-align: center; }
+  }
+
+  @media (min-width: 769px) {
+    .mobile-side-toggle { display: none !important; }
+  }
 </style>
 
 </head>
@@ -2224,7 +2327,7 @@ if ("serviceWorker" in navigator) {
         <button class="menu-btn manager-admin" onclick="scrollToSection('adminSection', this)">Admin Panel</button>
         <button class="menu-btn manager-access" onclick="scrollToSection('adminUsersSection', this)">Security Users</button>
         <button class="menu-btn manager-access" onclick="scrollToSection('adminGatesSection', this)">Gates Registry</button>
-        <button class="menu-btn" onclick="scrollToSection('actionsSection', this)">Security Actions</button>
+        <!-- Security Actions removed -->
         <button class="menu-btn manager-audit" onclick="scrollToSection('auditSection', this)">Audit Logs</button>
         <button class="menu-btn manager-sessions" onclick="scrollToSection('sessionsSection', this)">Active
           Sessions</button>
@@ -2984,36 +3087,7 @@ if ("serviceWorker" in navigator) {
       </div>
 
       <div class="grid-2">
-        <section class="section" id="actionsSection">
-          <div class="section-head">
-            <div class="section-head-main">
-              <h2 class="section-title">Security Actions</h2>
-              <p class="section-sub">Latest guard and supervisor actions registered within the operational workflow.</p>
-            </div>
-          </div>
-          <div class="section-body">
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Timestamp</th>
-                    <th>Permit</th>
-                    <th>Action</th>
-                    <th>Notes</th>
-                    <th>User</th>
-                    <th>Gate</th>
-                    <th>Apply</th>
-                  </tr>
-                </thead>
-                <tbody id="actionsTableBody">
-                  <tr>
-                    <td colspan="7" class="empty">Loading security actions...</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
+        <!-- Security Actions section removed -->
 
         <section class="section manager-audit" id="auditSection">
           <div class="section-head">
@@ -4025,7 +4099,7 @@ if ("serviceWorker" in navigator) {
       renderLatestVerification(data.latest || {});
       renderSummary(data.summary || {}, data.operations || {});
       renderAuditLogs(data.auditLogs || []);
-      renderSecurityActions(data.securityActions || []);
+      // renderSecurityActions removed
       renderActiveSessions(data.activeSessions || []);
       renderTokens(data.permitTokens || []);
       renderSettings(data.systemSettings || []);
